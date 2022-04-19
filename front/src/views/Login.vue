@@ -1,12 +1,6 @@
 <template>
   <section id="login-container">
-    <header class="login-header">
-      <div class="header-content">
-        <img src="../assets/Login/character.png" alt="">
-        <h1>다이어리키우기</h1>
-      </div>
-      <note-top/>
-    </header>
+    <account-header title="다이어리 키우기" />
     <article class="login-body">
       <form action="#">
         <label for="email">
@@ -31,14 +25,14 @@
 </template>
 
 <script>
-import NoteTop from '@/components/NoteTop'
+import AccountHeader from '../components/AccountHeader'
 import KakaoLogin from '../components/Login/KakaoLogin'
 import GoogleLogin from '../components/Login/GoogleLogin'
 
 
 export default {
   components: {
-    NoteTop,
+    AccountHeader,
     KakaoLogin,
     GoogleLogin
   }
@@ -54,32 +48,6 @@ export default {
 
     & > * {
       width: 100%;
-    }
-
-    header {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      background-image: url('../assets/Login/bg.png');
-      background-size: cover;
-      height: 35%;
-
-      .header-content {
-        display: flex;
-        align-items: flex-end;
-        margin: 0 3rem;
-
-        img {
-          width: 150px;
-          aspect-ratio: 3/4;
-        }
-
-        h1 {
-          font-size: 4rem;
-          color: white;
-          text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.35);
-        }
-      }
     }
 
     .login-body {
