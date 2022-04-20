@@ -24,4 +24,11 @@ public class UserItem {
     @ManyToOne
     @JoinColumn(name = "item_no")
     private Item item;
+
+
+    public UserItem(boolean wearFlag, Doll doll, Item item) {
+        this.wearFlag = wearFlag;
+        this.doll = doll;
+        this.item = item;
+    }
 }

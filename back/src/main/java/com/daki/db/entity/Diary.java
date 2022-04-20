@@ -28,4 +28,11 @@ public class Diary {
     @JoinColumn(name = "user_no")
     private User user;
 
+
+    public Diary(String diaryTitle, String diaryContent, LocalDateTime diaryDate, User user) {
+        this.diaryTitle = diaryTitle;
+        this.diaryContent = diaryContent;
+        this.diaryDate = diaryDate;
+        this.user = user;
+    }
 }

@@ -24,4 +24,10 @@ public class Doll {
     @Enumerated(EnumType.STRING)
     @Column(name = "doll_skin")
     private Skin skin;
+
+    public Doll(int dollLikeable, User user, Skin skin) {
+        this.dollLikeable = dollLikeable;
+        this.user = user;
+        this.skin = skin;
+    }
 }

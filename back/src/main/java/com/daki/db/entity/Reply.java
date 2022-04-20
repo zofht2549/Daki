@@ -28,4 +28,11 @@ public class Reply {
     @ManyToOne
     @JoinColumn(name = "board_no")
     private Board board;
+
+    public Reply(String replyContent, LocalDateTime replyDate, User user, Board board) {
+        this.replyContent = replyContent;
+        this.replyDate = replyDate;
+        this.user = user;
+        this.board = board;
+    }
 }

@@ -15,7 +15,7 @@ public class Board {
     @Column(name = "board_no")
     private Long boardNo;
 
-    @Column(name = "board_headline")
+    @Column(name = "board_head_line")
     private String boardHeadLine;
 
     @Column(name = "board_title")
@@ -30,4 +30,12 @@ public class Board {
     @ManyToOne
     @JoinColumn(name = "user_no")
     private User user;
+
+    public Board(String boardHeadLine, String boardTitle, String boardContent, LocalDateTime boardDate, User user) {
+        this.boardHeadLine = boardHeadLine;
+        this.boardTitle = boardTitle;
+        this.boardContent = boardContent;
+        this.boardDate = boardDate;
+        this.user = user;
+    }
 }

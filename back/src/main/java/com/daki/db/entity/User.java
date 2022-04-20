@@ -34,4 +34,12 @@ public class User {
     @Column(name = "user_point")
     private int userPoint;
 
+    public User(String userEmail, String userNickname, String userPassword, String userBirth, boolean userGender, int userPoint) {
+        this.userEmail = userEmail;
+        this.userNickname = userNickname;
+        this.userPassword = userPassword;
+        this.userBirth = userBirth;
+        this.userGender = userGender;
+        this.userPoint = userPoint;
+    }
 }
