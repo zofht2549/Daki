@@ -10,9 +10,11 @@
 <style lang="scss">
 #app {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
+  overflow: auto;
   display: flex;
   justify-content: center;
+  overflow: auto;
 }
 
 nav {

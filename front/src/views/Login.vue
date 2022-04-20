@@ -1,12 +1,6 @@
 <template>
   <section id="login-container">
-    <header class="login-header">
-      <div class="header-content">
-        <img src="../assets/Login/character.png" alt="">
-        <h1>다이어리키우기</h1>
-      </div>
-      <note-top/>
-    </header>
+    <account-header title="다이어리 키우기" />
     <article class="login-body">
       <form action="#">
         <label for="email">
@@ -18,10 +12,10 @@
           <input type="password" id="password" placeholder="비밀번호를 입력하세요">
         </label>
         <button>로그인</button>
+        <router-link to="/signup">
+          회원가입
+        </router-link>
       </form>
-      <router-link to="/signup">
-        회원가입
-      </router-link>
       <div class="social-login-box">
         <kakao-login/>
         <google-login/>
@@ -31,14 +25,14 @@
 </template>
 
 <script>
-import NoteTop from '@/components/NoteTop'
+import AccountHeader from '../components/AccountHeader'
 import KakaoLogin from '../components/Login/KakaoLogin'
 import GoogleLogin from '../components/Login/GoogleLogin'
 
 
 export default {
   components: {
-    NoteTop,
+    AccountHeader,
     KakaoLogin,
     GoogleLogin
   }
@@ -56,32 +50,6 @@ export default {
       width: 100%;
     }
 
-    header {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      background-image: url('../assets/Login/bg.png');
-      background-size: cover;
-      height: 35%;
-
-      .header-content {
-        display: flex;
-        align-items: flex-end;
-        margin: 0 3rem;
-
-        img {
-          width: 150px;
-          aspect-ratio: 3/4;
-        }
-
-        h1 {
-          font-size: 4rem;
-          color: white;
-          text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.35);
-        }
-      }
-    }
-
     .login-body {
       display: flex;
       flex-direction: column;
@@ -95,7 +63,7 @@ export default {
         justify-content: center;
         align-items: center;
         width: 70%;
-        margin: 4rem 0 2rem;
+        margin: 4rem 0 0;
 
         label {
           width: 70%;
@@ -119,6 +87,10 @@ export default {
 
             &:focus {
               outline: none;
+
+               &::-webkit-input-placeholder{
+                color: transparent;
+              }
             }
 
             &[type='password'] {
@@ -153,7 +125,7 @@ export default {
       }
 
       a {
-        margin: 1rem;
+        margin: 2rem;
         font-size: 1.25rem;
         font-weight: bold;
         text-decoration: none;
