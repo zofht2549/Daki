@@ -10,21 +10,15 @@
 <style lang="scss">
 #app {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
+  overflow: auto;
   display: flex;
   justify-content: center;
-}
+  overflow: auto;
+  position: relative;
 
-nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+  & * {
+    box-sizing: border-box;
   }
 }
 </style>
