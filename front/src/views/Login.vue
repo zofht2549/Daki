@@ -12,10 +12,10 @@
           <input type="password" id="password" placeholder="비밀번호를 입력하세요">
         </label>
         <button>로그인</button>
+        <router-link to="/signup">
+          회원가입
+        </router-link>
       </form>
-      <router-link to="/signup">
-        회원가입
-      </router-link>
       <div class="social-login-box">
         <kakao-login/>
         <google-login/>
@@ -63,7 +63,7 @@ export default {
         justify-content: center;
         align-items: center;
         width: 70%;
-        margin: 4rem 0 2rem;
+        margin: 4rem 0 0;
 
         label {
           width: 70%;
@@ -87,6 +87,10 @@ export default {
 
             &:focus {
               outline: none;
+
+               &::-webkit-input-placeholder{
+                color: transparent;
+              }
             }
 
             &[type='password'] {
@@ -121,7 +125,7 @@ export default {
       }
 
       a {
-        margin: 1rem;
+        margin: 2rem;
         font-size: 1.25rem;
         font-weight: bold;
         text-decoration: none;

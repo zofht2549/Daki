@@ -1,7 +1,7 @@
 <template>
   <header class="login-header">
     <div class="header-content">
-      <img src="../assets/Login/character.png" alt="">
+      <img src="../assets/character.png" alt="">
       <h1>{{ title }}</h1>
     </div>
     <note-top/>
@@ -28,7 +28,7 @@ export default {
     justify-content: flex-end;
     background-image: url('../assets/bg.png');
     background-size: cover;
-    height: 35%;
+    height: 35vh;
 
     .header-content {
       display: flex;
