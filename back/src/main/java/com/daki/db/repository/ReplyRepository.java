@@ -1,4 +1,4 @@
-package com.daki.repository;
+package com.daki.db.repository;
 
 import com.daki.db.entity.Reply;
 import org.springframework.data.jpa.repository.JpaRepository;
