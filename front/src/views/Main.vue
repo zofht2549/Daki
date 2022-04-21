@@ -77,5 +77,10 @@ export default {
         color: white;
       }
     }
+
+    .main-body {
+      display: flex;
+      justify-content: center;
+    }
   }
 </style>
