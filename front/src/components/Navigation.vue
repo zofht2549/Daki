@@ -26,7 +26,19 @@
 
 <script>
 export default {
-
+  data: function(){
+    return {
+      isTop: true,
+      flag: false
+    }
+  },
+  mounted: function(){
+    // const nav = document.querySelector('nav')
+    // const app = document.querySelector('#app')
+    // window.addEventListener('scroll', () => {
+    //   console.dir(app)
+    // })
+  }
 }
 </script>
 
@@ -43,7 +55,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 999;
+    z-index: 2;
 
     .logo {
       width: 75px;

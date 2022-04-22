@@ -1,7 +1,9 @@
 <template>
   <div id="calendar-container">
     <calendar is-expanded trim-weeks :max-date="new Date()"
-      :attributes="calendarAttrs" />
+      :attributes="calendarAttrs" ref="calendar"
+      @update:from-page="updateFromPage"
+      />
   </div>
 </template>
 
@@ -17,7 +19,8 @@ const VCalendar =  {
         highlight: true,
         dates: new Date(),
       }],
-      flag: false
+      flag: false,
+      clickedDay: null
     }
   },
   components: {
@@ -25,8 +28,12 @@ const VCalendar =  {
   },
   methods: {
     makeDisabled: function(){
-      const disalbled = document.querySelectorAll('.is-disabled')
+      const notInMonth = document.querySelectorAll('.is-not-in-month')
+      notInMonth.forEach(ele => {
+        ele.classList.add('day-disabled')
+      })
 
+      const disalbled = document.querySelectorAll('.is-disabled')
       disalbled.forEach(ele => {
         let tar = ele.parentElement
         tar.classList.add('day-disabled')
@@ -34,62 +41,107 @@ const VCalendar =  {
     },
     createButton: function(){
       const todayCol = document.querySelectorAll(`.id-${this.today[0]}-${this.today[1]}-${this.today[2]}`)[0]
-      const button = document.createElement('button')
 
-      todayCol.appendChild(button)
+      if (todayCol){
+        const button = document.createElement('button')
+  
+        todayCol.appendChild(button)
+      }
     },
     randomColor: function(){
-      return '#' + Math.floor(Math.random() * 0xeeeeee).toString(16)
+      return '#' + Math.floor(Math.random() * 0xffffff).toString(16)
     },
     loadDairies: function(init=true){
-      const parent = document.querySelectorAll('.vc-day')[0]
-      const w = parent.clientWidth * 0.5
+      this.$nextTick(
+        function(){
+          const parent = document.querySelectorAll('.vc-day')[0]
+          const w = parent.clientWidth * 0.5
 
-      for (const key in Dummy){
-        if (key.slice(5, 7) == this.today[1]){
-          const tar = document.querySelectorAll(`.id-${key}`)[0]
-          let wrapper
+          for (const key in Dummy){
+            if (key.slice(0, 7) == `${this.page[0]}-${this.page[1]}`){
+              const tar = document.querySelectorAll(`.id-${key}`)[0]
+              let wrapper
 
-          if (init){
-            wrapper = document.createElement('div')
-            wrapper.setAttribute('class', 'diary-wrapper')
-          }
-          else {
-            for (const child of tar.childNodes.entries()){
-              if (child[1].classList[0] == 'diary-wrapper'){
-                wrapper = child[1]
-                while (wrapper.firstChild){
-                  wrapper.removeChild(wrapper.firstChild)
-                }
-                break
+              if (init){
+                wrapper = document.createElement('div')
+                wrapper.setAttribute('class', 'diary-wrapper')
               }
+              else {
+                for (const child of tar.childNodes.entries()){
+                  if (child[1].classList[0] == 'diary-wrapper'){
+                    wrapper = child[1]
+                    while (wrapper.firstChild){
+                      wrapper.removeChild(wrapper.firstChild)
+                    }
+                    break
+                  }
+                }
+              }
+
+              for (const item of Dummy[key]){
+                const idx = Dummy[key].indexOf(item)
+                if ((idx+1) * 40 + 16 < w){
+                  const p = document.createElement('p')
+                  p.setAttribute('class', 'diary-title')
+                  // 랜덤 색상 부여
+                  // p.setAttribute('style', `background-color: ${this.randomColor()}`)
+                  p.innerText = item.title
+                  wrapper.appendChild(p)
+                }
+                else {
+                  break
+                }
+              }
+              const dot = document.createElement('span')
+              dot.setAttribute('class', 'is-exist')
+              const helpMessage = document.createElement('p')
+              helpMessage.setAttribute('class', 'diary-help-message')
+              helpMessage.innerText = `작성된 일기 수: ${Dummy[key].length}개`
+
+              dot.appendChild(helpMessage)
+              wrapper.appendChild(dot)
+              tar.appendChild(wrapper)
             }
-            console.log(tar)
           }
-          
-          for (const item of Dummy[key]){
-            const idx = Dummy[key].indexOf(item)
-            if ((idx+1) * 40 > w){
-              break
-            }
-            const p = document.createElement('p')
-            p.setAttribute('class', 'diary-title')
-            // 랜덤 색상 부여
-            // p.setAttribute('style', `background-color: ${this.randomColor()}`)
-            p.innerText = item.title
-            wrapper.appendChild(p)
-          }
-          tar.appendChild(wrapper)
+          this.makeDisabled()
+          this.createButton()
+          this.setEvent()
         }
-      }
+      )
+    },
+    clickEventHandler: function(tar){
+      this.$emit('show-date-diary', tar.slice(3, ))
+    },
+    setEvent: function(){
+      const dayList = document.querySelectorAll('.vc-day')
+      dayList.forEach(ele => {
+        if (ele.classList[ele.classList.length - 1] != 'day-disabled'){
+          ele.addEventListener('click', () => this.clickEventHandler(ele.classList[1]))
+        }
+      })
+    },
+    updateFromPage: function(){
+      this.loadDairies()
     }
   },
   computed: {
+    page: function(){
+      const time = this.$refs.calendar._data
+      let y = String(time.pages[0].year); let m = String(time.pages[0].month); let d = String(time.focusableDay);
+
+      if (m.length == 1){
+        m = '0' + m
+      }
+      if (d.length == 1){
+        d = '0' + d
+      }
+
+      return [y, m, d]
+    },
     today: function(){
-      const date = new Date()
-      const y = date.getFullYear().toString();
-      let m = (date.getMonth() + 1).toString();
-      let d = date.getDate().toString();
+      const today = new Date()
+      let y = String(today.getFullYear()); let m = String(today.getMonth()+1); let d = String(today.getDate());
+
       if (m.length == 1){
         m = '0' + m
       }
@@ -101,11 +153,8 @@ const VCalendar =  {
     }
   },
   mounted: function(){
-    this.makeDisabled()
-    this.loadDairies()
-    this.createButton()
-
     const _this = this
+
     window.addEventListener('resize', function(){
       if (_this.flag){
         clearTimeout()
@@ -211,7 +260,7 @@ export default VCalendar
       .diary-wrapper {
         width: 100%;
         height: 50%;
-        overflow: hidden;
+        position: relative;
 
         .diary-title {
           width: 100%;
@@ -225,6 +274,41 @@ export default VCalendar
           font-weight: bold;
           box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.35);
           background-color: #93D9CE;
+        }
+
+        .is-exist {
+          position: absolute;
+          bottom: 0;
+          width: 10px;
+          aspect-ratio: 1/1;
+          background-color: #FED771;
+          border-radius: 50%;
+
+          @keyframes showing {
+            from {opacity: 0;}
+            to {opacity: 1;}
+          }
+
+          .diary-help-message {
+            background-color: white;
+            color: #777777;
+            box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.35);
+            border-radius: 10px;
+            word-break: keep-all;
+            white-space: nowrap;
+            font-size: 0.75rem;
+            margin: 0;
+            padding: 1rem;
+            position: absolute;
+            visibility: hidden;
+          }
+
+          &:hover {
+            .diary-help-message {
+              animation: showing 0.3s ease-in forwards;
+              visibility: visible;
+            }
+          }
         }
       }
     }
