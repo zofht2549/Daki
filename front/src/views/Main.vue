@@ -5,8 +5,9 @@
       <span @click="() => tab = 0" :class="{'tab':true, 'active': tab == 0}">달력으로 보기</span>
       <span @click="() => tab = 1" :class="{'tab':true, 'active': tab == 1}">그리드로 보기</span>
     </article>
+    <diary-pop-up v-if="target" @close-pop-up="closePopUp" :target="target" />
     <article class="main-body">
-      <calendar />
+      <calendar @show-date-diary="showDateDiary" />
     </article>
   </section>
 </template>
@@ -14,17 +15,29 @@
 <script>
 import Navigation from '../components/Navigation.vue'
 import Calendar from '../components/Main/Calendar.vue'
+import DiaryPopUp from '../components/Main/DiaryPopUp.vue'
 
 export default {
   data: () => {
     return {
       tab: 0,
+      target: null
     }
   },
   components: {
     Navigation,
-    Calendar
+    Calendar,
+    DiaryPopUp
   },
+  methods: {
+    showDateDiary: function(t){
+      this.target = t
+    },
+    closePopUp: function(){
+      console.log('ehehh!!')
+      this.target = null
+    }
+  }
 }
 </script>
 
