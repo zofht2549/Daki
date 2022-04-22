@@ -1,7 +1,11 @@
 <template>
   <div id="calendar-container">
     <calendar is-expanded trim-weeks :max-date="new Date()"
-      :attributes="calendarAttrs" />
+      :attributes="calendarAttrs" ref="calendar"
+      />
+      <!-- :fromPage="(page)=>{console.log(page)}"
+      :toPage="(page)=>{console.log(page)}"
+      :dayclick="(day)=>{console.log(day)}" -->
   </div>
 </template>
 
@@ -17,7 +21,8 @@ const VCalendar =  {
         highlight: true,
         dates: new Date(),
       }],
-      flag: false
+      flag: false,
+      flag2: false
     }
   },
   components: {
@@ -33,20 +38,20 @@ const VCalendar =  {
       })
     },
     createButton: function(){
-      const todayCol = document.querySelectorAll(`.id-${this.today[0]}-${this.today[1]}-${this.today[2]}`)[0]
+      const todayCol = document.querySelectorAll(`.id-${this.page[0]}-${this.page[1]}-${this.page[2]}`)[0]
       const button = document.createElement('button')
 
       todayCol.appendChild(button)
     },
     randomColor: function(){
-      return '#' + Math.floor(Math.random() * 0xeeeeee).toString(16)
+      return '#' + Math.floor(Math.random() * 0xffffff).toString(16)
     },
     loadDairies: function(init=true){
       const parent = document.querySelectorAll('.vc-day')[0]
       const w = parent.clientWidth * 0.5
 
       for (const key in Dummy){
-        if (key.slice(5, 7) == this.today[1]){
+        if (key.slice(0, 7) == `${this.page[0]}-${this.page[1]}`){
           const tar = document.querySelectorAll(`.id-${key}`)[0]
           let wrapper
 
@@ -64,7 +69,6 @@ const VCalendar =  {
                 break
               }
             }
-            console.log(tar)
           }
           
           for (const item of Dummy[key]){
@@ -82,30 +86,41 @@ const VCalendar =  {
           tar.appendChild(wrapper)
         }
       }
-    }
+    },
   },
   computed: {
-    today: function(){
-      const date = new Date()
-      const y = date.getFullYear().toString();
-      let m = (date.getMonth() + 1).toString();
-      let d = date.getDate().toString();
+    page: function(){
+      const time = this.$refs.calendar._data
+      let y = String(time.pages[0].year); let m = String(time.pages[0].month); let d = String(time.focusableDay);
+
       if (m.length == 1){
         m = '0' + m
       }
       if (d.length == 1){
         d = '0' + d
       }
+      this.flag2 = !this.flag2
 
       return [y, m, d]
+    },
+  },
+  watch: {
+    flag2: function(){
+      console.log('called!!!')
     }
+  },
+  created: function(){
+    this.$nextTick(()=>console.log('nextTick!!'))
   },
   mounted: function(){
     this.makeDisabled()
     this.loadDairies()
     this.createButton()
 
+    // // console.log(this.$refs.calendar._data.pages[0])
+
     const _this = this
+
     window.addEventListener('resize', function(){
       if (_this.flag){
         clearTimeout()
