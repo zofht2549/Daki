@@ -27,6 +27,11 @@ const routes = [
     name: 'main',
     component: () => import('../views/Main.vue')
   },
+  {
+    path:'/mypage',
+    name:'mypage',
+    component: () => import('../views/MyPage.vue')
+  }
 ]
 
 
