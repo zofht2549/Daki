@@ -8,8 +8,17 @@
         <h3>OOO님의 일기</h3>
       </span>
       <ol class="popup-list">
-        <li v-for="diary of diaries" :key="diary.title" class="list-item">
-          {{ diary.title }}
+        <li v-for="(diary, idx) of diaries" :key="diary.title" class="list-item">
+          <p class="items">
+            {{idx + 1}}
+          </p>
+          <p class="items">
+            {{ diary.title }}
+          </p>
+          <span class="btn-box">
+            <button class="popup-btn edit"/>
+            <button class="popup-btn delete"/>
+          </span>
         </li>
       </ol>
     </div>
@@ -49,7 +58,7 @@ export default {
     justify-content: center;
     align-items: center;
     background-color: rgba(0, 0, 0, 0.35);
-    z-index: 3;
+    z-index: 20;
 
     .popup-box {
       background-color: white;
@@ -86,17 +95,46 @@ export default {
         height: 80%;
         box-shadow: inset 1px 2px 4px rgba(0, 0, 0, 0.35);
         border-radius: 10px;
+        padding: 0;
         overflow: auto;
 
         .list-item {
           padding: 0.75rem;
           border-bottom: 2px #cccccc solid;
           font-size: 1.25rem;
+          list-style: none;
+          display: flex;
           cursor: pointer;
 
           &:hover {
             background-color: #cccccc;
             color: white;
+          }
+
+          .items {
+            font-weight: bold;
+            margin: 0 2rem 0 1rem;
+          }
+
+          .btn-box {
+            margin-left: auto;
+
+            .popup-btn {
+              width: 20px;
+              aspect-ratio: 1/1;
+              margin: 0 0.5rem;
+              background-color: transparent;
+              border: none;
+              cursor: pointer;
+            }
+
+            .edit {
+              background-image: url('../../assets/edit.png');
+            }
+
+            .delete {
+              background-image: url('../../assets/delete.png');
+            }
           }
         }
       }

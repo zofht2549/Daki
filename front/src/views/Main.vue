@@ -7,7 +7,8 @@
     </article>
     <diary-pop-up v-if="target" @close-pop-up="closePopUp" :target="target" />
     <article class="main-body">
-      <calendar @show-date-diary="showDateDiary" />
+      <calendar v-if="tab == 0" @show-date-diary="showDateDiary" />
+      <grid v-if="tab == 1" />
     </article>
   </section>
 </template>
@@ -15,6 +16,7 @@
 <script>
 import Navigation from '../components/Navigation.vue'
 import Calendar from '../components/Main/Calendar.vue'
+import Grid from '../components/Main/Grid.vue'
 import DiaryPopUp from '../components/Main/DiaryPopUp.vue'
 
 export default {
@@ -27,6 +29,7 @@ export default {
   components: {
     Navigation,
     Calendar,
+    Grid,
     DiaryPopUp
   },
   methods: {
