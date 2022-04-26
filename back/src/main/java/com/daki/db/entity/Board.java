@@ -1,5 +1,7 @@
 package com.daki.db.entity;
 
+import com.daki.api.request.BoardModifyReqDto;
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -7,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Builder
 @Table(name = "board")
 public class Board {
 
@@ -37,5 +40,11 @@ public class Board {
         this.boardContent = boardContent;
         this.boardDate = boardDate;
         this.user = user;
+    }
+
+    public void modify(BoardModifyReqDto dto) {
+        this.boardHeadLine = dto.getHeadLine();
+        this.boardContent = dto.getContent();
+        this.boardDate = LocalDateTime.now();
     }
 }
