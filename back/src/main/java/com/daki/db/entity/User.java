@@ -19,6 +19,9 @@ public class User {
     @Column(name = "user_email")
     private String userEmail;
 
+    @Column(name = "user_name")
+    private String userName;
+
     @Column(name = "user_nickname")
     private String userNickname;
 
@@ -34,8 +37,11 @@ public class User {
     @Column(name = "user_point")
     private int userPoint;
 
-    public User(String userEmail, String userNickname, String userPassword, String userBirth, boolean userGender, int userPoint) {
+    public User(){}
+
+    public User(String userEmail, String userName, String userNickname, String userPassword, String userBirth, boolean userGender, int userPoint) {
         this.userEmail = userEmail;
+        this.userName = userName;
         this.userNickname = userNickname;
         this.userPassword = userPassword;
         this.userBirth = userBirth;
