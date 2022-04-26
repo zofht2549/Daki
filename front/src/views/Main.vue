@@ -2,13 +2,13 @@
   <section id="main-container">
     <navigation />
     <article class="tab-box">
-      <span @click="() => tab = 0" :class="{'tab':true, 'active': tab == 0}">달력으로 보기</span>
-      <span @click="() => tab = 1" :class="{'tab':true, 'active': tab == 1}">그리드로 보기</span>
+      <span @click="changeTab('calendar')" :class="{'tab':true, 'active': tab == 'calendar'}">달력으로 보기</span>
+      <span @click="changeTab('grid')" :class="{'tab':true, 'active': tab == 'grid'}">그리드로 보기</span>
     </article>
     <diary-pop-up v-if="target" @close-pop-up="closePopUp" :target="target" />
     <article class="main-body">
-      <calendar v-if="tab == 0" @show-date-diary="showDateDiary" />
-      <grid v-if="tab == 1" />
+      <calendar v-if="tab == 'calendar'" @show-date-diary="showDateDiary" />
+      <grid v-if="tab == 'grid'" />
     </article>
   </section>
 </template>
@@ -22,7 +22,6 @@ import DiaryPopUp from '../components/Main/DiaryPopUp.vue'
 export default {
   data: () => {
     return {
-      tab: 0,
       target: null
     }
   },
@@ -32,7 +31,15 @@ export default {
     Grid,
     DiaryPopUp
   },
+  computed: {
+    tab: function(){
+      return this.$route.query.tab
+    }
+  },
   methods: {
+    changeTab: function(tab){
+      this.$router.push({ name: 'Main', query: { tab: tab }})
+    },
     showDateDiary: function(t){
       this.target = t
     },
@@ -40,7 +47,7 @@ export default {
       console.log('ehehh!!')
       this.target = null
     }
-  }
+  },
 }
 </script>
 

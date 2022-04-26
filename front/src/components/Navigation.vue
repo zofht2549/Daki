@@ -32,13 +32,6 @@ export default {
       flag: false
     }
   },
-  mounted: function(){
-    // const nav = document.querySelector('nav')
-    // const app = document.querySelector('#app')
-    // window.addEventListener('scroll', () => {
-    //   console.dir(app)
-    // })
-  }
 }
 </script>
 
