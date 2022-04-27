@@ -17,12 +17,13 @@ public class BoardResDto {
     private LocalDateTime registDate;
     private String nickName;
 
-    public BoardResDto(Long boardNo, String headLine, String title, String content, LocalDateTime registDate) {
+    public BoardResDto(Long boardNo, String headLine, String title, String content, LocalDateTime registDate, String nickName) {
         this.boardNo = boardNo;
         this.headLine = headLine;
         this.title = title;
         this.content = content;
         this.registDate = registDate;
+        this.nickName = nickName;
     }
 
     public BoardResDto() {
