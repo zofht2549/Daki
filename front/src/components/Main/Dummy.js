@@ -53,6 +53,7 @@ export default {
     {
       title: '그대는 찹쌀떡',
       content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      thumbnail: 'https://mblogthumb-phinf.pstatic.net/MjAxNzExMTFfNzMg/MDAxNTEwNDA1Nzc4OTUx.DkvGFYGpOzM_dFOrK_Ru7F3fg2a7C3f8aCL-ajpWGH8g.A-NzH3G-BoX5AklE763e2oP1T-EJLlpk3EKArpPNbuwg.JPEG.job0315/3caa3f644dc79c29936987a446dc6f54.jpg?type=w800'
     },
     {
       title: '그대는 나의 메밀 국수',

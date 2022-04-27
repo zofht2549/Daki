@@ -14,22 +14,22 @@ const routes = [
   },
   {
     path: '/login',
-    name: 'login',
+    name: 'Login',
     component: () => import('../views/Login.vue')
   },
   {
     path: '/signup',
-    name: 'signup',
+    name: 'Signup',
     component: () => import('../views/Signup.vue')
   },
   {
     path: '/main',
-    name: 'main',
+    name: 'Main',
     component: () => import('../views/Main.vue')
   },
   {
     path:'/mypage',
-    name:'mypage',
+    name:'Mypage',
     component: () => import('../views/MyPage.vue')
   }
 ]
@@ -39,6 +39,14 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+// eslint-disable-next-line no-unused-vars
+router.beforeEach((to, from, next) => {
+  if (to.name == 'Main' && !to.query.tab){
+    next({ name: 'Main', query: { tab: 'calendar' } })
+  }
+  next()
 })
 
 export default router

@@ -5722,6 +5722,11 @@
     "hash-sum" "^2.0.0"
     "loader-utils" "^2.0.0"
 
+"vue-perfect-scrollbar@^0.2.1":
+  "integrity" "sha512-45rOonNrZaKX0mu0N9v422+c3Ngm8iTnVAP0N2iUwPfWZJds4S6eRGdmiNbrVFqmUc8IfRNI0Dpa3Zk8ntjaZQ=="
+  "resolved" "https://registry.npmjs.org/vue-perfect-scrollbar/-/vue-perfect-scrollbar-0.2.1.tgz"
+  "version" "0.2.1"
+
 "vue-router@^3.5.1":
   "integrity" "sha512-FUlILrW3DGitS2h+Xaw8aRNvGTwtuaxrRkNSHWTizOfLUie7wuYwezeZ50iflRn8YPV5kxmU2LQuu3nM/b3Zsg=="
   "resolved" "https://registry.npmjs.org/vue-router/-/vue-router-3.5.3.tgz"

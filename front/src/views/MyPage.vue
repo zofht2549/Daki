@@ -67,9 +67,9 @@
 </template>
 <script>
 import Navigation from '../components/Navigation.vue'
-import CharacterPopUp from '@/components/CharacterPopUp.vue'
 import ChangePassword from '@/components/Mypage/ChangePassword.vue'
 import ChangeNickname from '@/components/Mypage/ChangeNickname.vue'
+import CharacterPopUp from '../components/CharacterPopUp.vue'
 
 export default {
   name: 'MyPage',
