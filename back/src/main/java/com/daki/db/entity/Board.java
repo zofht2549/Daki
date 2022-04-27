@@ -42,6 +42,15 @@ public class Board {
         this.user = user;
     }
 
+    public Board(Long boardNo, String boardHeadLine, String boardTitle, String boardContent, LocalDateTime boardDate, User user) {
+        this.boardNo = boardNo;
+        this.boardHeadLine = boardHeadLine;
+        this.boardTitle = boardTitle;
+        this.boardContent = boardContent;
+        this.boardDate = boardDate;
+        this.user = user;
+    }
+
     public void modify(BoardModifyReqDto dto) {
         this.boardHeadLine = dto.getHeadLine();
         this.boardContent = dto.getContent();
