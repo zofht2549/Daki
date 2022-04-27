@@ -28,7 +28,10 @@
 						<div for="nickname">
 							<span class="title">닉네임</span>
 							<span class="content">닉네임</span>
-							<button class="nickname_button">닉네임 변경</button>
+							<button
+								class="nickname_button" @click="changeNickname()">
+								닉네임 변경
+							</button>
 						</div>
 						<div for="birth">
 							<span class="title">생년월일</span>
@@ -40,7 +43,7 @@
 						</div>
 					</form>
 					<article class="botton-area">
-						<button>비밀번호 수정</button>
+						<button @click="changePassword()">비밀번호 수정</button>
 						<br>
 						<a href="#">회원탈퇴</a>
 					</article>
@@ -52,12 +55,20 @@
 			<div class="pop" :class="{ active : view }">
 				<character-pop-up @close-pop-up="openPop()"/>
 			</div>
+			<div class="change-password" :class="{ active : passwordView }">
+				<change-password @close-pop-up="changePassword()" />
+			</div>
+			<div class="change-nickname" :class="{ active : nicknameView}">
+				<change-nickname @close-pop-up="changeNickname()" />
+			</div>
 
     </div>
     
 </template>
 <script>
 import Navigation from '../components/Navigation.vue'
+import ChangePassword from '@/components/Mypage/ChangePassword.vue'
+import ChangeNickname from '@/components/Mypage/ChangeNickname.vue'
 import CharacterPopUp from '../components/CharacterPopUp.vue'
 
 export default {
@@ -67,12 +78,16 @@ export default {
 			popupVal : false,
 			target : false,
 
-			view : false
+			view : false,
+			passwordView : false,
+			nicknameView : false,
 		}
 	},
   components:{
     Navigation,
 		CharacterPopUp,
+		ChangePassword,
+		ChangeNickname,
   },
   methods:{
 		openPop(){
@@ -81,6 +96,12 @@ export default {
     showDateDiary: function(t){
       this.target = t
     },
+		changePassword(){
+			this.passwordView = (this.passwordView) ? false : true
+		},
+		changeNickname(){
+			this.nicknameView = (this.nicknameView) ? false : true
+		}
 
   }
 }
@@ -95,6 +116,34 @@ export default {
 
 		&.active {
 			& {
+				opacity: 1;
+				display: block;
+				visibility: visible;
+			}
+		}
+	}
+	.change-password{
+		& {
+			opacity: 0;
+			display: none;
+			visibility: hidden;
+		}
+		&.active {
+			&{
+				opacity: 1;
+				display: block;
+				visibility: visible;
+			}
+		}
+	}
+	.change-nickname{
+		& {
+			opacity: 0;
+			display: none;
+			visibility: hidden;
+		}
+		&.active{
+			&{
 				opacity: 1;
 				display: block;
 				visibility: visible;
