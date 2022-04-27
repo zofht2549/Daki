@@ -25,10 +25,28 @@ public class UserItem {
     @JoinColumn(name = "item_no")
     private Item item;
 
+    public UserItem(){}
 
     public UserItem(boolean wearFlag, Doll doll, Item item) {
         this.wearFlag = wearFlag;
         this.doll = doll;
         this.item = item;
+    }
+
+    public UserItem(Long userItemNo, boolean wearFlag, Doll doll, Item item) {
+        this.userItemNo = userItemNo;
+        this.wearFlag = wearFlag;
+        this.doll = doll;
+        this.item = item;
+    }
+
+    @Override
+    public String toString() {
+        return "UserItem{" +
+                "userItemNo=" + userItemNo +
+                ", wearFlag=" + wearFlag +
+                ", doll=" + doll +
+                ", item=" + item +
+                '}';
     }
 }

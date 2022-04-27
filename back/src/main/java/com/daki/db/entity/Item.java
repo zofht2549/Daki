@@ -24,6 +24,8 @@ public class Item {
     @Column(name = "item_image")
     private String itemImage;
 
+    public Item(){}
+
     public Item(ItemType itemType, String itemName, String itemImage) {
         this.itemType = itemType;
         this.itemName = itemName;

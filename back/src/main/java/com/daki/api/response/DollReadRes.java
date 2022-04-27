@@ -3,10 +3,13 @@ package com.daki.api.response;
 
 import com.daki.db.entity.Skin;
 
-public class DollGetRes {
+public class DollReadRes {
 
+    private Long dollNo;
     private int dollLikeable;
     private Skin skin;
+
+    public Long getDollNo() { return dollNo;}
 
     public Skin getSkin() {
         return skin;
@@ -16,6 +19,8 @@ public class DollGetRes {
         return dollLikeable;
     }
 
+    public void setDollNo(Long dollNo) { this.dollNo = dollNo;}
+
     public void setSkin(Skin skin) {
         this.skin = skin;
     }
@@ -24,7 +29,8 @@ public class DollGetRes {
         this.dollLikeable = dollLikeable;
     }
 
-    public DollGetRes(int dollLikeable, Skin skin){
+    public DollReadRes(Long dollNo, int dollLikeable, Skin skin){
+        this.dollNo = dollNo;
         this.dollLikeable = dollLikeable;
         this.skin = skin;
     }

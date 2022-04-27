@@ -25,9 +25,28 @@ public class Doll {
     @Column(name = "doll_skin")
     private Skin skin;
 
+    public Doll(){}
+
     public Doll(int dollLikeable, User user, Skin skin) {
         this.dollLikeable = dollLikeable;
         this.user = user;
         this.skin = skin;
+    }
+
+    public Doll(Long dollNo, int dollLikeable, User user, Skin skin) {
+        this.dollNo = dollNo;
+        this.dollLikeable = dollLikeable;
+        this.user = user;
+        this.skin = skin;
+    }
+
+    @Override
+    public String toString() {
+        return "Doll{" +
+                "dollNo=" + dollNo +
+                ", dollLikeable=" + dollLikeable +
+                ", user=" + user +
+                ", skin=" + skin +
+                '}';
     }
 }
