@@ -32,13 +32,6 @@ export default {
       flag: false
     }
   },
-  mounted: function(){
-    // const nav = document.querySelector('nav')
-    // const app = document.querySelector('#app')
-    // window.addEventListener('scroll', () => {
-    //   console.dir(app)
-    // })
-  }
 }
 </script>
 
@@ -55,7 +48,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 2;
+    z-index: 10;
 
     .logo {
       width: 75px;
