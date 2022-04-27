@@ -44,24 +44,63 @@
 						<br>
 						<a href="#">회원탈퇴</a>
 					</article>
-
 				</article>
-
       </section>
+			<div  @show="showDateDiary" @click="openPop()">
+				<img src="@/assets/character.png" alt="">
+			</div>
+			<div class="pop" :class="{ active : view }">
+				<character-pop-up @close-pop-up="openPop()"/>
+			</div>
+
     </div>
     
 </template>
 <script>
 import Navigation from '../components/Navigation.vue'
+import CharacterPopUp from '@/components/CharacterPopUp.vue'
 
 export default {
-  name: 'MyPage',  
+  name: 'MyPage',
+	data: () => {
+		return {
+			popupVal : false,
+			target : false,
+
+			view : false
+		}
+	},
   components:{
-    Navigation
+    Navigation,
+		CharacterPopUp,
+  },
+  methods:{
+		openPop(){
+			this.view = (this.view) ? false : true; 
+		},
+    showDateDiary: function(t){
+      this.target = t
+    },
+
   }
 }
 </script>
 <style lang="scss">
+	.pop {
+		& {
+			opacity: 0;
+			display: none;
+			visibility: hidden;
+		}
+
+		&.active {
+			& {
+				opacity: 1;
+				display: block;
+				visibility: visible;
+			}
+		}
+	}
   #mypage-container{
     border-left: 1px #cccccc solid;
     border-right: 1px #cccccc solid;
@@ -169,6 +208,7 @@ export default {
 				}
 			}
 		}
+
 		button {
 			font-size: 1.25rem;
 			font-weight: bold;
@@ -193,5 +233,10 @@ export default {
         text-decoration: none;
         color: #555555;
       }
+		& > div{
+			position: fixed;
+			bottom: 10%;
+			right: 10%;
+		}
   }
 </style>
