@@ -2,8 +2,10 @@
   <div id="scroll-container"
    :class="[activate ? 'scroll-active':'scroll-inactive', {'clicked': clicked}]"
    v-if="isShow" @mouseover="scrollActivate(true)" @mouseleave="scrollActivate(false)" 
-   @click="moveScrollRail" >
-    <span class="scroll-bar" :style="{ height: s, top: position }" />
+   @click="moveScroll">
+    <span :class="['scroll-bar', {'dragged': dragged}]" :style="{ height: s, top: position }"
+     @mousedown="e => dragDrop(e, true)"/>
+    <div class="drag-box" v-if="dragged" @mouseup="e => dragDrop(e, false)" @mousemove="move" />
   </div>
 </template>
 
@@ -15,6 +17,8 @@ export default {
     return {
       activate: true,
       clicked: false,
+      dragged: false,
+      firstClicked: null,
       flag: false,
       flag2: false,
     }
@@ -58,19 +62,45 @@ export default {
     }
   },
   methods: {
-    scrollActivate: function(tar){
+    scrollActivate: function(payload){
       if (this.clicked){
         return
       }
-      this.activate = tar
+      this.activate = payload
     },
-    moveScrollRail: function(e){
-      console.log(e)
+    moveScroll: function(e){
+      if (e.target.id !== 'scroll-container'){
+        return
+      }
+      const p = this.height * e.clientY / this.v
+      let scrollTo
+      if (p > this.scroll){
+        const _p = this.height * (e.clientY / this.v - this.v / this.height)
+        scrollTo = {top: _p, behavior: 'smooth'}
+      }
+      else {
+        scrollTo = {top: p, behavior: 'smooth'}
+      }
+      console.log(scrollTo)
       this.clicked = true
-      window.scrollTo({top: e.clientY, behavior: 'smooth'})
+      window.scrollTo(scrollTo)
       setTimeout(() => {
         this.clicked = false
       }, 500)
+    },
+    dragDrop: function(e, payload){
+      if (payload){
+        this.firstClicked = e.offsetY
+      }
+      this.dragged = payload
+      this.activate = payload
+    },
+    move: function(e){
+      if (!this.dragged){
+        return
+      }
+      const p = this.height * (e.clientY - this.firstClicked) / this.v
+      window.scrollTo({top: p, behavior: 'smooth'})
     },
     scrollHandler: async function(){
       store.dispatch('scrollHandler', window.scrollY)
@@ -142,6 +172,18 @@ export default {
       border-radius: 10px;
       box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.35);
       background-color: rgba(110, 110, 110, 0.5);
+
+      &.dragged {
+        background-color: rgba(110, 110, 110, 0.85);;
+      }
+    }
+
+    .drag-box {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100vw;
+      height: 100vh;
     }
   }
 </style>

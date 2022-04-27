@@ -58,7 +58,7 @@
 </template>
 <script>
 import Navigation from '../components/Navigation.vue'
-import CharacterPopUp from '@/components/CharacterPopUp.vue'
+import CharacterPopUp from '../components/CharacterPopUp.vue'
 
 export default {
   name: 'MyPage',
