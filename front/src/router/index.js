@@ -31,6 +31,11 @@ const routes = [
     path:'/mypage',
     name:'Mypage',
     component: () => import('../views/MyPage.vue')
+  },
+  {
+    path:'/diary-create',
+    name:'DiaryCreate',
+    component: () => import('../views/DiaryCreate.vue')
   }
 ]
 
