@@ -48,4 +48,15 @@ public class User {
         this.userGender = userGender;
         this.userPoint = userPoint;
     }
+
+    public User(Long userNo, String userEmail, String userName, String userNickname, String userPassword, String userBirth, boolean userGender, int userPoint) {
+        this.userNo = userNo;
+        this.userEmail = userEmail;
+        this.userName = userName;
+        this.userNickname = userNickname;
+        this.userPassword = userPassword;
+        this.userBirth = userBirth;
+        this.userGender = userGender;
+        this.userPoint = userPoint;
+    }
 }
