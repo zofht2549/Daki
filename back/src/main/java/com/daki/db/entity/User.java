@@ -1,5 +1,6 @@
 package com.daki.db.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,9 +38,17 @@ public class User {
     @Column(name = "user_point")
     private int userPoint;
 
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
+
     public User(){}
 
-    public User(String userEmail, String userName, String userNickname, String userPassword, String userBirth, boolean userGender, int userPoint) {
+    public void modify(String password){
+        this.userPassword = password;
+    }
+
+    @Builder
+    public User(String userEmail, String userName, String userNickname, String userPassword, String userBirth, boolean userGender, int userPoint, Authority authority) {
         this.userEmail = userEmail;
         this.userName = userName;
         this.userNickname = userNickname;
@@ -47,5 +56,8 @@ public class User {
         this.userBirth = userBirth;
         this.userGender = userGender;
         this.userPoint = userPoint;
+        this.authority = authority;
     }
+
+
 }
