@@ -38,7 +38,7 @@ public class UserItemTest {
     @Test
     @Transactional
     public void testEntity(){
-        User userA = new User("aa123@gmail.com", "aa123", "aa123", "22/04/27", false, 1000);
+        User userA = new User("aa123@gmail.com", "kim", "aa123", "aa123", "22/04/27", false, 1000);
 //        userRepository.save(userA);
         em.persist(userA);
 

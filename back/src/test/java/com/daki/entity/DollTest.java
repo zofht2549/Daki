@@ -3,6 +3,7 @@ package com.daki.entity;
 import com.daki.db.entity.Doll;
 import com.daki.db.entity.Skin;
 import com.daki.db.entity.User;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
@@ -24,8 +25,11 @@ public class DollTest {
     @Transactional // transactional 붙이면 자동으로 롤백됨.
 //    @Rollback(false) //롤백 안할거면
     public void testEntity(){
-        User userA = new User("aa123@gmail.com", "aa123", "aa123", "22/04/27", false, 1000);
+        User userA = new User("aa123@gmail.com", "kim" , "aa123", "aa123", "22/04/27", false, 1000);
         em.persist(userA);
+
+//        Assertions.assertThat(userA.getUserNo()).isEqualTo(13L);
+
 
         Doll dollA = new Doll(100, userA, Skin.black);
         em.persist(dollA);
