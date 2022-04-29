@@ -4,6 +4,7 @@ import com.daki.api.request.TokenRequestDto;
 import com.daki.api.request.UserJoinReq;
 import com.daki.api.request.UserLoginReq;
 import com.daki.api.response.BaseRes;
+import com.daki.api.response.CheckRes;
 import com.daki.api.response.UserJoinRes;
 import com.daki.api.response.UserLoginRes;
 import com.daki.api.service.UserService;
@@ -70,6 +71,32 @@ public class UserController {
     })
     public ResponseEntity<TokenDto> reToken(@RequestBody @ApiParam(value="토큰정보", required = true) TokenRequestDto tokenRequestDto) {
         return ResponseEntity.ok(userService.reissue(tokenRequestDto));
+    }
+
+    @GetMapping("/emailCheck/{userEmail}")
+    @ApiOperation(value = "이메일(=아이디)", notes = "이메일(=아이디) 중복체크요청")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = UserLoginRes.class),
+            @ApiResponse(code = 401, message = "중복 존재", response = BaseRes.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseRes.class)
+    })
+    public ResponseEntity<CheckRes> emailCheck(@PathVariable("userEmail") String userEmail) {
+        boolean findCheck = userService.checkEmail(userEmail);
+        if(findCheck) return ResponseEntity.status(401).body(CheckRes.of("Fail"));
+        else return ResponseEntity.status(401).body(CheckRes.of("OK"));
+    }
+
+    @GetMapping("/nickNameCheck/{nickName}")
+    @ApiOperation(value = "닉네임", notes = "닉네임 중복체크요청")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = UserLoginRes.class),
+            @ApiResponse(code = 401, message = "중복 존재", response = BaseRes.class),
+            @ApiResponse(code = 500, message = "서버 오류", response = BaseRes.class)
+    })
+    public ResponseEntity<CheckRes> nickNameCheck(@PathVariable("nickName") String nickName) {
+        boolean findCheck = userService.checkNickName(nickName);
+        if(findCheck) return ResponseEntity.status(401).body(CheckRes.of("Fail"));
+        else return ResponseEntity.status(401).body(CheckRes.of("OK"));
     }
 
 }

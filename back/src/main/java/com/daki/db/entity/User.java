@@ -43,7 +43,8 @@ public class User {
 
     public User(){}
 
-    public void modify(String password){
+    public void modify(String password, String nickName){
+        this.userNickname = nickName;
         this.userPassword = password;
     }
 

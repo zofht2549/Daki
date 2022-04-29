@@ -1,8 +1,6 @@
 package com.daki.api.service;
 
-import com.daki.api.request.TokenRequestDto;
-import com.daki.api.request.UserJoinReq;
-import com.daki.api.request.UserLoginReq;
+import com.daki.api.request.*;
 import com.daki.common.config.TokenDto;
 import com.daki.common.config.TokenProvider;
 import com.daki.common.util.RefreshToken;
@@ -31,24 +29,11 @@ public class UserServiceImpl implements UserService {
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
-//    @Autowired
-//    AuthenticationManagerBuilder authenticationManagerBuilder;
-//
-//    @Autowired
-//    TokenProvider tokenProvider;
-//
-//    @Autowired
-//    RefreshTokenRepository refreshTokenRepository;
-
     @Autowired
     UserRepository userRepository;
 
     @Autowired
     DollRepository dollRepository;
-
-//    @Autowired
-//    PasswordEncoder passwordEncoder;
-
 
 
     @Transactional
@@ -97,9 +82,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserInfo(String email) {
-        return null;
+    public Boolean checkEmail(String email) {
+        boolean findCheck = userRepository.existsByUserEmail(email);
+        return findCheck;
     }
+
+    @Override
+    public Boolean checkNickName(String nickName) {
+        boolean findCheck = userRepository.existsByUserNickname(nickName);
+        return findCheck;
+    }
+
+    @Override
+    public Boolean checkPassword(UserPasswordReq passwordReq) {
+
+
+        User user = userRepository.findByUserEmail(SecurityUtil.getCurrentUserEmail()).orElseThrow(()
+                -> new RuntimeException("로그인 없음"));
+//        System.out.println("기존 비밀번호 : " + user.getUserPassword());
+//        System.out.println("입력 비밀번호 : " + passwordReq.getMemberPassword() + " => 인코딩 : "+passwordEncoder.encode(passwordReq.getMemberPassword()));
+        return passwordEncoder.matches(passwordReq.getMemberPassword(), user.getUserPassword());
+
+    }
+
 
     @Transactional
     @Override
@@ -134,20 +139,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getMyInfo() {
-        String str = SecurityUtil.getCurrentUserEmail();
-        System.out.println(str);
-//        return userRepository.findByUserEmail(SecurityUtil.getCurrentUserEmail()).orElseThrow(() -> new RuntimeException("로그인 없음"));
-        return null;
+//        String str = SecurityUtil.getCurrentUserEmail();
+//        System.out.println(str);
+        return userRepository.findByUserEmail(SecurityUtil.getCurrentUserEmail()).orElseThrow(()
+                -> new RuntimeException("로그인 없음"));
     }
 
     @Transactional
     @Override
-    public User modify(String password) {
-        User user = userRepository.findByUserEmail(SecurityUtil.getCurrentUserEmail()).orElseThrow(() -> new RuntimeException("로그인 없음"));
-        user.modify(passwordEncoder.encode(password));
+    public void modify(UserModifyReq modifyReq) {
+        User user = userRepository.findByUserEmail(SecurityUtil.getCurrentUserEmail()).orElseThrow(()
+                -> new RuntimeException("로그인 없음"));
+        user.modify(passwordEncoder.encode(modifyReq.getPassword()), modifyReq.getNickName());
 
         userRepository.save(user);
+    }
 
-        return user;
+    @Transactional
+    @Override
+    public void remove() {
+        User user = userRepository.findByUserEmail(SecurityUtil.getCurrentUserEmail()).orElseThrow(()
+                -> new RuntimeException("로그인 없음"));
+        userRepository.delete(user);
     }
 }

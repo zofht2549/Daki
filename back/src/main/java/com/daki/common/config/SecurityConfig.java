@@ -70,6 +70,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/api/auth/**").permitAll()
+                .antMatchers("/api/member/**").hasRole("USER").anyRequest().authenticated()
+
 
                 //메인페이지, 로그인, 회원가입은 토큰이 없는 상태에서 요청이 들어오기때문에 permitAll설정정
 //               .antMatchers("/api/auth/signup").permitAll()
@@ -87,7 +89,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/v2/api-docs/**");
         web.ignoring().antMatchers("/swagger.json");
         web.ignoring().antMatchers("/swagger-ui/**");
+        web.ignoring().antMatchers("/swagger-ui.html/**");
         web.ignoring().antMatchers("/swagger-resources/**");
         web.ignoring().antMatchers("/webjars/**");
+        web.ignoring().antMatchers("/api/auth/**");
+        web.ignoring().antMatchers("/api/auth");
+
     }
 }
