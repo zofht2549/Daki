@@ -18,7 +18,7 @@ public class DollController {
     DollServiceImpl dollService;
 
     @GetMapping
-    public ResponseEntity<DollReadRes> getDollInfo(@RequestParam Long dollNo){
+    public ResponseEntity<DollReadRes> getDollInfo(@RequestParam(value = "dollNo") Long dollNo){
         DollReadRes dollReadRes = dollService.readDollInfo(dollNo);
         return ResponseEntity.status(200).body(dollReadRes);
     }

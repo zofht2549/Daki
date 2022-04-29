@@ -1,12 +1,16 @@
 package com.daki.db.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "diary")
 public class Diary {
 
