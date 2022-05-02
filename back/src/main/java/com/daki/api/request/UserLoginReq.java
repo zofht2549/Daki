@@ -3,9 +3,13 @@ package com.daki.api.request;
 import com.daki.db.entity.Skin;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 @Getter
+@Setter
 @ApiModel("LoginRequest")
 public class UserLoginReq {
     @ApiModelProperty(name="이메일(=ID)")
@@ -14,11 +18,9 @@ public class UserLoginReq {
     @ApiModelProperty(name="비밀번호")
     String password;
 
-    @Override
-    public String toString() {
-        return "UserLoginReq{" +
-                "email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+
+    public UsernamePasswordAuthenticationToken toAuthentication() {
+        return new UsernamePasswordAuthenticationToken(email, password);
     }
+
 }

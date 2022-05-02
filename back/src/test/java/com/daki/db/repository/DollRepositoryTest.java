@@ -23,8 +23,8 @@ class DollRepositoryTest {
 
     @Test
     public void testDoll(){
-        User userA = new User("aa123@gmail.com", "aa123", "aa123", "22/04/27", false, 1000);
-        User userB = new User("aa123@gmail.com", "aa123", "aa123", "22/04/27", false, 1000);
+        User userA = new User("aa123@gmail.com", "kim" ,"aa123", "aa123", "22/04/27", false, 1000);
+        User userB = new User("aa123@gmail.com", "kim", "aa123", "aa123", "22/04/27", false, 1000);
         Doll dollA = new Doll(80, userA, Skin.black);
         Doll dollB = new Doll(90, userB, Skin.black);
 
