@@ -3,17 +3,20 @@
     <label :class="[{'clicked': menu == 'text'}, 'text']" title="텍스트" for="text"
      @click="menuClickHandler" />
     <input type="radio" id="text" value="text" v-model="menu">
+
     <label :class="[{'clicked': menu == 'mic'}, 'mic']" title="음성 녹음" for="mic"
      @click="menuClickHandler" />
     <input type="radio" id="mic" value="mic" v-model="menu">
+
     <label :class="[{'clicked': menu == 'image'}, 'image']" title="이미지 업로드" for="image"
      @click="menuClickHandler" />
     <input type="radio" id="image" value="image" v-model="menu">
+
     <label :class="[{'clicked': menu == 'sticker'}, 'sticker']" title="스티커" for="sticker"
      @click="menuClickHandler" />
     <input type="radio" id="sticker" value="sticker" v-model="menu">
     
-    <text-options v-if="menu == 'text'" />
+    <text-options v-if="menu == 'text'" :selected="selected" />
   </div>
 </template>
 
@@ -23,12 +26,12 @@ import TextOptions from './TextOptions.vue'
 export default {
   data: function(){
     return {
-      menu: this.type,
-      popupShow: false
+      menu: null,
+      isActive: false
     }
   },
   props: {
-    type: String
+    selected: Object
   },
   components: {
     TextOptions
@@ -38,6 +41,29 @@ export default {
       if (this.menu == e.target.htmlFor){
         e.preventDefault();
         this.menu = null
+        this.isActive = false
+      }
+      else {
+        this.isActive = true
+      }
+    }
+  },
+  watch: {
+    selected: function(){
+      if (this.selected){
+        this.menu = this.selected.type
+      }
+      else {
+        this.menu = null
+        this.isActive = false
+      }
+    },
+    menu: function(){
+      if (this.menu){
+        this.$emit('active-menu', {menu: this.menu, isActive: this.isActive})
+      }
+      else {
+        this.$emit('active-menu', {menu: this.menu, isActive: this.isActive})
       }
     }
   }

@@ -1,10 +1,10 @@
 <template>
   <div class="side-options">
-    <option-color-picker />
+    <option-color-picker :color="color" />
 
     <div class="option-box">
-      <option-font-family />
-      <option-font-size />
+      <option-font-family :family="family" />
+      <option-font-size :size="size" />
     </div>
 
     <label :class="[{'clicked': align == 'left'}, 'align-left']" title="왼쪽정렬" for="align-left"
@@ -33,37 +33,63 @@ export default {
   data: function(){
     return {
       align: 'left',
-      bold: false,
-      italic: false,
-      underLine: false,
+      bold: false
     }
+  },
+  props: {
+    selected: Object
   },
   components: {
     OptionColorPicker,
     OptionFontFamily,
     OptionFontSize
   },
+  computed: {
+    color: function(){
+      if (this.selected){
+        return this.selected.fontStyle.color
+      }
+      return null
+    },
+    family: function(){
+      if (this.selected){
+        return this.selected.fontStyle.family
+      }
+      return null
+    },
+    size: function(){
+      if (this.selected){
+        return this.selected.fontStyle.size
+      }
+      return null
+    }
+  },
   methods: {
     optionClickHandler: function(e){
-      if (this.align == e.target.htmlFor.slice(6, )){
+      if (this.align == e.target.htmlFor){
         e.preventDefault();
-        this.align = 'left'
+      }
+    },
+    setter: function(){
+      if (this.selected){
+        this.align = this.selected.fontStyle.align
+        this.bold = this.selected.fontStyle.weight == 'bold' ? true:false
       }
     }
+  },
+  watch: {
+    selected: function(){
+      this.setter()
+    }
+  },
+  mounted: function(){
+    this.setter()
   }
 }
 </script>
 
 <style lang="scss">
   .side-options {
-    .popup-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 1;
-    }
 
     .option-box {
       height: 75%;

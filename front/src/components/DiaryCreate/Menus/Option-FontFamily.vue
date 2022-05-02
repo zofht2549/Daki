@@ -27,16 +27,31 @@ export default {
       active: false
     }
   },
+  props: {
+    family: String
+  },
   computed: {
     fonts: function(){
-      console.log(Fonts)
       return Fonts
     }
   },
   methods: {
     activate: function(payload){
       this.active = payload
+    },
+    setter: function(){
+      if (this.family){
+        this.fontFamily = this.family
+      }
     }
+  },
+  watch: {
+    family: function(){
+      this.setter()
+    }
+  },
+  mounted: function(){
+    this.setter()
   }
 }
 </script>
