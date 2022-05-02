@@ -4,8 +4,7 @@
     <input class="curr-font-size" type="number" v-model.number="currSize" min="1" max="200"
      @click="() => activate(true)" @keypress.enter="keypress" @input="input">
     <div class="font-size-controller" v-if="active"
-     title="글자크기는 1~270까지 가능합니다."
-     @mouseup="drop" @mouseleave="drop" @mousemove="move" >
+     title="글자크기는 1~270까지 가능합니다.">
       <hr class="controller-rail">
       <span class="controller-btn" :style="{left: `${10 + currSize}px`}" 
        @mousedown="drag" @mouseup="drop" />
@@ -22,7 +21,6 @@ export default {
       currSize: 10,
       active: false,
       dragged: false,
-      currPosition: null
     }
   },
   props: {
@@ -32,21 +30,25 @@ export default {
     activate: function(payload){
       this.active = payload
     },
-    drag: function(e){
+    drag: function(){
       this.dragged = true
-      this.currPosition = e.screenX
-    },
-    drop: function(){
-      this.dragged = false
+      const editor = document.querySelector('#editor')
+      editor.addEventListener('mousemove', this.move)
+      editor.addEventListener('mouseup', this.drop)
     },
     move: function(e){
       if (this.dragged){
-        const temp = e.screenX - this.currPosition
+        const temp = e.movementX
         if (temp + this.currSize > 0 && temp + this.currSize <= 270){
           this.currSize += temp
-          this.currPosition = e.screenX
         }
       }
+    },
+    drop: function(){
+      this.dragged = false
+      const editor = document.querySelector('#editor')
+      editor.addEventListener('mousemove', this.move)
+      editor.addEventListener('mouseup', this.drop)
     },
     keypress: function(){
       this.active = false
@@ -59,19 +61,29 @@ export default {
         this.currSize = 1
       }
     },
-    setter: function(){
+    /// 선택된 요소의 값을 현재 값에 부여 ///
+    getter: function(){
       if (this.size){
         this.currSize = this.size
       }
+    },
+    /// 변경된 현재 값을 선택된 요소에 적용 ///
+    setter: function(){
+      this.$parent.$parent.$parent.$emit('value-change', {size: this.currSize})
     }
   },
   watch: {
     size: function(){
-      this.setter()
+      this.getter()
+    },
+    currSize: function(){
+      if (this.currSize !== this.size){
+        this.setter()
+      }
     }
   },
   mounted: function(){
-    this.setter()
+    this.getter()
   }
 }
 </script>

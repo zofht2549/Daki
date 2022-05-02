@@ -32,9 +32,24 @@ export default {
   props: {
     item: Object,
     idx: Number,
-    selected: Boolean
+    selected: Boolean,
+    canvasSize: Object
   },
   methods: {
+    initItems: function(){
+      if (typeof(this.item.width) == 'string'){
+        this.width = this.canvasSize.w * Number(this.item.width.replace('%', '')) / 100
+      }
+      if (typeof(this.item.height) == 'string'){
+        this.height = this.canvasSize.h * Number(this.item.height.replace('%', '')) / 100
+      }
+      if (typeof(this.item.top) == 'string'){
+        this.top = this.canvasSize.h * Number(this.item.top.replace('%', '')) / 100
+      }
+      if (typeof(this.item.left) == 'string'){
+        this.left = this.canvasSize.w * Number(this.item.left.replace('%', '')) / 100
+      }
+    },
     clickHandler: function(){
       if (!this.selected){
         this.$emit('select', this.idx)
@@ -59,15 +74,17 @@ export default {
       }
     },
     dropResize: function(){
-      this.resizable = false
-      const canvas = document.querySelector('#canvas-container')
-      canvas.removeEventListener('mousemove', this.resize)
-      canvas.removeEventListener('mouseup', this.dropResize)
+      if (this.resizable){
+        this.resizable = false
+        const canvas = document.querySelector('#canvas-container')
+        canvas.removeEventListener('mousemove', this.resize)
+        canvas.removeEventListener('mouseup', this.dropResize)
+        this.$emit('value-change', {width: this.width, height: this.height})
+      }
     },
     /// 드래그 & 드랍 ///
     dragMove: function(e){
-      console.log(e)
-      if (e.target.tagName !== 'SPAN'){
+      if (this.selected && e.target.tagName !== 'SPAN'){
         this.draggable = true
         const canvas = document.querySelector('#canvas-container')
         canvas.addEventListener('mousemove', this.move)
@@ -80,10 +97,12 @@ export default {
       }
     },
     dropMove: function(){
-      console.log('drop!!!')
-      this.draggable = false
-      const canvas = document.querySelector('#canvas-container')
-      canvas.removeEventListener('mousemove', this.move)
+      if (this.draggable){
+        this.draggable = false
+        const canvas = document.querySelector('#canvas-container')
+        canvas.removeEventListener('mousemove', this.move)
+        this.$emit('value-change', {top: this.top, left: this.left})
+      }
     },
   },
   watch: {
@@ -95,14 +114,13 @@ export default {
         this.editable = false
         this.resizable = false
       }
+    },
+    canvasSize: function(){
+      this.initItems()
     }
   },
   mounted: function(){
-    const canvas = document.querySelector('#canvas-container')
-    this.width = canvas.clientWidth * Number(this.width.replace('%', '')) / 100
-    this.height = canvas.clientHeight * Number(this.height.replace('%', '')) / 100
-    this.top = canvas.clientHeight * Number(this.top.replace('%', '')) / 100
-    this.left = canvas.clientWidth * Number(this.left.replace('%', '')) / 100
+    this.initItems()
   }
 }
 </script>

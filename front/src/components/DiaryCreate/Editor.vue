@@ -1,7 +1,7 @@
 <template>
-  <article id="editor">
+  <article id="editor" ref="editor">
     <menu-bar @active-menu="params => activate(params)" :selected="selected" />
-    <Canvas :type="type" :isActive="isActive" @deactivate="deactivate" @select="tar => select(tar)" />
+    <Canvas :type="type" :isActive="isActive" :changes="changes" @deactivate="deactivate" @select="tar => select(tar)" />
   </article>
 </template>
 
@@ -14,7 +14,8 @@ export default {
     return {
       type: null,
       isActive: false,
-      selected: null
+      selected: null,
+      changes: null,
     }
   },
   components: {
@@ -31,7 +32,15 @@ export default {
     },
     select: function(tar){
       this.selected = tar
+    },
+    setter: function(payload){
+      if (this.selected){
+        this.changes = payload
+      }
     }
+  },
+  mounted: function(){
+    this.$on('value-change', payload => this.setter(payload))
   }
 }
 </script>

@@ -2,11 +2,11 @@
   <div :class="[{'clicked': active}, 'font-family-container']"
    :title="active ? '':'글자체'">
     <p class="curr-font-family" @click="() => activate(true)"
-     :style="{fontFamily: fontFamily}">
-      {{ fonts[fontFamily] }}
+     :style="{fontFamily: currFamily}">
+      {{ fonts[currFamily] }}
     </p>
     <ul class="font-family-list" v-if="active">
-      <li :class="['font-family-item', {'chosen': font == fontFamily}]" v-for="(name, font) in fonts"
+      <li :class="['font-family-item', {'chosen': font == currFamily}]" v-for="(name, font) in fonts"
        :key="font" :style="{ fontFamily: font }">
         {{ name }}
       </li>
@@ -23,7 +23,7 @@ import './Fonts.scss'
 export default {
   data: function(){
     return {
-      fontFamily: 'HallymMjo-Regular',
+      currFamily: 'HallymMjo-Regular',
       active: false
     }
   },
@@ -39,19 +39,29 @@ export default {
     activate: function(payload){
       this.active = payload
     },
-    setter: function(){
+    /// 선택된 요소의 값을 현재 값에 부여 ///
+    getter: function(){
       if (this.family){
-        this.fontFamily = this.family
+        this.currFamily = this.family
       }
+    },
+    /// 변경된 현재 값을 선택된 요소에 적용 ///
+    setter: function(){
+      this.$parent.$parent.$parent.$emit('value-change', {family: this.currFamily})
     }
   },
   watch: {
     family: function(){
-      this.setter()
+      this.getter()
+    },
+    currFamily: function(){
+      if (this.currFamily !== this.family){
+        this.setter()
+      }
     }
   },
   mounted: function(){
-    this.setter()
+    this.getter()
   }
 }
 </script>

@@ -30,19 +30,29 @@ export default {
       console.log(e.target)
       this.active = false
     },
-    setter: function(){
+    /// 선택된 요소의 값을 현재 값에 부여 ///
+    getter: function(){
       if (this.color){
         this.currColor = this.color
       }
+    },
+    /// 변경된 현재 값을 선택된 요소에 적용 ///
+    setter: function(){
+      this.$parent.$parent.$parent.$emit('value-change', {color: this.currColor})
     }
   },
   watch: {
     color: function(){
-      this.setter()
+      this.getter()
+    },
+    currColor: function(){
+      if (this.currColor !== this.color){
+        this.setter()
+      }
     }
   },
   mounted: function(){
-    this.setter()
+    this.getter()
   }
 }
 </script>

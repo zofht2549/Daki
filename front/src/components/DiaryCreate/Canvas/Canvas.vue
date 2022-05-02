@@ -1,7 +1,9 @@
 <template>
-  <div id="canvas-container" ref="canvas">
-    <canvas-item v-for="(item, idx) in items" :key="item.content ? item.content + idx : item.imgUrl + idx" :item="item" :idx="idx" :selected="selected == idx ? true:false"
+  <div id="canvas-container" ref="canvas" @click="createNewOne">
+    <canvas-item v-for="(item, idx) in items" :key="item.content ? item.content + idx : item.imgUrl + idx" :item="item" :idx="idx" 
+    :selected="selected == idx ? true:false" :canvasSize="{w: canvasWidth, h: canvasHeight}"
      @select="idx => select(idx)" @remove-item="idx => removeItem(idx)"
+     @value-change="payload => valueChange(payload)"
      ref="canvas-item"/>
   </div>
 </template>
@@ -15,12 +17,15 @@ export default {
     return {
       cursorType: null,
       items: null,
-      selected: null
+      selected: null,
+      canvasWidth: null,
+      canvasHeight: null
     }
   },
   props: {
     type: String,
-    isActive: Boolean
+    isActive: Boolean,
+    changes: Object
   },
   components: {
     CanvasItem
@@ -65,6 +70,17 @@ export default {
     },
     removeItem: function(idx){
       this.items.splice(idx, 1)
+    },
+    getCanvasSize: function(){
+      this.canvasWidth = this.$refs.canvas.clientWidth
+      this.canvasHeight = this.$refs.canvas.clientHeight
+    },
+    valueChange: function(payload){
+      const tar = {...this.items[this.selected]}
+      for (const key of Object.keys(payload)){
+        tar[key] = payload[key]
+      }
+      this.$set(this.items, this.selected, tar)
     }
   },
   watch: {
@@ -78,13 +94,21 @@ export default {
       else {
         this.$refs.canvas.style.cursor = 'auto'
       }
+    },
+    changes: function(){
+      const key = Object.keys(this.changes)[0]
+      this.$set(this.items[this.selected].fontStyle, key, this.changes[key])
     }
   },
   created: function(){
     this.items = items
   },
   mounted: function(){
-    this.$refs.canvas.addEventListener('click', this.createNewOne)
+    this.getCanvasSize()
+    window.addEventListener('resize', this.getCanvasSize)
+  },
+  destroyed: function(){
+    window.removeEventListener('resize', this.getCanvasSize)
   }
 }
 </script>

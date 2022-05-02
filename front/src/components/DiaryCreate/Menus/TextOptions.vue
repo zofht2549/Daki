@@ -70,20 +70,28 @@ export default {
         e.preventDefault();
       }
     },
-    setter: function(){
+    getter: function(){
       if (this.selected){
         this.align = this.selected.fontStyle.align
         this.bold = this.selected.fontStyle.weight == 'bold' ? true:false
       }
+    },
+    setter: function(){
+      this.$parent.$parent.$emit('value-change', {align: this.align})
     }
   },
   watch: {
     selected: function(){
-      this.setter()
+      this.getter()
+    },
+    align: function(){
+      if (this.align !== this.selected.fontStyle.align){
+        this.setter()
+      }
     }
   },
   mounted: function(){
-    this.setter()
+    this.getter()
   }
 }
 </script>
