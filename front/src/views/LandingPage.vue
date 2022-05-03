@@ -10,7 +10,7 @@
           <br>
           <span>일기쓰기</span>
         </div>
-        <button>로그인</button>
+        <button @click="goToLogin">로그인</button>
       </div>
     </header>
     <section class="bgcolor content-padding">
@@ -71,7 +71,12 @@
 
 <script>
 export default {
-  name: 'LandingPage',  
+  name: 'LandingPage',
+  methods:{
+    goToLogin:function(){
+      this.$router.push({ name: 'Login' })
+    }
+  }
 }
 </script>
 
@@ -149,8 +154,6 @@ export default {
 
   .bgcolor{
     background-color:#93D9CE;
-    // display: table-cell;
-    // vertical-align: middle;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -163,14 +166,6 @@ export default {
       color: #fff;
       text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.25);
       font-family: kyobo;
-
-      // display: flex;
-      // align-items: center;
-
-      // margin-top: auto;
-      // margin-bottom: auto;
-
-      // display: inline-block;
     }
     .image{
       margin: 5%;
@@ -181,14 +176,8 @@ export default {
       transform: translate(800px,150px);
     }
   }
-  .edit-bg{
-  }
+
   .start{
-    // display: flex;
-    // align-items: center;
-    // text-align: center;
-    // width: 100%;
-    // margin: 0;
     display: inline-block;
     margin-right: auto;
     margin-left: auto;
