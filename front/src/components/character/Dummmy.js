@@ -70,28 +70,52 @@ export default [
     },
     {
         id:'9',
-        title:'슈퍼맨 머리',
+        title:'고양이귀',
         categories:1,
-        image:require('@/assets/character/hair.png'),
+        image:require('@/assets/character/hair2.png'),
         own:'false',
         price: 1000,
 
     },
     {
         id:'10',
-        title:'슈퍼맨 머리',
+        title:'스미티 워벤 재거 맨 잰슨의 모자',
         categories:1,
-        image:require('@/assets/character/hair.png'),
+        image:require('@/assets/character/hair3.png'),
         own:'false',
         price: 1000,
 
-    },    {
+    },    
+    {
         id:'11',
-        title:'슈퍼맨 머리',
+        title:'직원용 유니폼',
         categories:1,
-        image:require('@/assets/character/hair.png'),
+        image:require('@/assets/character/hair4.png'),
         own:'false',
         price: 1000,
-
+    },
+    {
+        id:'12',
+        title:'누군가의 옷',
+        categories:0,
+        image:require('@/assets/character/cloth3.png'),
+        own:'false',
+        price: 1000,
+    },
+    {
+        id:'13',
+        title:'17세기 국자',
+        categories:3,
+        image:require('@/assets/character/deco1.png'),
+        own:'false',
+        price: 1000,
+    },
+    {
+        id:'14',
+        title:'게살버거',
+        categories:3,
+        image:require('@/assets/character/deco2.png'),
+        own:'false',
+        price: 1000,
     },
 ]
