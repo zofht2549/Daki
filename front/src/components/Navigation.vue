@@ -13,7 +13,7 @@
         </router-link>
       </li>
       <li :class="{'menu':true, 'now': true}">
-        <router-link to="">
+        <router-link to="/mypage">
           마이페이지
         </router-link>
       </li>
