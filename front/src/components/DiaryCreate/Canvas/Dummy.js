@@ -11,7 +11,8 @@ export const items = [
       size: 16,
       color: "#3929EA",
       family: 'twayair',
-      weight: 'regular',
+      weight: 'normal',
+      underline: false,
       align: 'center'
     }
   },
@@ -27,7 +28,8 @@ export const items = [
       size: null,
       color: null,
       family: null,
-      isBold: null,
+      weight: null,
+      underline: false,
       align: null
     }
   },
@@ -44,6 +46,7 @@ export const items = [
       color: "#E9238A",
       family: 'Pretendard',
       weight: 'bold',
+      underline: false,
       align: 'right'
     }
   },

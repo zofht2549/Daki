@@ -7,6 +7,14 @@
       <option-font-size :size="size" />
     </div>
 
+    <label :class="[{'clicked': bold}, 'bold']" title="굵게" for="bold">
+      <input type="checkbox" id="bold" v-model="bold">
+     </label>
+
+    <label :class="[{'clicked': underline}, 'underline']" title="밑줄" for="underline">
+      <input type="checkbox" id="underline" v-model="underline">
+     </label>
+
     <label :class="[{'clicked': align == 'left'}, 'align-left']" title="왼쪽정렬" for="align-left"
      @click="optionClickHandler">
       <input type="radio" id="align-left" value="left" v-model="align">
@@ -33,7 +41,8 @@ export default {
   data: function(){
     return {
       align: 'left',
-      bold: false
+      bold: false,
+      underline: false
     }
   },
   props: {
@@ -74,10 +83,12 @@ export default {
       if (this.selected){
         this.align = this.selected.fontStyle.align
         this.bold = this.selected.fontStyle.weight == 'bold' ? true:false
+        this.underline = this.selected.fontStyle.underline == 'underline' ? true:false
       }
     },
-    setter: function(){
-      this.$parent.$parent.$emit('value-change', {align: this.align})
+    setter: function(payload){
+      /// to Editor.vue ///
+      this.$parent.$parent.$emit('value-change', payload)
     }
   },
   watch: {
@@ -86,8 +97,14 @@ export default {
     },
     align: function(){
       if (this.align !== this.selected.fontStyle.align){
-        this.setter()
+        this.setter({align: this.align})
       }
+    },
+    bold: function(){
+      this.setter({weight: this.bold ? 'bold':'normal'})
+    },
+    underline: function(){
+      this.setter({underline: this.underline ? 'underline':'none'})
     }
   },
   mounted: function(){
@@ -104,6 +121,14 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+    }
+
+    .bold {
+      background-image: url('../../../assets/Editor/bold.png');
+    }
+
+    .underline {
+      background-image: url('../../../assets/Editor/underline.png');
     }
 
     .align-left {

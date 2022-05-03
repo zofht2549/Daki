@@ -1,7 +1,9 @@
 <template>
   <article id="editor" ref="editor">
-    <menu-bar @active-menu="params => activate(params)" :selected="selected" />
-    <Canvas :type="type" :isActive="isActive" :changes="changes" @deactivate="deactivate" @select="tar => select(tar)" />
+    <menu-bar :selected="selected" 
+     @active-menu="params => activate(params)" @image-upload="file => fileSetter(file)" />
+    <Canvas :type="type" :isActive="isActive" :changes="changes" :file="file"
+     @deactivate="deactivate" @select="tar => select(tar)" />
   </article>
 </template>
 
@@ -16,6 +18,7 @@ export default {
       isActive: false,
       selected: null,
       changes: null,
+      file: null
     }
   },
   components: {
@@ -29,18 +32,23 @@ export default {
     },
     deactivate: function(){
       this.isActive = false
+      this.changes = null
+      this.file = null
     },
     select: function(tar){
       this.selected = tar
     },
-    setter: function(payload){
+    changeSetter: function(payload){
       if (this.selected){
         this.changes = payload
       }
+    },
+    fileSetter: function(file){
+      this.file = file
     }
   },
   mounted: function(){
-    this.$on('value-change', payload => this.setter(payload))
+    this.$on('value-change', payload => this.changeSetter(payload))
   }
 }
 </script>

@@ -13,6 +13,7 @@
     "one-colorpicker": "^1.0.12",
     "v-calendar": "^2.4.1",
     "vue": "^2.6.14",
+    "vue-image-upload-resize": "^2.3.0",
     "vue-perfect-scrollbar": "^0.2.1",
     "vue-router": "^3.5.1",
     "vuex": "^3.6.2"

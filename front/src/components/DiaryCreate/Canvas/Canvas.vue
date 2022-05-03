@@ -5,6 +5,9 @@
      @select="idx => select(idx)" @remove-item="idx => removeItem(idx)"
      @value-change="payload => valueChange(payload)"
      ref="canvas-item"/>
+
+    <img v-if="file && isActive" :src="file" class="image-preview" ref="preview"
+     :style="{top: `${mouseY}px`, left: `${mouseX}px`}" >
   </div>
 </template>
 
@@ -19,13 +22,16 @@ export default {
       items: null,
       selected: null,
       canvasWidth: null,
-      canvasHeight: null
+      canvasHeight: null,
+      mouseX: null,
+      mouseY: null
     }
   },
   props: {
     type: String,
     isActive: Boolean,
-    changes: Object
+    changes: Object,
+    file: String
   },
   components: {
     CanvasItem
@@ -38,21 +44,29 @@ export default {
       }
       if (this.isActive){
         const canvas = this.$refs.canvas
-        const temp = {
+        let temp = {
           type: this.cursorType,
           top: `${e.offsetY / canvas.clientHeight * 100}%`,
           left: `${e.offsetX / canvas.clientWidth * 100}%`,
-          width: '100px',
-          height: '100px',
+          width: 200,
+          height: 100,
           imgUrl: null,
           content: null,
           fontStyle: {
-            size: null,
-            family: null,
-            weight: null,
-            align: null
+            size: 16,
+            family: 'HallymMjo-Regular',
+            weight: 'normal',
+            align: 'left'
           }
         }
+
+        if (this.cursorType == 'image'){
+          const preview = this.$refs.preview
+          temp.width = preview.width
+          temp.height = preview.height
+          temp.imgUrl = this.file
+        }
+
         this.items.push(temp)
         this.selected = this.$refs['canvas-item'].length
         this.$emit('select', temp)
@@ -81,6 +95,16 @@ export default {
         tar[key] = payload[key]
       }
       this.$set(this.items, this.selected, tar)
+    },
+    mouseMove: function(e){
+      if (this.mouseX == null){
+        this.mouseX = e.offsetX
+      }
+      if (this.mouseY == null){
+        this.mouseY = e.offsetY
+      }
+      this.mouseX += e.movementX
+      this.mouseY += e.movementY
     }
   },
   watch: {
@@ -91,13 +115,27 @@ export default {
       if (this.cursorType == 'text'){
         this.$refs.canvas.style.cursor = 'text'
       }
+      else if (this.cursorType == 'image'){
+        this.$refs.canvas.style.cursor = 'none'
+      }
       else {
         this.$refs.canvas.style.cursor = 'auto'
       }
     },
     changes: function(){
-      const key = Object.keys(this.changes)[0]
-      this.$set(this.items[this.selected].fontStyle, key, this.changes[key])
+      if (this.changes){
+        const key = Object.keys(this.changes)[0]
+        this.$set(this.items[this.selected].fontStyle, key, this.changes[key])
+      }
+    },
+    file: function(){
+      const canvas = this.$refs.canvas
+      if (this.file){
+        canvas.addEventListener('mousemove', this.mouseMove)
+      }
+      else {
+        canvas.removeEventListener('mousemove', this.mouseMove)
+      }
     }
   },
   created: function(){
@@ -122,5 +160,10 @@ export default {
     background-color: white;
     box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.35);
     overflow: hidden;
+
+    .image-preview {
+      position: absolute;
+      z-index: 987654321;
+    }
   }
 </style>

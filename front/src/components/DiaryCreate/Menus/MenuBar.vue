@@ -9,7 +9,8 @@
     <input type="radio" id="mic" value="mic" v-model="menu">
 
     <label :class="[{'clicked': menu == 'image'}, 'image']" title="이미지 업로드" for="image"
-     @click="menuClickHandler" />
+     @click="menuClickHandler">
+    </label>
     <input type="radio" id="image" value="image" v-model="menu">
 
     <label :class="[{'clicked': menu == 'sticker'}, 'sticker']" title="스티커" for="sticker"
@@ -17,24 +18,30 @@
     <input type="radio" id="sticker" value="sticker" v-model="menu">
     
     <text-options v-if="menu == 'text'" :selected="selected" />
+    
+    <image-uploader  v-model="file" :maxSize="3"
+      :id="'file-input'" :maxWidth="500" :maxHeight="500" :preview="false" />
   </div>
 </template>
 
 <script>
 import TextOptions from './TextOptions.vue'
+import ImageUploader from 'vue-image-upload-resize'
 
 export default {
   data: function(){
     return {
       menu: null,
-      isActive: false
+      isActive: false,
+      file: null
     }
   },
   props: {
     selected: Object
   },
   components: {
-    TextOptions
+    TextOptions,
+    ImageUploader
   },
   methods: {
     menuClickHandler: function(e){
@@ -45,6 +52,9 @@ export default {
       }
       else {
         this.isActive = true
+        if (e.target.htmlFor == 'image'){
+          document.querySelector('#file-input').click()
+        }
       }
     }
   },
@@ -64,6 +74,11 @@ export default {
       }
       else {
         this.$emit('active-menu', {menu: this.menu, isActive: this.isActive})
+      }
+    },
+    file: function(){
+      if (this.file){
+        this.$emit('image-upload', this.file)
       }
     }
   }
@@ -98,10 +113,11 @@ export default {
       
       &.clicked {
         background-color: #cccccc;
+        z-index: 9;
       }
     }
 
-    input[type="radio"], input[type="checkbox"]{
+    input[type="radio"], input[type="checkbox"], input[type="file"]{
       display: none;
     }
 
@@ -122,6 +138,7 @@ export default {
 
     .image {
       background-image: url('../../../assets/Editor/image.png');
+
     }
 
     .sticker {

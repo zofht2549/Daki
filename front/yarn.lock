@@ -2005,6 +2005,11 @@
   "resolved" "https://registry.npmjs.org/bluebird/-/bluebird-3.7.2.tgz"
   "version" "3.7.2"
 
+"blueimp-canvas-to-blob@^3.14.0":
+  "integrity" "sha512-0pcSSGxC0QxT+yVkivxIqW0Y4VlO2XSDPofBAqoJ1qJxgH9eiUDLv50Rixij2cDuEfx4M6DpD9UGZpRhT5Q8qg=="
+  "resolved" "https://registry.npmjs.org/blueimp-canvas-to-blob/-/blueimp-canvas-to-blob-3.29.0.tgz"
+  "version" "3.29.0"
+
 "body-parser@1.19.2":
   "integrity" "sha512-SAAwOxgoCKMGs9uUAUFHygfLAyaniaoun6I8mFY9pRAJL9+Kec34aU+oIjDhTycub1jozEfEwx1W1IuOYxVSFw=="
   "resolved" "https://registry.npmjs.org/body-parser/-/body-parser-1.19.2.tgz"
@@ -6170,6 +6175,14 @@
   "resolved" "https://registry.npmjs.org/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz"
   "version" "2.3.4"
 
+"vue-image-upload-resize@^2.3.0":
+  "integrity" "sha512-ElzyAVCluiDt8xSZkSK9FbuLY5mr23JlO4cHyyRo86RfEGLWtvXrTq7vYOgDstT8rNBmnTgNCkPKc0rpmyl1yA=="
+  "resolved" "https://registry.npmjs.org/vue-image-upload-resize/-/vue-image-upload-resize-2.3.0.tgz"
+  "version" "2.3.0"
+  dependencies:
+    "blueimp-canvas-to-blob" "^3.14.0"
+    "vue" "^2.5.17"
+
 "vue-loader@^17.0.0":
   "integrity" "sha512-OWSXjrzIvbF2LtOUmxT3HYgwwubbfFelN8PAP9R9dwpIkj48TVioHhWWSx7W7fk+iF5cgg3CBJRxwTdtLU4Ecg=="
   "resolved" "https://registry.npmjs.org/vue-loader/-/vue-loader-17.0.0.tgz"
@@ -6210,7 +6223,7 @@
   "resolved" "https://registry.npmjs.org/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz"
   "version" "1.9.1"
 
-"vue@^2 || ^3.2.13", "vue@^2.0.0", "vue@^2.5.18", "vue@^2.6.14":
+"vue@^2 || ^3.2.13", "vue@^2.0.0", "vue@^2.5.17", "vue@^2.5.18", "vue@^2.6.14":
   "integrity" "sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ=="
   "resolved" "https://registry.npmjs.org/vue/-/vue-2.6.14.tgz"
   "version" "2.6.14"

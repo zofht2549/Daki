@@ -69,6 +69,7 @@ export default {
     },
     /// 변경된 현재 값을 선택된 요소에 적용 ///
     setter: function(){
+      /// to Editor.vue ///
       this.$parent.$parent.$parent.$emit('value-change', {size: this.currSize})
     }
   },
@@ -95,7 +96,7 @@ export default {
     z-index: 1;
 
     &.clicked {
-      z-index: 2;
+      z-index: 9999;
     }
 
     .curr-font-size {

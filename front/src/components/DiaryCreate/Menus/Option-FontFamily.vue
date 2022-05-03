@@ -1,13 +1,13 @@
 <template>
   <div :class="[{'clicked': active}, 'font-family-container']"
-   :title="active ? '':'글자체'">
+   :title="active ? '':fonts[currFamily]">
     <p class="curr-font-family" @click="() => activate(true)"
      :style="{fontFamily: currFamily}">
       {{ fonts[currFamily] }}
     </p>
     <ul class="font-family-list" v-if="active">
       <li :class="['font-family-item', {'chosen': font == currFamily}]" v-for="(name, font) in fonts"
-       :key="font" :style="{ fontFamily: font }">
+       :key="font" :style="{ fontFamily: font }" @click="() => fontChange(font)">
         {{ name }}
       </li>
     </ul>
@@ -39,6 +39,11 @@ export default {
     activate: function(payload){
       this.active = payload
     },
+    fontChange: function(font){
+      console.log(font)
+      this.currFamily = font
+      this.active = false
+    },
     /// 선택된 요소의 값을 현재 값에 부여 ///
     getter: function(){
       if (this.family){
@@ -47,6 +52,7 @@ export default {
     },
     /// 변경된 현재 값을 선택된 요소에 적용 ///
     setter: function(){
+      /// to Editor.vue ///
       this.$parent.$parent.$parent.$emit('value-change', {family: this.currFamily})
     }
   },
@@ -73,11 +79,16 @@ export default {
     z-index: 1;
 
     &.clicked {
-      z-index: 2;
+      z-index: 9999;
     }
 
     .curr-font-family {
       font-size: 1rem;
+      width: 100px;
+      height: 1.5rem;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       margin: 0;
       cursor: pointer;
     }

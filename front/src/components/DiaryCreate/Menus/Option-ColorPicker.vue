@@ -38,6 +38,7 @@ export default {
     },
     /// 변경된 현재 값을 선택된 요소에 적용 ///
     setter: function(){
+      /// to Editor.vue ///
       this.$parent.$parent.$parent.$emit('value-change', {color: this.currColor})
     }
   },
@@ -74,7 +75,7 @@ export default {
       }
 
       &.clicked {
-        z-index: 2;
+        z-index: 9999;
       }
     }
     

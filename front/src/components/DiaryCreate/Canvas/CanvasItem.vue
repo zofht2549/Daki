@@ -4,17 +4,20 @@
    @click="clickHandler" @dblclick="dbclickHandler" @mousedown="dragMove" @mouseup="dropMove"
    ref="item">
     <textarea v-if="type == 'text'" :class="[`canvas-${item.type}`]"
-     v-model="content" :disabled="!editable"
+     v-model="content" :disabled="!editable" @change="changeHandler"
      :style="{
       fontSize: `${fontStyle.size}px`, fontFamily: fontStyle.family, color: fontStyle.color,
-      fontWeight: fontStyle.weight, textAlign: fontStyle.align}">
+      fontWeight: fontStyle.weight, textDecoration: fontStyle.underline, textAlign: fontStyle.align}">
     </textarea>
 
     <img v-else :class="[`canvas-${item.type}`]"
      :src="item.imgUrl" draggable="false">
 
-    <span v-show="selected" class="size-controller" 
-    @mousedown="dragResize" />
+    <span v-show="selected" class="size-controller" @mousedown="dragResize" />
+
+    <button v-show="selected" class="remover" @click="removeItem">
+      지우기
+    </button>
   </div>
 </template>
 
@@ -50,6 +53,11 @@ export default {
         this.left = this.canvasSize.w * Number(this.item.left.replace('%', '')) / 100
       }
     },
+    removeItem: function(){
+      if (confirm('지우시겠습니까?')){
+        this.$emit('remove-item', this.idx)
+      }
+    },
     clickHandler: function(){
       if (!this.selected){
         this.$emit('select', this.idx)
@@ -60,8 +68,12 @@ export default {
         this.editable = true
       }
     },
+    changeHandler: function(){
+      this.$emit('value-change', {content: this.content})
+    },
     /// 리사이즈 ///
     dragResize: function(){
+      console.log('why?')
       this.resizable = true
       const canvas = document.querySelector('#canvas-container')
       canvas.addEventListener('mousemove', this.resize)
@@ -84,7 +96,7 @@ export default {
     },
     /// 드래그 & 드랍 ///
     dragMove: function(e){
-      if (this.selected && e.target.tagName !== 'SPAN'){
+      if (this.selected && !this.editable && e.target.tagName !== 'SPAN'){
         this.draggable = true
         const canvas = document.querySelector('#canvas-container')
         canvas.addEventListener('mousemove', this.move)
@@ -129,7 +141,6 @@ export default {
   .canvas-item {
     position: absolute;
     margin: 0;
-    overflow: hidden;
     display: flex;
 
     & * {
@@ -178,6 +189,24 @@ export default {
       border-bottom: 0;
       border-right: 20px rgba(170, 170, 170, 0.5) solid;
     }
-  }
 
+    .remover {
+      position: absolute;
+      top: -25px;
+      right: 0;
+      width: 40px;
+      height: 20px;
+      color: white;
+      background-color: rgb(255, 100, 100);
+      border-radius: 5px;
+      font-size: 0.5rem;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgb(255, 85, 85);
+      }
+    }
+  }
 </style>
