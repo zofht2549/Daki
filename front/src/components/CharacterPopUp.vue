@@ -24,16 +24,16 @@
               <img src="@/assets/coin.png" alt=""><span>5000P</span><button>포인트 충전</button>
             </div>
           </article>
-          <article>
+          <article class="inventory-box">
             <h3>인벤토리</h3>
             <div class="inventory">
               <div class="tab-box">
-                <span @click="() => tab = 0" :class="{'tab':true, 'active': tab == 0}">치장</span>
-                <span @click="() => tab = 1" :class="{'tab':true, 'active': tab == 1}">장식</span>
+                <span @click="() => tab = 0" :class="{'tab':true, 'active': tab == 0}">옷</span>
+                <span @click="() => tab = 1" :class="{'tab':true, 'active': tab == 1}">머리</span>
                 <span @click="() => tab = 2" :class="{'tab':true, 'active': tab == 2}">배경</span>
-                <span @click="() => tab = 3" :class="{'tab':true, 'active': tab == 3}">프레임</span>
+                <span @click="() => tab = 3" :class="{'tab':true, 'active': tab == 3}">장식</span>
               </div>
-              <inventory-box />
+              <inventory-box :tab="tab"/>
             </div>
           </article>
       </section>
@@ -48,7 +48,14 @@ export default {
 	data: () => {
 	return {
 		tab: 0,
-		target: null
+		target: null,
+
+    // list: [
+    //   { id : 1, label: 'Tab1', content:'콘텐츠1'},
+    //   { id : 2, label: 'Tab2', content:'콘텐츠2'},
+    //   { id : 3, label: 'Tab3', content:'콘텐츠3'},
+    //   { id : 4, label: 'Tab4', content:'콘텐츠4'},
+    // ]
 	}
 },
   props:{
@@ -192,7 +199,11 @@ export default {
 							}
 						}
 					}
+          & > .inventory-box{
+            width: 100%;
+          }
           & > article{
+
             margin: 10px;
             & > .inventory{
               box-shadow: inset 1px 2px 4px rgba(0, 0, 0, 0.25);

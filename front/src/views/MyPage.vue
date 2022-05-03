@@ -75,6 +75,7 @@ export default {
   name: 'MyPage',
 	data: () => {
 		return {
+			
 			popupVal : false,
 			target : false,
 
