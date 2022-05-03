@@ -1,5 +1,6 @@
 package com.daki.db.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Builder
 @Table(name = "reply")
 public class Reply {
 
@@ -30,6 +32,14 @@ public class Reply {
     private Board board;
 
     public Reply(String replyContent, LocalDateTime replyDate, User user, Board board) {
+        this.replyContent = replyContent;
+        this.replyDate = replyDate;
+        this.user = user;
+        this.board = board;
+    }
+
+    public Reply(Long replyNo, String replyContent, LocalDateTime replyDate, User user, Board board) {
+        this.replyNo = replyNo;
         this.replyContent = replyContent;
         this.replyDate = replyDate;
         this.user = user;

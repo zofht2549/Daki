@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/api/board")
 public class BoardController {
 
@@ -38,7 +38,18 @@ public class BoardController {
 
     @PostMapping
     public Long regist(@RequestBody BoardRegistReqDto reqDto, Authentication authentication) {
+
+        if(authentication.getDetails() == null) {
+            System.out.println("유저가 없습니다");
+        }
+
         User user = (User) authentication.getDetails();
+        if(user == null) {
+            System.out.println("유저가 없습니다");
+        }
+        else {
+
+        }
         return boardService.register(reqDto, user);
     }
 
