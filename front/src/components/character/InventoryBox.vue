@@ -1,6 +1,12 @@
 <template>
     <div id="inventory-container">
-        <div class="item">
+        <item-card
+            v-for="item in Hello" :key="item.id"
+            :item="item"
+            :tab="tab"></item-card>
+            <!-- {{ item.title }} -->
+
+        <!-- <div class="item">
             <img src="@/assets/character/item.png" alt="">
             <p>item name</p>
         </div>
@@ -12,31 +18,66 @@
                     <div><img src="@/assets/coin.png" alt=""> 1000P</div>
                     <div><img src="@/assets/heart.png" alt=""> +5</div>
                 </div>
-
             </div>
         </div>
-
         <div class="item">
             <img src="@/assets/character/item.png" alt="">
             <p>item name</p>
-        </div>
+        </div> -->
     </div>
 </template>
 <script>
+import Dummmy from './Dummmy.js'
+import ItemCard from '@/components/character/ItemCard.vue'
 
+export default{
+    components:{
+        ItemCard,
+    },
+    data: () => {
+        return{
+            Dummmy:Dummmy,
+            Hello : null
+        }
+    },
+    props:{
+        tab: Number,
+    },
+    created(){
+        this.Hello = this.Dummmy.filter((item) => {
+            return (item.categories == this.tab);
+        });
+
+        console.log(this.Dummmy);
+    },
+    watch:{
+        matchingTab: function(){
+            this.Hello = this.Dummmy.filter((item) =>{
+                return (item.categories == this.tab)
+            })
+        },
+        tab:function(){
+            this.Hello = this.Dummmy.filter((item) =>{
+                return (item.categories == this.tab)
+            })
+            console.log(this.tab)
+        }
+    }
+}
 </script>
 <style lang="scss">
 #inventory-container{
     display: flex;
+    flex-wrap: wrap;
 
     & > .item{
-        box-shadow: inset 1px 2px 4px rgba(0, 0, 0, 0.25);
-        background: #fff;
-        text-align: center;
-        padding: 5px 30px;
-        margin: 10px;
-        border-radius: 10px;
-        position: relative;
+        // box-shadow: inset 1px 2px 4px rgba(0, 0, 0, 0.25);
+        // background: #fff;
+        // text-align: center;
+        // padding: 5px 30px;
+        // margin: 10px;
+        // border-radius: 10px;
+        // position: relative;
 
 
         & > img{
