@@ -44,6 +44,8 @@ export default {
       }
       if (this.isActive){
         const canvas = this.$refs.canvas
+        const preview = this.$refs.preview
+
         let temp = {
           type: this.cursorType,
           top: `${e.offsetY / canvas.clientHeight * 100}%`,
@@ -60,8 +62,7 @@ export default {
           }
         }
 
-        if (this.cursorType == 'image'){
-          const preview = this.$refs.preview
+        if (this.cursorType == 'image' || this.cursorType == 'sticker'){
           temp.width = preview.width
           temp.height = preview.height
           temp.imgUrl = this.file
@@ -73,6 +74,7 @@ export default {
       }
       this.$emit('deactivate')
       this.$refs.canvas.style.cursor = 'auto'
+      this.mouseX = null; this.mouseY = null
     },
     select: function(idx){
       if (this.selected == idx){
@@ -84,6 +86,7 @@ export default {
     },
     removeItem: function(idx){
       this.items.splice(idx, 1)
+      this.$emit('select', null)
     },
     getCanvasSize: function(){
       this.canvasWidth = this.$refs.canvas.clientWidth
@@ -109,13 +112,16 @@ export default {
   },
   watch: {
     type: function(){
+      if (!this.type){
+        this.selected = null
+      }
       this.cursorType = this.type
     },
     cursorType: function(){
       if (this.cursorType == 'text'){
         this.$refs.canvas.style.cursor = 'text'
       }
-      else if (this.cursorType == 'image'){
+      else if (this.cursorType == 'image' || this.cursorType == 'sticker'){
         this.$refs.canvas.style.cursor = 'none'
       }
       else {
@@ -162,6 +168,8 @@ export default {
     overflow: hidden;
 
     .image-preview {
+      max-width: 500px;
+      max-height: 500px;
       position: absolute;
       z-index: 987654321;
     }

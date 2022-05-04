@@ -1,6 +1,6 @@
 <template>
   <article id="editor" ref="editor">
-    <menu-bar :selected="selected" 
+    <menu-bar :selected="selected" :isCreated="isCreated"
      @active-menu="params => activate(params)" @image-upload="file => fileSetter(file)" />
     <Canvas :type="type" :isActive="isActive" :changes="changes" :file="file"
      @deactivate="deactivate" @select="tar => select(tar)" />
@@ -18,12 +18,17 @@ export default {
       isActive: false,
       selected: null,
       changes: null,
-      file: null
+      file: null,
     }
   },
   components: {
     MenuBar,
     Canvas
+  },
+  computed: {
+    isCreated: function(){
+      return !this.isActive
+    }
   },
   methods: {
     activate: function(params){

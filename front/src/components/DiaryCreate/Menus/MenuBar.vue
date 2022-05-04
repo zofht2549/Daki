@@ -8,25 +8,29 @@
      @click="menuClickHandler" />
     <input type="radio" id="mic" value="mic" v-model="menu">
 
-    <label :class="[{'clicked': menu == 'image'}, 'image']" title="이미지 업로드" for="image"
-     @click="menuClickHandler">
-    </label>
-    <input type="radio" id="image" value="image" v-model="menu">
-
-    <label :class="[{'clicked': menu == 'sticker'}, 'sticker']" title="스티커" for="sticker"
+    <label :class="[{'clicked': menu == 'image'}, 'image']" title="이미지" for="image"
      @click="menuClickHandler" />
+    <input type="radio" id="image" value="image" v-model="menu">
+    <image-uploader  v-model="file" :maxSize="3" v-show="false"
+      :id="'file-input'" :maxWidth="500" :maxHeight="500" :preview="false" />
+
+    <label :class="[{'clicked': menu == 'sticker'}, 'sticker']" :title="menu == 'sticker' ? false:'스티커'" for="sticker"
+     @click="menuClickHandler">
+      <div v-if="menu == 'sticker' && isActive && !file" class="popup-container" @click="closePopUp" />
+      <transition name="swipe" class="test">
+        <sticker-loader v-if="menu == 'sticker' && isActive && !file" @select-sticker="selectSticker" />
+      </transition>
+    </label>
     <input type="radio" id="sticker" value="sticker" v-model="menu">
     
     <text-options v-if="menu == 'text'" :selected="selected" />
-    
-    <image-uploader  v-model="file" :maxSize="3"
-      :id="'file-input'" :maxWidth="500" :maxHeight="500" :preview="false" />
   </div>
 </template>
 
 <script>
 import TextOptions from './TextOptions.vue'
 import ImageUploader from 'vue-image-upload-resize'
+import StickerLoader from './StickerLoader.vue'
 
 export default {
   data: function(){
@@ -37,11 +41,13 @@ export default {
     }
   },
   props: {
-    selected: Object
+    selected: Object,
+    isCreated: Boolean
   },
   components: {
     TextOptions,
-    ImageUploader
+    ImageUploader,
+    StickerLoader
   },
   methods: {
     menuClickHandler: function(e){
@@ -55,6 +61,14 @@ export default {
         if (e.target.htmlFor == 'image'){
           document.querySelector('#file-input').click()
         }
+      }
+    },
+    selectSticker: function(sticker){
+      this.file = sticker
+    },
+    closePopUp: function(e){
+      if (e.target.className == 'popup-container'){
+        this.menu = null
       }
     }
   },
@@ -78,7 +92,15 @@ export default {
     },
     file: function(){
       if (this.file){
-        this.$emit('image-upload', this.file)
+        this.$nextTick(() => {
+          this.$emit('image-upload', this.file)
+        })
+      }
+    },
+    isCreated: function(){
+      if (this.isCreated){
+        this.isActive = false
+        this.file = null
       }
     }
   }
@@ -143,6 +165,43 @@ export default {
 
     .sticker {
       background-image: url('../../../assets/Editor/sticker.png');
+
+      & > * {
+        cursor: auto
+      }
+
+      @keyframes swipe {
+        from {
+          opacity: 0;
+          transform: scaleY(0);
+          transform-origin: top;
+        }
+        to {
+          opacity: 1;
+          transform: scaleY(1);
+          transform-origin: top;
+        }
+      }
+
+      .swipe-enter-active {
+        animation: swipe 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        z-index: 987654321;
+      }
+      
+      .swipe-leave-active {
+        animation: swipe 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards reverse;
+        z-index: 987654321;
+      }
+
+      .popup-container {
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        z-index: 1;
+      }
     }
+
   }
 </style>

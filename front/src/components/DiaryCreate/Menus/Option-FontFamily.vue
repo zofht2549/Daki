@@ -5,12 +5,14 @@
      :style="{fontFamily: currFamily}">
       {{ fonts[currFamily] }}
     </p>
-    <ul class="font-family-list" v-if="active">
-      <li :class="['font-family-item', {'chosen': font == currFamily}]" v-for="(name, font) in fonts"
-       :key="font" :style="{ fontFamily: font }" @click="() => fontChange(font)">
-        {{ name }}
-      </li>
-    </ul>
+    <transition name="swipe">
+      <ul class="font-family-list" v-if="active">
+        <li :class="['font-family-item', {'chosen': font == currFamily}]" v-for="(name, font) in fonts"
+        :key="font" :style="{ fontFamily: font }" @click="() => fontChange(font)">
+          {{ name }}
+        </li>
+      </ul>
+    </transition>
 
     <div class="popup-container" v-if="active" @click="() => activate(false)" />
   </div>
@@ -76,7 +78,7 @@ export default {
   .font-family-container {
     width: 100px;
     position: relative;
-    z-index: 1;
+    z-index: 2;
 
     &.clicked {
       z-index: 9999;
@@ -91,6 +93,29 @@ export default {
       text-overflow: ellipsis;
       margin: 0;
       cursor: pointer;
+    }
+
+    @keyframes swipe {
+      from {
+        opacity: 0;
+        transform: scaleY(0);
+        transform-origin: top;
+      }
+      to {
+        opacity: 1;
+        transform: scaleY(1);
+        transform-origin: top;
+      }
+    }
+
+    .swipe-enter-active {
+      animation: swipe 0.3s ease-in forwards;
+      z-index: 987654321;
+    }
+    
+    .swipe-leave-active {
+      animation: swipe 0.3s ease-in forwards reverse;
+      z-index: 987654321;
     }
 
     .font-family-list {
