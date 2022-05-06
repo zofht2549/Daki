@@ -5,13 +5,21 @@
       <form action="#">
         <label for="email">
           <span>Email</span>
-          <input type="email" id="email" placeholder="이메일을 입력하세요">
+          <input 
+            type="email" 
+            id="email" 
+            placeholder="이메일을 입력하세요"
+            v-model="credentials.email">
         </label>
         <label for="password">
           <span>Password</span>
-          <input type="password" id="password" placeholder="비밀번호를 입력하세요">
+          <input
+            type="password"
+            id="password" 
+            placeholder="비밀번호를 입력하세요"
+            v-model="credentials.password">
         </label>
-        <button>로그인</button>
+        <button @click="onLogin">로그인</button>
         <router-link to="/signup">
           회원가입
         </router-link>
@@ -31,10 +39,25 @@ import GoogleLogin from '../components/Login/GoogleLogin'
 
 
 export default {
+  data:function(){
+    return{
+      credentials:{
+        email: null,
+        password: null,
+        fcmToken: null,
+      }
+    }
+  },
   components: {
     AccountHeader,
     KakaoLogin,
     GoogleLogin
+  },
+  methods:{
+    onLogin(){
+      this.$store.dispatch('login',this.credentials)
+      console.log('login click')
+    },
   }
 }
 </script>

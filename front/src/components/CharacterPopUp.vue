@@ -9,7 +9,23 @@
       <section class="deco-box">
           <article class="char-box">
             <div class="char">
-              <img src="@/assets/character/character.png" alt="">
+              <img src="@/assets/character/head.png" alt="">
+
+              <!-- 캐릭터 파츠 -->
+
+              <div class="parts background">
+                <img :src="require(`@/assets/character/${this.ItemImageBackground}.png`)" alt="배경">
+              </div>
+              <div class="parts head">
+                <img :src="require(`@/assets/character/${this.ItemImageHair}.png`)" alt="머리">
+              </div>
+              <div class="parts cloth">
+                <img :src="require(`@/assets/character/${this.ItemImageCloth}.png`)" alt="옷">
+              </div>
+              <div class="parts deco">
+                <img :src="require(`@/assets/character/${this.ItemImageDeco}.png`)" alt="장식">
+              </div>
+              
             </div>
             <div class="nickname">닉네임</div>
             <div class="tooltip">
@@ -33,7 +49,9 @@
                 <span @click="() => tab = 2" :class="{'tab':true, 'active': tab == 2}">배경</span>
                 <span @click="() => tab = 3" :class="{'tab':true, 'active': tab == 3}">장식</span>
               </div>
-              <inventory-box :tab="tab"/>
+              <inventory-box :tab="tab"
+                @itemImage="itemImage"
+                @categoryNum="categoryNum"/>
             </div>
           </article>
       </section>
@@ -49,13 +67,12 @@ export default {
 	return {
 		tab: 0,
 		target: null,
+    ItemImageBackground : 'background1',
+    CategoryNum : null,
+    ItemImageCloth : 'cloth1',
+    ItemImageHair : 'hair1',
+    ItemImageDeco : 'deco1'
 
-    // list: [
-    //   { id : 1, label: 'Tab1', content:'콘텐츠1'},
-    //   { id : 2, label: 'Tab2', content:'콘텐츠2'},
-    //   { id : 3, label: 'Tab3', content:'콘텐츠3'},
-    //   { id : 4, label: 'Tab4', content:'콘텐츠4'},
-    // ]
 	}
 },
   props:{
@@ -67,8 +84,34 @@ export default {
   methods: {
     closePopUp: function(){
         this.$emit('close-pop-up');
-    }
-  }
+    },
+    categoryNum(data){
+      this.CategoryNum = data
+    },
+    itemImage(data){
+      console.log('카테고리 넘버 (최종)',this.CategoryNum)
+      if(this.CategoryNum == 0){
+        this.ItemImageCloth = data
+        console.log('옷',data)
+      }else if(this.CategoryNum == 1){
+        this.ItemImageHair = data
+        console.log('머리',data)
+      }else if(this.CategoryNum == 2){
+        this.ItemImageBackground = data
+        console.log('배경',data)
+      }else{
+        this.ItemImageDeco = data
+        console.log('데코',data)
+      }
+      // console.log(data)
+      // console.log('확인', this.ItemImage)
+    },
+  },
+  watch:{
+  },
+  // created(){
+  //   console.log(`@/assets/character/${itemImage}.png`)
+  // }
 }
 </script>
 
@@ -153,7 +196,7 @@ export default {
             & > div{
 
               font-size: 1.5rem;
-              padding: 5px 0px;
+              // padding: 5px 0px;
               & > .progerr-tag{
                 color: yellow;
                 background-color: yellow;
@@ -184,19 +227,60 @@ export default {
               font-weight: bold;
             }
 						& > .char{
-							width: 300px;
-							height: 300px;
-							border: 10px solid black;
+							//width: 300px;
+							//height: 300px;
+							width: 240px;
+              height: 240px;
+              border: 10px solid black;
 							border-radius: 10px;
 							text-align: center;
 							display: table-cell;
 							vertical-align: middle;
-            
+              position: relative;
+
+              &:after {
+                & {
+                  content: " ";
+                  display: block;
+                  width: 100%;
+                  padding-bottom: 100%;
+                }
+              }
+
+              & > div{
+                position: relative;
+              }
 							& > img{
-								width: 80%;
-								height: 80%;
+								width: 100%;
+                height: 100%;
+                left: 0; top: 0;
 								object-fit: contain;
+                position: absolute;
+                z-index: 1;
 							}
+
+              & > .parts{
+                position: absolute;
+                width: 100%; height: 100%;
+                left: 0px;
+                top: 0px;
+                z-index: 2;
+
+                & > img {
+                  & {
+                    width: 100%; height: 100%;
+                  }
+                }
+              }
+
+              & > .background{
+                //position: absolute;
+                //width: 100%; height: 100%;
+                //left: 0; top: 0;
+                position: absolute;
+                z-index: 0;
+              }
+
 						}
 					}
           & > .inventory-box{
