@@ -15,7 +15,7 @@
 
     <span v-show="selected" class="size-controller" @mousedown="dragResize" />
 
-    <button v-show="selected" class="remover" @click="removeItem">
+    <button v-show="selected" class="remover" @click="remove">
       지우기
     </button>
   </div>
@@ -39,8 +39,8 @@ export default {
     canvasSize: Object
   },
   methods: {
-    removeItem: function(){
-      this.$emit('remove-item', this.idx)
+    remove: function(){
+      this.$emit('remove-item')
     },
     clickHandler: function(){
       if (!this.selected){

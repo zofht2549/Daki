@@ -1,8 +1,8 @@
 <template>
   <div id="canvas-container" ref="canvas" @click="createNewOne">
-    <canvas-item v-for="(item, idx) in items" :key="item.content ? item.content + idx : item.imgUrl + idx" :item="item" :idx="idx" 
+    <canvas-item v-for="(item, idx) in items" :key="item.content ? item.content + idx + pointer: item.imgUrl + idx + pointer" :item="item" :idx="idx" 
     :selected="selected == idx ? true:false" :canvasSize="{w: canvasWidth, h: canvasHeight}"
-     @select="idx => select(idx)" @remove-item="idx => removeItem(idx)"
+     @select="idx => select(idx)" @remove-item="removeItem"
      @value-change="payload => valueChange(payload)"
      ref="canvas-item"/>
 
@@ -28,6 +28,7 @@ export default {
       history: Array(1000),
       historyChange: false,
       pointer: -1,
+      historyHead: 0,
       ctrl: false,
       shift: false
     }
@@ -109,7 +110,7 @@ export default {
         const item = this.items[this.selected]
         /// remove
         if (e.key == 'Backspace' || e.key == 'Delete'){
-          this.removeItem(this.selected)
+          this.removeItem()
         }
         /// item move
         if (e.key == 'ArrowUp'){
@@ -196,17 +197,23 @@ export default {
       this.selected = idx
       this.$emit('select', tar)
     },
-    removeItem: function(idx){
-      this.items.splice(idx, 1)
+    removeItem: function(){
+      this.items.splice(this.selected, 1)
       this.$emit('select', null)
     },
     valueChange: function(payload){
-      console.log('hy', payload)
+      console.log(payload)
       const tar = {...this.items[this.selected]}
+      let flag = false
       for (const key of Object.keys(payload)){
-        tar[key] = payload[key]
+        if (tar[key] != payload[key]){
+          tar[key] = payload[key]
+          flag = true
+        }
       }
-      this.$set(this.items, this.selected, tar)
+      if (flag){
+        this.$set(this.items, this.selected, tar)
+      }
     },
     /// new image, sticker assistant ///
     mouseMove: function(e){
@@ -218,12 +225,6 @@ export default {
       }
       this.mouseX += (e.movementX / this.canvasWidth) * 100
       this.mouseY += (e.movementY / this.canvasHeight) * 100
-    }
-  },
-  computed: {
-    topOfHistory: function(){
-      const temp = this.history.filter(ele => ele)
-      return temp.length - 1
     }
   },
   watch: {
@@ -267,22 +268,20 @@ export default {
     items: {deep: true, handler(){
       if (!this.historyChange){
         this.pointer += 1
-        this.$nextTick(() => {
-          this.$set(this.history, this.pointer, [...this.item])
-        })
+        this.historyHead = this.pointer
+        this.history[this.pointer] = [...this.items]
       }
     }},
     historyChange: function(){
       if (this.historyChange){
-        console.log(this.pointer)
-        this.items = this.history[this.pointer]
+        this.items = [...this.history[this.pointer]]
         this.$nextTick(() => {
           this.historyChange = false
         })
       }
     },
     pointer: function(){
-      this.$emit('get-history-info', [this.pointer, this.topOfHistory])
+      this.$emit('get-history-info', [this.pointer, this.historyHead])
     },
     historyChangeFromMenu: function(){
       if (this.historyChangeFromMenu == 'undo'){

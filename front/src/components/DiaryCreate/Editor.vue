@@ -55,6 +55,7 @@ export default {
     },
     getHistoryInfo: function(info){
       this.historyInfo = info
+      this.historyChangeFromMenu = null
     },
     historyChange: function(payload){
       this.historyChangeFromMenu = payload
