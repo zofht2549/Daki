@@ -1,9 +1,9 @@
 <template>
   <article id="editor" ref="editor">
-    <menu-bar :selected="selected" :isCreated="isCreated"
-     @active-menu="params => activate(params)" @image-upload="file => fileSetter(file)" />
-    <Canvas :type="type" :isActive="isActive" :changes="changes" :file="file"
-     @deactivate="deactivate" @select="tar => select(tar)" />
+    <menu-bar :selected="selected" :isCreated="isCreated" :historyInfo="historyInfo"
+     @active-menu="params => activate(params)" @image-upload="file => fileSetter(file)" @history-change="payload => historyChange(payload)" />
+    <Canvas :type="type" :isActive="isActive" :changes="changes" :file="file" :historyChangeFromMenu="historyChangeFromMenu"
+     @deactivate="deactivate" @select="tar => select(tar)" @get-history-info="info => getHistoryInfo(info)" />
   </article>
 </template>
 
@@ -19,6 +19,8 @@ export default {
       selected: null,
       changes: null,
       file: null,
+      historyInfo: [0, 0],
+      historyChangeFromMenu: null
     }
   },
   components: {
@@ -50,6 +52,12 @@ export default {
     },
     fileSetter: function(file){
       this.file = file
+    },
+    getHistoryInfo: function(info){
+      this.historyInfo = info
+    },
+    historyChange: function(payload){
+      this.historyChangeFromMenu = payload
     }
   },
   mounted: function(){

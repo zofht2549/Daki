@@ -1,10 +1,10 @@
 <template>
   <div :class="['canvas-item', {'selected': selected, 'edit': editable}]" :id="`item-${idx}`"
-   :style="{top: `${top}px`, left: `${left}px`, width: `${width}px`, height: `${height}px`, zIndex: index}"
+   :style="{top: `${top}%`, left: `${left}%`, width: `${width}%`, height: `${height}%`, zIndex: index}"
    @click="clickHandler" @dblclick="dbclickHandler" @mousedown="dragMove" @mouseup="dropMove"
    ref="item">
     <textarea v-if="type == 'text'" :class="[`canvas-${item.type}`]"
-     v-model="content" :disabled="!editable" @change="changeHandler"
+     v-model="content" :disabled="!editable" autofocus @change="changeHandler"
      :style="{
       fontSize: `${fontStyle.size}px`, fontFamily: fontStyle.family, color: fontStyle.color,
       fontWeight: fontStyle.weight, textDecoration: fontStyle.underline, textAlign: fontStyle.align}">
@@ -39,28 +39,13 @@ export default {
     canvasSize: Object
   },
   methods: {
-    initItems: function(){
-      if (typeof(this.item.width) == 'string'){
-        this.width = this.canvasSize.w * Number(this.item.width.replace('%', '')) / 100
-      }
-      if (typeof(this.item.height) == 'string'){
-        this.height = this.canvasSize.h * Number(this.item.height.replace('%', '')) / 100
-      }
-      if (typeof(this.item.top) == 'string'){
-        this.top = this.canvasSize.h * Number(this.item.top.replace('%', '')) / 100
-      }
-      if (typeof(this.item.left) == 'string'){
-        this.left = this.canvasSize.w * Number(this.item.left.replace('%', '')) / 100
-      }
-    },
     removeItem: function(){
-      if (confirm('지우시겠습니까?')){
-        this.$emit('remove-item', this.idx)
-      }
+      this.$emit('remove-item', this.idx)
     },
     clickHandler: function(){
       if (!this.selected){
         this.$emit('select', this.idx)
+        this.$refs.item.focus()
       }
     },
     dbclickHandler: function(){
@@ -81,8 +66,8 @@ export default {
     },
     resize: function(e){
       if (this.resizable){
-        this.width += e.movementX
-        this.height += e.movementY
+        this.width += (e.movementX / this.canvasSize.w) * 100
+        this.height += (e.movementY / this.canvasSize.h) * 100
       }
     },
     dropResize: function(){
@@ -104,8 +89,8 @@ export default {
     },
     move: function(e){
       if (this.draggable){
-        this.top += e.movementY
-        this.left += e.movementX
+        this.top += (e.movementY / this.canvasSize.h) * 100
+        this.left += (e.movementX / this.canvasSize.w) * 100
       }
     },
     dropMove: function(){
@@ -115,7 +100,7 @@ export default {
         canvas.removeEventListener('mousemove', this.move)
         this.$emit('value-change', {top: this.top, left: this.left})
       }
-    },
+    }
   },
   watch: {
     selected: function(){
@@ -126,13 +111,7 @@ export default {
         this.editable = false
         this.resizable = false
       }
-    },
-    canvasSize: function(){
-      this.initItems()
     }
-  },
-  mounted: function(){
-    this.initItems()
   }
 }
 </script>

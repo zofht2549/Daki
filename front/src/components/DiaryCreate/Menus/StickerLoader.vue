@@ -156,6 +156,7 @@ export default {
         width: 150px;
         height: 150px;
         background-size: cover;
+        background-position: center;
         margin: 1rem;
         cursor: pointer;
       }

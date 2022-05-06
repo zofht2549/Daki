@@ -24,6 +24,13 @@
     <input type="radio" id="sticker" value="sticker" v-model="menu">
     
     <text-options v-if="menu == 'text'" :selected="selected" />
+
+    <div class="do-box">
+      <button :class="['undo', {'active':historyInfo[0] > 0}]" title="undo" 
+       @click="historyChange('undo')" />
+      <button :class="['redo', {'active':historyInfo[1] > historyInfo[0]}]" title="redo" 
+       @click="historyChange('do')" />
+    </div>
   </div>
 </template>
 
@@ -42,7 +49,8 @@ export default {
   },
   props: {
     selected: Object,
-    isCreated: Boolean
+    isCreated: Boolean,
+    historyInfo: Array
   },
   components: {
     TextOptions,
@@ -70,6 +78,9 @@ export default {
       if (e.target.className == 'popup-container'){
         this.menu = null
       }
+    },
+    historyChange: function(payload){
+      this.$emit('history-change', payload)
     }
   },
   watch: {
@@ -203,5 +214,41 @@ export default {
       }
     }
 
+    .do-box {
+      display: flex;
+      margin-left: auto;
+      margin-right: 1rem;
+      align-items: center;
+
+      .undo {
+        border: none;
+        background-color: transparent;
+        width: 20px;
+        height: 20px;
+        margin: 0 0.75rem;
+        background-image: url('../../../assets/Editor/undo-inactive.png');
+        background-size: cover;
+
+        &.active {
+          cursor: pointer;
+          background-image: url('../../../assets/Editor/undo-active.png');
+        }
+      }
+
+      .redo {
+        border: none;
+        background-color: transparent;
+        width: 20px;
+        height: 20px;
+        margin: 0 0.75rem;
+        background-image: url('../../../assets/Editor/redo-inactive.png');
+        background-size: cover;
+
+        &.active {
+          cursor: pointer;
+          background-image: url('../../../assets/Editor/redo-active.png');
+        }
+      }
+    }
   }
 </style>
