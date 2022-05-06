@@ -49,11 +49,8 @@
 					</article>
 				</article>
       </section>
-			<div  @show="showDateDiary" @click="openPop()">
-				<img src="@/assets/character.png" alt="">
-			</div>
-			<div class="pop" :class="{ active : view }">
-				<character-pop-up @close-pop-up="openPop()"/>
+			<div>
+				<character-button></character-button>
 			</div>
 			<div class="change-password" :class="{ active : passwordView }">
 				<change-password @close-pop-up="changePassword()" />
@@ -69,25 +66,25 @@
 import Navigation from '../components/Navigation.vue'
 import ChangePassword from '@/components/Mypage/ChangePassword.vue'
 import ChangeNickname from '@/components/Mypage/ChangeNickname.vue'
-import CharacterPopUp from '../components/CharacterPopUp.vue'
+import CharacterButton from '@/components/CharacterButton.vue'
 
 export default {
   name: 'MyPage',
 	data: () => {
 		return {
+			
 			popupVal : false,
 			target : false,
 
-			view : false,
 			passwordView : false,
 			nicknameView : false,
 		}
 	},
   components:{
     Navigation,
-		CharacterPopUp,
 		ChangePassword,
 		ChangeNickname,
+		CharacterButton,
   },
   methods:{
 		openPop(){
@@ -164,6 +161,14 @@ export default {
 			align-items: center;
 			width: 70%;
 			margin: 0 auto;
+
+			& > a {
+        margin: 2rem;
+        font-size: 1.25rem;
+        font-weight: bold;
+        text-decoration: none;
+        color: #555555;
+      }
 
 			& .char-box{
 				display: table;
@@ -275,13 +280,6 @@ export default {
 				color: white;
 			}
 		}
-		a {
-        margin: 2rem;
-        font-size: 1.25rem;
-        font-weight: bold;
-        text-decoration: none;
-        color: #555555;
-      }
 		& > div{
 			position: fixed;
 			bottom: 10%;
