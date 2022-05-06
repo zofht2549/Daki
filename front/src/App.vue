@@ -1,32 +1,70 @@
 <template>
-  <div id="app">
-    <!-- <nav>
-      <router-link to="/">Home</router-link> |
-    </nav> -->
-    <router-view/>
+  <div id="app" ref="app">
+    <router-view />
+    <scrollbar :height="height" />
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  width: 100vw;
-  min-height: 100vh;
-  overflow: auto;
-  display: flex;
-  justify-content: center;
-  overflow: auto;
-}
+<script>
+import store from './store/index'
+import Scrollbar from './components/ScrollBar.vue'
 
-nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+export default {
+  data: function(){
+    return {
+      height: 0,
+      flag: false
     }
+  },
+  components: {
+    Scrollbar
+  },
+  computed: {
+    isEnd: function(){
+      return store.state.isEnd
+    }
+  },
+  watch: {
+    isEnd: function(){
+      if (!this.isEnd){
+        setTimeout(() => {
+          this.getHeight()
+        }, 1000)
+      }
+    }
+  },
+  methods: {
+    getHeight: function(){
+      this.$nextTick(() => {
+        this.height = this.$refs.app.clientHeight
+      })
+    },
+  },
+  mounted: function(){
+    this.getHeight()
+  },
+  updated: function(){
+    this.getHeight()
   }
 }
+</script>
+
+<style lang="scss">
+  body {
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  
+  #app {
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+
+    & * {
+      box-sizing: border-box;
+    }
+  }
 </style>
