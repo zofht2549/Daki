@@ -3,7 +3,9 @@
         <item-card
             v-for="item in Hello" :key="item.id"
             :item="item"
-            :tab="tab"></item-card>
+            :tab="tab"
+            @itemImage="itemImage"
+            @categoryNum="categoryNum"></item-card>
             <!-- {{ item.title }} -->
 
         <!-- <div class="item">
@@ -37,11 +39,24 @@ export default{
     data: () => {
         return{
             Dummmy:Dummmy,
-            Hello : null
+            Hello : null,
+            ItemImage : null,
+            CategoriesNum : null,
         }
     },
     props:{
         tab: Number,
+    },
+    methods:{
+        itemImage(data){
+            this.ItemImage = data
+            this.$emit('itemImage', data);
+        },
+        categoryNum(data){
+            this.CategoriesNum = data
+            this.$emit('categoryNum', data)
+            console.log('카테고리 넘버 (중간)',data)
+        }
     },
     created(){
         this.Hello = this.Dummmy.filter((item) => {

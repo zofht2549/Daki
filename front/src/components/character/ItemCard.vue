@@ -1,5 +1,6 @@
 <template>
-    <div id="item-box-container">
+    <div id="item-box-container"
+        @click="dressUp()">
         <img :src="`${item.image}`" alt="">
         {{ item.title }}
     </div>
@@ -11,6 +12,14 @@ export default {
         item : Object,
         // tab : String,
     },
+    methods:{
+        dressUp(){
+            // console.log(this.item.image)
+            this.$emit('itemImage', this.item.name)
+            this.$emit('categoryNum', this.item.categories)
+            console.log('카테고리 넘버',this.item.categories)
+        }
+    }
 }
 </script>
 <style lang="scss">
@@ -23,6 +32,7 @@ export default {
     border-radius: 10px;
     position: relative;
     width: 30%;
+    cursor: pointer;
 
     & > img{
         width: 100%;
