@@ -1,8 +1,8 @@
 <template>
-  <div id="canvas-container" ref="canvas" @click="createNewOne">
+  <div id="canvas-container" ref="canvas" @click="createNewOne" @contextmenu.prevent>
     <canvas-item v-for="(item, idx) in items" :key="item.content ? item.content + idx + pointer: item.imgUrl + idx + pointer" :item="item" :idx="idx" 
-    :selected="selected == idx ? true:false" :canvasSize="{w: canvasWidth, h: canvasHeight}"
-     @select="idx => select(idx)" @remove-item="removeItem"
+    :selected="selected == idx ? true:false" :canvasSize="{w: canvasWidth, h: canvasHeight}" :maxIdx="items.length - 1"
+     @select="idx => select(idx)" @remove-item="removeItem" @move-index="index => moveIndex(index)"
      @value-change="payload => valueChange(payload)"
      ref="canvas-item"/>
 
@@ -130,38 +130,26 @@ export default {
           if (this.selected == 0){
             return
           }
-          const temp = [...this.items]
-          const idx = this.selected
-          
+
           if (this.ctrl){
-            const tar = temp.splice(idx, 1)
-            temp.shift(tar)
-            this.selected = 0
+            this.moveIndex(3)
           }
           else {
-            [temp[idx], temp[idx-1]] = [temp[idx-1], temp[idx]]
-            this.selected = idx - 1
+            this.moveIndex(2)
           }
-          this.items = temp
         }
         /// bring to front
         else if (e.key == ']'){  
           if (this.selected == this.items.length - 1){
             return
           }
-          const temp = [...this.items]
-          const idx = this.selected
-          
+
           if (this.ctrl){
-            const tar = temp.splice(idx, 1)
-            temp.append(tar)
-            this.selected = this.items.length - 1
+            this.moveIndex(0)
           }
           else {
-            [temp[idx], temp[idx+1]] = [temp[idx+1], temp[idx]]
-            this.selected = idx + 1
+           this.moveIndex(1)
           }
-          this.items = temp
         }
       }
       /// undo & redo
@@ -182,8 +170,36 @@ export default {
         }
       }
     },
-    removeCtrl: function(e){
-      console.log(e)
+    /// 요소 순서 변경 ///
+    moveIndex: function(index){
+      const temp = [...this.items]
+      const idx = this.selected
+      console.log(index, temp, idx)
+      /// 맨 앞으로 ///
+      if (index == 0){
+        const tar = temp.splice(idx, 1)[0]
+        temp.push(tar)
+        this.selected = this.items.length - 1
+      }
+      /// 앞으로 ///
+      else if (index == 1){
+        [temp[idx], temp[idx+1]] = [temp[idx+1], temp[idx]]
+        this.selected = idx + 1
+      }
+      /// 뒤로 ///
+      else if (index == 2){
+        [temp[idx], temp[idx-1]] = [temp[idx-1], temp[idx]]
+        this.selected = idx - 1
+      }
+      /// 맨 뒤로 ///
+      else if (index == 3){
+        const tar = temp.splice(idx, 1)[0]
+        temp.shift(tar)
+        this.selected = 0
+      }
+      this.items = temp
+    },
+    removeCtrl: function(){
       this.ctrl = false
     },
     removeShift: function(){
