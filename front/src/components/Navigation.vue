@@ -1,5 +1,18 @@
 <template>
-  <nav id="nav-container">
+  <nav>
+    <div class="nav-mobile">
+      <div class="mobile-bar">
+        <router-link to="/main">
+          <img src="../assets/logo.png" alt="">
+        </router-link>
+        
+        <button
+          @click="menuClick()">
+          메뉴버튼
+        </button>
+      </div>
+    </div>
+    <div id="nav-container" :class="{ active : onClick }">
     <router-link to="/main" class="logo" />
     <ul class="menu-box">
       <li :class="['menu', {'now': path == '/diary-create'}]">
@@ -31,7 +44,18 @@ export default {
   data: function(){
     return {
       isTop: true,
-      flag: false
+      flag: false,
+
+      onClick: false,
+    }
+  },
+  methods:{
+    menuClick(){
+      if(this.onClick == false){
+        this.onClick = true
+      }else{
+        this.onClick = false
+      }
     }
   },
   computed: {
@@ -43,6 +67,15 @@ export default {
 </script>
 
 <style lang="scss">
+@media only screen and (min-width:800px){
+  .nav-mobile{
+    button{
+      display: none;
+    }
+    img{
+      display: none;
+    }
+  }
   #nav-container {
     width: 100vw;
     height: 100px;
@@ -72,6 +105,7 @@ export default {
       justify-content: space-between;
       align-items: center;
       list-style: none;
+      
 
       .menu > a {
         font-size: 1.5rem;
@@ -87,4 +121,90 @@ export default {
 
     }
   }
+}
+@media only screen and (max-width:799px){
+  .nav-mobile{
+    width: 100vw;
+    height: 80px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #FED771;
+    text-align: right;
+    & > .mobile-bar{
+      display: flex;
+      justify-content: space-between;
+      height: 100%;
+
+        & > button{
+        margin: 10px;
+        padding: 10px;
+        //
+        img{
+          height: 100%;
+        }
+      }
+    }
+
+  }
+
+  #nav-container{
+    & {
+      opacity: 0;
+      display: none;
+      visibility: hidden;
+    }
+    &.active{
+      &{
+        opacity: 1;
+        display: block;
+        visibility: visible;
+        height: 100vw;
+        float: right;
+        top: 60px;
+        right: 0px;
+        position: fixed;
+        z-index: 3;
+        margin: 0px;
+
+        @keyframes fadeinRight{
+          0%{
+            opacity: 0;
+            transform: translate3d(100%,0,0);
+          }
+          to{
+            opacity: 1;
+            transform: translateZ(0);
+          }
+        }
+        & > .menu-box{
+          background: #FED771;
+          height: 100vw;
+          // height: 100%;
+          top: 0px;
+          list-style: none;
+          text-align: center;
+          animation: fadeinRight 1s;
+          vertical-align: middle;
+
+          & a {
+            text-decoration: none;
+            color: #333;
+          }
+          & > .menu{
+            width: 200px;
+            height: 50px;
+            text-align: center;
+            vertical-align: middle;
+          }
+        }
+        & a {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+
+}
+
 </style>

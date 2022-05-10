@@ -36,12 +36,18 @@ export default new Vuex.Store({
       commit('ARRIVED', payload)
     },
     // accounts
-    login: function({commit}, credentials ){
+    login: function({commit}, credentials){
       console.log('확인',credentials)
       axios({
-        method: 'post',
-        url: 'http://k6e105.p.ssafy.io:8080/v2/api-docs',
+        method: 'POST',
+        url: 'http://k6e105.p.ssafy.io:8080/api/auth/login',
         // url : `${process.env.VUE_APP_API_URL}/api/auth/login`
+        data:credentials,
+        headers: {
+          "Access-Control-Allow-Origin" : "*",
+          "Access-Control-Allow-Methods" : "GET,POST,PUT,DELETE,OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+      }
 
       })
         .then(res => {
@@ -51,6 +57,7 @@ export default new Vuex.Store({
           commit('LOGIN',res.data)
         })
         .catch(err =>{
+          console.log('확인확인')
           console.log(err)
         })
     }

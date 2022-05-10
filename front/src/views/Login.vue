@@ -44,7 +44,6 @@ export default {
       credentials:{
         email: null,
         password: null,
-        fcmToken: null,
       }
     }
   },
