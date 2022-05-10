@@ -14,27 +14,28 @@
     </div>
     <div id="nav-container" :class="{ active : onClick }">
     <router-link to="/main" class="logo" />
-      <ul class="menu-box">
-        <li :class="{'menu':true, 'now': true}">
-          <router-link to="">
-            일기쓰기
-          </router-link>
-        </li>
-        <li :class="{'menu':true, 'now': true}">
-          <router-link to="">
-            일기장
-          </router-link>
-        </li>
-        <li :class="{'menu':true, 'now': true}">
-          <router-link to="/mypage">
-            마이페이지
-          </router-link>
-        </li>
-        <li class="menu">
+    <ul class="menu-box">
+      <li :class="['menu', {'now': path == '/diary-create'}]">
+        <router-link to="/diary-create">
+          일기쓰기
+        </router-link>
+      </li>
+      <li :class="['menu', {'now': false}]">
+        <router-link to="">
+          일기장
+        </router-link>
+      </li>
+      <li :class="['menu', {'now': path == '/mypage'}]">
+        <router-link to="/mypage">
+          마이페이지
+        </router-link>
+      </li>
+      <li class="menu">
+        <a>
           로그아웃
-        </li>
-      </ul>
-    </div>
+        </a>
+      </li>
+    </ul>
   </nav>
 </template>
 
@@ -55,6 +56,11 @@ export default {
       }else{
         this.onClick = false
       }
+    }
+  },
+  computed: {
+    path: function(){
+      return this.$route.path
     }
   }
 }
@@ -82,7 +88,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 10;
+    z-index: 98765432;
 
     .logo {
       width: 75px;
@@ -101,20 +107,18 @@ export default {
       list-style: none;
       
 
-      & a {
-        text-decoration: none;
-        color: #777777;
-      }
-
-      .menu {
+      .menu > a {
         font-size: 1.5rem;
         color: #777777;
+        text-decoration: none;
         cursor: pointer;
       }
 
-      .now {
+      .now > a {
+        font-weight: bold;
         color: #93D9CE;
       }
+
     }
   }
 }

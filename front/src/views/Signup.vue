@@ -2,9 +2,17 @@
   <section id="signup-container">
     <account-header title="다키에 오신 것을 환영합니다" />
     <article class="signup-body">
-      <account-progress :step="step" :direction="direction" @change-step="tar => changeStep(Number(tar))" />
-      <first-credentials v-if="step == 1" @next-step="p => {step = p; direction = true}" />
-      <second-credentials v-if="step == 2" @next-step="p => {step = p; direction = true}" />
+      <account-progress :step="step" :direction="direction" :firstValidData="firstValidData" :secondValidData="secondValidData"
+       @change-step="tar => changeStep(Number(tar))" />
+
+      <first-credentials v-if="step == 1" :firstCredentials="firstCredentials" :validData="firstValidData"
+       @next-step="p => changeStep(p)" @get-credentials="credentials => getFirst(credentials)"
+       @get-valid-data="validData => getValidData(validData)" />
+
+      <second-credentials v-if="step == 2" :secondCredentials="secondCredentials" :validData="secondValidData"
+       @next-step="p => changeStep(p)" @get-credentials="credentials => getSecond(credentials)"
+       @get-valid-data="validData => getValidData(validData)" />
+
       <account-complete v-if="step == 3" />
     </article>
   </section>
@@ -16,6 +24,7 @@ import AccountProgress from '@/components/Signup/AccountProgress.vue'
 import FirstCredentials from '@/components/Signup/FirstCredentials.vue'
 import SecondCredentials from '@/components/Signup/SecondCredentials.vue'
 import AccountComplete from '@/components/Signup/AccountComplete.vue'
+import customAxios from '../customAxios'
 
 export default {
   data: () => {
@@ -32,11 +41,38 @@ export default {
         birth: null,
         gender: null,
         character: null
+      },
+      validData: {
+        email: false,
+        nickname: false,
+        password: false,
+        passwordConf: false,
+        birth: false,
+        gender: false,
+        character: false
       }
+    }
+  },
+  computed: {
+    firstValidData: function(){
+      const {email, nickname, password, passwordConf} = this.validData
+      return  {email, nickname, password, passwordConf}
+    },
+    secondValidData: function(){
+      const {birth, gender, character} = this.validData
+      return {birth, gender, character}
     }
   },
   methods: {
     changeStep: function(tar){
+      if (tar == 3){
+        for (const value of Object.values(this.validData)){
+          if (!value){
+            return
+          }
+        }
+        this.signIn()
+      }
       if (tar - this.step > 0){
         this.direction = true
       }
@@ -45,6 +81,26 @@ export default {
       }
       this.step = tar
     },
+    signIn: function(){
+      customAxios({
+        method: 'post',
+        url: '/api/auth/signup',
+        data: {...this.firstCredentials, ...this.secondCredentials}
+      })
+      .then(res => console.log(res))
+      .catch(err => console.log(err))
+    },
+    getFirst: function(credentials){
+      this.firstCredentials = credentials
+    },
+    getSecond: function(credentials){
+      this.secondCredentials = credentials
+    },
+    getValidData: function(validData){
+      for (const [key, value] of Object.entries(validData)){
+        this.validData[key] = value
+      }
+    }
   },
   components: {
     AccountHeader,
@@ -81,11 +137,12 @@ export default {
         margin: 5rem 0 0;
 
         label {
-          width: 70%;
+          width: 80%;
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin: 1.5rem;
+          padding: 1.5rem 0;
+          position: relative;
 
           h5 {
             width: 30%;
@@ -98,7 +155,7 @@ export default {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            width: 70%;
+            width: 80%;
             padding: 0.25rem 0.5rem;
             margin: 0 1rem;
             border-bottom: 1px #cccccc solid;
@@ -107,6 +164,7 @@ export default {
               border: none;
               margin: 0;
               padding: 0;
+              width: 100%;
             }
 
             button {
@@ -162,6 +220,10 @@ export default {
         &:hover, &:disabled {
           background-color: #93D9CE;
           color: white;
+        }
+
+        &:disabled {
+          cursor: auto;
         }
       }
 

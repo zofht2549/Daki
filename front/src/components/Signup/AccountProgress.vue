@@ -1,14 +1,16 @@
 <template>
   <div class="progress-box">
     <hr class="progress-bar">
-    <div :class="{'progress':true, 'done': step > 0}" id="1" @click="e => changeStep(e)">
-      <p :class="{ 'done-txt': step > 0 }">기본 정보</p>
+    <div :class="['progress', {'done': step > 0, 'warn': step > 0 && !firstValid}]"
+     :title="firstValid ? '':`${firstHelpMessage}를 확인해주세요`" id="1" @click="e => changeStep(e)">
+      <p class="progress-text">기본 정보</p>
     </div>
-    <div :class="{'progress':true, 'done': step > 1}" id="2" @click="e => changeStep(e)">
-      <p :class="{ 'done-txt': step > 1 }">개인 정보</p>
+    <div :class="['progress', {'done': step > 1, 'warn': step > 1 && !secondValid}]" 
+     :title="secondValid ? '':`${secondHelpMessage}를 확인해주세요`" id="2" @click="e => changeStep(e)">
+      <p class="progress-text">개인 정보</p>
     </div>
-    <div :class="{'progress':true, 'done': step > 2}" id="3" @click="e => changeStep(e)">
-      <p :class="{ 'done-txt': step > 2 }">가입 완료</p>
+    <div :class="['progress', {'done': step > 2}]" id="3" @click="e => changeStep(e)">
+      <p class="progress-text">가입 완료</p>
     </div>
   </div>
 </template>
@@ -17,7 +19,38 @@
 export default {
   props: {
     step: Number,
-    direction: Boolean
+    direction: Boolean,
+    firstValidData: Object,
+    secondValidData: Object
+  },
+  computed: {
+    firstValid: function(){
+      return Object.values(this.firstValidData).every(ele => ele)
+    },
+    firstHelpMessage: function(){
+      const temp = {email: '이메일', nickname: '닉네임', password: '비밀번호', passwordConf: '비밀번호확인'}
+      const msg = []
+      Object.keys(this.firstValidData).forEach(key => {
+        if (!this.firstValidData[key]){
+          msg.push(temp.key)
+        }
+      })
+      return msg.join(', ')
+    },
+    secondValid: function(){
+      return Object.values(this.secondValidData).every(ele => ele)
+    },
+    secondHelpMessage: function(){
+      const temp = {birth: '생년월일', gender: '성별', character: '캐릭터'}
+      const msg = []
+      Object.keys(this.secondValidData).forEach(key => {
+        console.log(key)
+        if (!this.secondValidData[key]){
+          msg.push(temp[key])
+        }
+      })
+      return msg.join(', ')
+    },
   },
   methods: {
     changeStep: function(e){
@@ -113,7 +146,7 @@ export default {
       position: absolute;
       cursor: pointer;
 
-      p {
+      .progress-text {
         min-width: 100px;
         color: #777777;
         font-size: 1.25rem;
@@ -124,16 +157,27 @@ export default {
         left: -32px;
       }
 
-      .done-txt {
-        font-size: 1.35rem;
-        left: -40px;
-        color: #93D9CE;
+      &.done {
+        outline: 1px #93D9CE solid;
+        border: 5px white solid;
+        background-color: #93D9CE;
+
+        .progress-text {
+          font-size: 1.35rem;
+          left: -40px;
+          color: #93D9CE;
+        }
       }
-    }
-    .done {
-      outline: 1px #93D9CE solid;
-      border: 5px white solid;
-      background-color: #93D9CE;
+
+      &.warn {
+        outline: 1px rgb(252, 112, 112) solid;
+        border: 5px white solid;
+        background-color: rgb(250, 112, 112);
+
+        .progress-text {
+          color: rgb(252, 112, 112);
+        }
+      }
     }
   }
 </style>

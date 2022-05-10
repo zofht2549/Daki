@@ -4,7 +4,7 @@
    v-if="isShow" @mouseover="scrollActivate(true)" @mouseleave="scrollActivate(false)" 
    @click="moveScroll">
     <span :class="['scroll-bar', {'dragged': dragged}]" :style="{ height: s, top: position }"
-     @mousedown="e => dragDrop(e, true)"/>
+     @mousedown="e => dragDrop(e, true)" @mouseup="e => dragDrop(e, false)" />
     <div class="drag-box" v-if="dragged" @mouseup="e => dragDrop(e, false)" @mousemove="move" />
   </div>
 </template>
@@ -184,6 +184,7 @@ export default {
       right: 0;
       width: 100vw;
       height: 100vh;
+      z-index: 2;
     }
   }
 </style>
