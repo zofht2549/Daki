@@ -1,21 +1,15 @@
 package com.daki.api.request;
 
-import com.daki.db.entity.Skin;
-
 public class DollUpdateReq {
 
     private long userNo;
     private int dollLikeable;
-    private Skin skin;
+    private int dollType;
 
     public long getUserNo() {return userNo;}
 
     public int getDollLikeable() {
         return dollLikeable;
-    }
-
-    public Skin getSkin() {
-        return skin;
     }
 
     public void setUserNo(long userNo) {this.userNo = userNo;}
@@ -24,16 +18,20 @@ public class DollUpdateReq {
         this.dollLikeable = dollLikeable;
     }
 
-    public void setSkin(Skin skin) {
-        this.skin = skin;
+    public int getDollType() {
+        return dollType;
+    }
+
+    public void setDollType(int dollType) {
+        this.dollType = dollType;
     }
 
     public DollUpdateReq(){}
 
-    public DollUpdateReq(long userNo, int dollLikeable, Skin skin){
+    public DollUpdateReq(long userNo, int dollLikeable, int dollType){
         this.userNo = userNo;
         this.dollLikeable = dollLikeable;
-        this.skin = skin;
+        this.dollType = dollType;
     }
 
 }

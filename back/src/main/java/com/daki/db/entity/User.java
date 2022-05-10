@@ -20,9 +20,6 @@ public class User {
     @Column(name = "user_email")
     private String userEmail;
 
-    @Column(name = "user_name")
-    private String userName;
-
     @Column(name = "user_nickname")
     private String userNickname;
 
@@ -33,7 +30,7 @@ public class User {
     private String userBirth;
 
     @Column(name = "user_gender")
-    private boolean userGender;
+    private String userGender;  //남자 = "M", 여자 = "F"
 
     @Column(name = "user_point")
     private int userPoint;
@@ -49,9 +46,8 @@ public class User {
     }
 
     @Builder
-    public User(String userEmail, String userName, String userNickname, String userPassword, String userBirth, boolean userGender, int userPoint, Authority authority) {
+    public User(String userEmail, String userNickname, String userPassword, String userBirth, String userGender, int userPoint, Authority authority) {
         this.userEmail = userEmail;
-        this.userName = userName;
         this.userNickname = userNickname;
         this.userPassword = userPassword;
         this.userBirth = userBirth;
@@ -60,10 +56,9 @@ public class User {
         this.authority = authority;
     }
 
-    public User(Long userNo, String userEmail, String userName, String userNickname, String userPassword, String userBirth, boolean userGender, int userPoint) {
+    public User(Long userNo, String userEmail, String userNickname, String userPassword, String userBirth, String userGender, int userPoint) {
         this.userNo = userNo;
         this.userEmail = userEmail;
-        this.userName = userName;
         this.userNickname = userNickname;
         this.userPassword = userPassword;
         this.userBirth = userBirth;

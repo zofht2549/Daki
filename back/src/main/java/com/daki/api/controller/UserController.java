@@ -47,7 +47,7 @@ public class UserController {
 //        System.out.println(userJoinReq.toString());
         User user = userService.createUser(userJoinReq);
 
-        return ResponseEntity.status(200).body(UserJoinRes.of(user, userJoinReq.getSkin()));
+        return ResponseEntity.status(200).body(UserJoinRes.of(user, userJoinReq.getDollType()));
     }
 
     @PostMapping("/login")

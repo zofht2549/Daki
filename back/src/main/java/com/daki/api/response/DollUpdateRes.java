@@ -2,10 +2,6 @@ package com.daki.api.response;
 
 
 import com.daki.db.entity.Doll;
-import com.daki.db.entity.Skin;
-import com.daki.db.entity.User;
-
-import javax.persistence.*;
 
 public class DollUpdateRes {
 
@@ -13,19 +9,24 @@ public class DollUpdateRes {
 
     private int dollLikeable;
 
-    private Skin skin;
+    private int dollType;
 
     public Long getDollNo() {
         return dollNo;
+    }
+
+    public int getDollType() {
+        return dollType;
+    }
+
+    public void setDollType(int dollType) {
+        this.dollType = dollType;
     }
 
     public int getDollLikeable() {
         return dollLikeable;
     }
 
-    public Skin getSkin() {
-        return skin;
-    }
 
     public void setDollNo(Long dollNo) {
         this.dollNo = dollNo;
@@ -35,20 +36,17 @@ public class DollUpdateRes {
         this.dollLikeable = dollLikeable;
     }
 
-    public void setSkin(Skin skin) {
-        this.skin = skin;
-    }
 
-    public DollUpdateRes(Long dollNo, int dollLikeable, Skin skin) {
+    public DollUpdateRes(Long dollNo, int dollLikeable, int dollType) {
         this.dollNo = dollNo;
         this.dollLikeable = dollLikeable;
-        this.skin = skin;
+        this.dollType = dollType;
     }
 
     public DollUpdateRes(Doll doll){
         this.dollNo = doll.getDollNo();
         this.dollLikeable = doll.getDollLikeable();
-        this.skin = doll.getSkin();
+        this.dollType = doll.getDollType();
     }
 
 }

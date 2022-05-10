@@ -39,12 +39,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public User createUser(UserJoinReq userJoinReq){
-        User user = new User(userJoinReq.getEmail(), userJoinReq.getUserName(), userJoinReq.getNickName(), passwordEncoder.encode(userJoinReq.getPassword()),
-                userJoinReq.getBirth(), userJoinReq.isGender(), 0, Authority.valueOf("ROLE_USER"));
+        User user = new User(userJoinReq.getEmail(), userJoinReq.getNickName(), passwordEncoder.encode(userJoinReq.getPassword()),
+                userJoinReq.getBirth(), userJoinReq.getUserGender(), 0, Authority.valueOf("ROLE_USER"));
 
         User saveUser = userRepository.save(user);  //회원가입 시킴
 
-        Doll doll = new Doll(0, saveUser, userJoinReq.getSkin());
+        Doll doll = new Doll(0, saveUser, userJoinReq.getDollType());
         dollRepository.save(doll);
 
         return saveUser;
