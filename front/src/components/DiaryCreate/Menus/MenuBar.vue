@@ -29,7 +29,7 @@
       <button :class="['undo', {'active':historyInfo[0] > 0}]" title="undo" 
        @click="historyChange('undo')" />
       <button :class="['redo', {'active':historyInfo[1] > historyInfo[0]}]" title="redo" 
-       @click="historyChange('do')" />
+       @click="historyChange('redo')" />
     </div>
   </div>
 </template>
@@ -68,6 +68,7 @@ export default {
         this.isActive = true
         if (e.target.htmlFor == 'image'){
           document.querySelector('#file-input').click()
+          this.menu = null
         }
       }
     },
@@ -80,6 +81,9 @@ export default {
       }
     },
     historyChange: function(payload){
+      if ((payload == 'undo' && this.historyInfo[0] <= 0) || (payload == 'redo' && this.historyInfo[1] <= this.historyInfo[0])){
+        return
+      }
       this.$emit('history-change', payload)
     }
   },
@@ -87,6 +91,9 @@ export default {
     selected: function(){
       if (this.selected){
         this.menu = this.selected.type
+        if (this.selected.type == 'image' || this.selected.type == 'sticker'){
+          this.menu = null
+        }
       }
       else {
         this.menu = null

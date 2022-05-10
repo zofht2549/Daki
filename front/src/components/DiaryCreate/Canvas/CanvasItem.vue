@@ -1,7 +1,7 @@
 <template>
   <div :class="['canvas-item', {'selected': selected, 'edit': editable}]" :id="`item-${idx}`"
    :style="{top: `${top}%`, left: `${left}%`, width: `${width}%`, height: `${height}%`, zIndex: index}"
-   @click="clickHandler" @dblclick="dbclickHandler" @mousedown="dragMove" @mouseup="dropMove"
+   @click="clickHandler" @dblclick="dbclickHandler" @mousedown="dragMove" @mouseup="dropMove" @contextmenu="contextHandler"
    ref="item">
     <textarea v-if="type == 'text'" :class="[`canvas-${item.type}`]"
      v-model="content" :disabled="!editable" autofocus @change="changeHandler"
@@ -15,9 +15,18 @@
 
     <span v-show="selected" class="size-controller" @mousedown="dragResize" />
 
-    <button v-show="selected" class="remover" @click="removeItem">
+    <button v-show="selected" class="remover" @click="remove">
       지우기
     </button>
+    <transition name="swipe">
+      <ul v-show="contextable" class="context-box" ref="context"
+      :style="{ top: `${context.top}px`, left: `${context.left}px` }">
+        <li :class="['context-btn', {'context-active': idx < maxIdx}]" @click="moveIndex(0)">맨 앞으로</li>
+        <li :class="['context-btn', {'context-active': idx < maxIdx}]" @click="moveIndex(1)">앞으로</li>
+        <li :class="['context-btn', {'context-active': idx > 0}]" @click="moveIndex(2)">뒤로</li>
+        <li :class="['context-btn', {'context-active': idx > 0}]" @click="moveIndex(3)">맨 뒤로</li>
+      </ul>
+    </transition>
   </div>
 </template>
 
@@ -29,18 +38,21 @@ export default {
       index: this.idx,
       editable: false,
       resizable: false,
-      draggable: false
+      draggable: false,
+      contextable: false,
+      context: { top: 0, left: 0 }
     }
   },
   props: {
     item: Object,
     idx: Number,
+    maxIdx: Number,
     selected: Boolean,
     canvasSize: Object
   },
   methods: {
-    removeItem: function(){
-      this.$emit('remove-item', this.idx)
+    remove: function(){
+      this.$emit('remove-item')
     },
     clickHandler: function(){
       if (!this.selected){
@@ -55,6 +67,19 @@ export default {
     },
     changeHandler: function(){
       this.$emit('value-change', {content: this.content})
+    },
+    contextHandler: function(e){
+      e.preventDefault()
+    },
+    rightClickHandler: function(e){
+      if (this.selected){
+        this.context.top = e.offsetY
+        this.context.left = e.offsetX
+        this.contextable = true
+      }
+    },
+    moveIndex: function(index){
+      this.$emit('move-index', index)
     },
     /// 리사이즈 ///
     dragResize: function(){
@@ -81,6 +106,10 @@ export default {
     },
     /// 드래그 & 드랍 ///
     dragMove: function(e){
+      /// 우클릭일 경우 ///
+      if (e.button == 2){
+        this.rightClickHandler(e)
+      }
       if (this.selected && !this.editable && e.target.tagName !== 'SPAN'){
         this.draggable = true
         const canvas = document.querySelector('#canvas-container')
@@ -110,6 +139,7 @@ export default {
       if (!this.selected){
         this.editable = false
         this.resizable = false
+        this.contextable = false
       }
     }
   }
@@ -122,7 +152,7 @@ export default {
     margin: 0;
     display: flex;
 
-    & * {
+    & > * {
       width: 100%;
       height: 100%;
       background-color: transparent;
@@ -185,6 +215,56 @@ export default {
 
       &:hover {
         background-color: rgb(255, 85, 85);
+      }
+    }
+
+    @keyframes swipe {
+      from {
+        opacity: 0;
+        transform: scaleY(0);
+        transform-origin: top;
+      }
+      to {
+        opacity: 1;
+        transform: scaleY(1);
+        transform-origin: top;
+      }
+    }
+
+    .swipe-enter-active {
+      animation: swipe 0.2s ease-in forwards;
+      z-index: 987654321;
+    }
+    
+    .swipe-leave-active {
+      animation: swipe 0.2s ease-in forwards reverse;
+      z-index: 987654321;
+    }
+
+    .context-box {
+      position: absolute;
+      margin: 0;
+      padding: 0;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.35);
+      width: 120px;
+      height: 150px;
+
+      .context-btn {
+        list-style: none;
+        padding: 0.5rem 1rem;
+        color: #cccccc;
+        cursor: auto;
+      }
+
+      .context-active {
+        color: black;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #cccccc;
+        }
       }
     }
   }

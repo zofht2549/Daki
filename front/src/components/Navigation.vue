@@ -2,23 +2,25 @@
   <nav id="nav-container">
     <router-link to="/main" class="logo" />
     <ul class="menu-box">
-      <li :class="{'menu':true, 'now': true}">
-        <router-link to="">
+      <li :class="['menu', {'now': path == '/diary-create'}]">
+        <router-link to="/diary-create">
           일기쓰기
         </router-link>
       </li>
-      <li :class="{'menu':true, 'now': true}">
+      <li :class="['menu', {'now': false}]">
         <router-link to="">
           일기장
         </router-link>
       </li>
-      <li :class="{'menu':true, 'now': true}">
+      <li :class="['menu', {'now': path == '/mypage'}]">
         <router-link to="/mypage">
           마이페이지
         </router-link>
       </li>
       <li class="menu">
-        로그아웃
+        <a>
+          로그아웃
+        </a>
       </li>
     </ul>
   </nav>
@@ -32,6 +34,11 @@ export default {
       flag: false
     }
   },
+  computed: {
+    path: function(){
+      return this.$route.path
+    }
+  }
 }
 </script>
 
@@ -66,20 +73,18 @@ export default {
       align-items: center;
       list-style: none;
 
-      & a {
-        text-decoration: none;
-        color: #777777;
-      }
-
-      .menu {
+      .menu > a {
         font-size: 1.5rem;
         color: #777777;
+        text-decoration: none;
         cursor: pointer;
       }
 
-      .now {
+      .now > a {
+        font-weight: bold;
         color: #93D9CE;
       }
+
     }
   }
 </style>

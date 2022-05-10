@@ -2,6 +2,7 @@
   <article id="editor" ref="editor">
     <menu-bar :selected="selected" :isCreated="isCreated" :historyInfo="historyInfo"
      @active-menu="params => activate(params)" @image-upload="file => fileSetter(file)" @history-change="payload => historyChange(payload)" />
+    
     <Canvas :type="type" :isActive="isActive" :changes="changes" :file="file" :historyChangeFromMenu="historyChangeFromMenu"
      @deactivate="deactivate" @select="tar => select(tar)" @get-history-info="info => getHistoryInfo(info)" />
   </article>
@@ -55,6 +56,7 @@ export default {
     },
     getHistoryInfo: function(info){
       this.historyInfo = info
+      this.historyChangeFromMenu = null
     },
     historyChange: function(payload){
       this.historyChangeFromMenu = payload
@@ -69,7 +71,7 @@ export default {
 <style lang="scss">
   #editor {
     width: 100%;
-    min-height: 100vh;
+    min-height: 125vh;
     margin: 3rem;
     border: 1px #cccccc solid;
     background-color: #cccccc;
