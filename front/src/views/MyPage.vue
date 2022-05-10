@@ -147,6 +147,8 @@ export default {
 			}
 		}
 	}
+@media only screen and (min-width:800px){
+
   #mypage-container{
     border-left: 1px #cccccc solid;
     border-right: 1px #cccccc solid;
@@ -286,4 +288,55 @@ export default {
 			right: 10%;
 		}
   }
+}
+@media only screen and (max-width:799px){
+	#mypage-container{
+		width: 100%;
+		padding-top: 20%;
+
+		& > .info{
+
+
+			& > .char-box{
+				display: flex;
+				justify-content: space-around;
+				
+				& > .char{
+					text-align: center;
+					border: 5px solid black;
+					border-radius: 10px;
+					width: 150px;
+					height: 150px;
+					// margin: auto;
+
+					& > img{
+						width: 80%;
+					}
+				}
+			}
+			& > article{
+				& > form{
+					& > textarea{
+						margin: 10px;
+						width: 100%;
+						border-radius: 10px;
+					}
+				}
+			}
+
+			& > .infomation-box{
+				display: flex;
+				justify-content: space-between;
+
+				& > form{
+					& > p{
+						font-size: 1.25rem;
+						font-weight: bold;
+					}
+				}
+			}
+		}
+	}
+}
+
 </style>
