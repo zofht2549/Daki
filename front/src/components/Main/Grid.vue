@@ -2,6 +2,7 @@
   <div id="grid-container">
     <grid-row v-for="(t, num) in nums" :key="'row-' + num" :num="num"
      :items="slicedItems(num)" :point="point" />
+    <img v-if="loading" class="loading" src="../../assets/loading.gif">
   </div>
 </template>
 
@@ -15,7 +16,8 @@ export default {
     return {
       Dummy: Dummy,
       page: 1,
-      flag: false,
+      loading: false,
+      flag: false
     }
   },
   components: {
@@ -44,18 +46,6 @@ export default {
       return point
     }
   },
-  watch: {
-    isEnd: function(){
-      const _this = this
-      if (!this.flag && this.isEnd){
-        _this.flag = true
-        setTimeout(() => {
-          _this.page += 1
-          _this.flag = false
-        }, 1000)
-      }
-    }
-  },
   methods: {
     slicedItems: function(n){
       if (n == 0){
@@ -63,6 +53,29 @@ export default {
       }
       return this.items.slice(n * 4 - 1, n * 4 + 3)
     },
+    getItem: function(){
+      return new Promise((resolve, reject) => {
+        resolve(setTimeout(() => {
+          this.page += 1
+          this.loading = false
+        }, 1000));
+        reject()
+      })
+    }
+  },
+  watch: {
+    isEnd: function(){
+      if (!this.loading && this.isEnd && !this.flag){
+        this.loading = true
+        this.getItem()
+      }
+    },
+    page: function(){
+      console.log(this.page)
+      if (this.page > this.nums / 2){
+        this.flag = true
+      }
+    }
   }
 }
 </script>
@@ -78,6 +91,13 @@ export default {
 
     & * {
       cursor: pointer;
+    }
+
+    .loading {
+      width: 100px;
+      aspect-ratio: 1/1;
+      margin: 3rem auto;
+      cursor: auto;
     }
   }
 </style>

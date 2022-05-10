@@ -25,6 +25,7 @@ import FirstCredentials from '@/components/Signup/FirstCredentials.vue'
 import SecondCredentials from '@/components/Signup/SecondCredentials.vue'
 import AccountComplete from '@/components/Signup/AccountComplete.vue'
 import customAxios from '../customAxios'
+import Swal from 'sweetalert2'
 
 export default {
   data: () => {
@@ -33,34 +34,34 @@ export default {
       direction: true,
       firstCredentials: {
         email: null,
-        nickname: null,
+        nickName: null,
         password: null,
         passwordConf: null
       },
       secondCredentials: {
         birth: null,
         gender: null,
-        character: null
+        dollType: null
       },
       validData: {
         email: false,
-        nickname: false,
+        nickName: false,
         password: false,
         passwordConf: false,
         birth: false,
         gender: false,
-        character: false
+        dollType: false
       }
     }
   },
   computed: {
     firstValidData: function(){
-      const {email, nickname, password, passwordConf} = this.validData
-      return  {email, nickname, password, passwordConf}
+      const {email, nickName, password, passwordConf} = this.validData
+      return  {email, nickName, password, passwordConf}
     },
     secondValidData: function(){
-      const {birth, gender, character} = this.validData
-      return {birth, gender, character}
+      const {birth, gender, dollType} = this.validData
+      return {birth, gender, dollType}
     }
   },
   methods: {
@@ -68,10 +69,13 @@ export default {
       if (tar == 3){
         for (const value of Object.values(this.validData)){
           if (!value){
-            return
+            return Swal.fire({
+              icon: 'warning',
+              text: '회원가입에 필요한 정보를 모두 입력해주세요'
+            })
           }
         }
-        this.signIn()
+        return this.signUp()
       }
       if (tar - this.step > 0){
         this.direction = true
@@ -81,20 +85,28 @@ export default {
       }
       this.step = tar
     },
-    signIn: function(){
+    signUp: function(){
       customAxios({
         method: 'post',
         url: '/api/auth/signup',
         data: {...this.firstCredentials, ...this.secondCredentials}
       })
-      .then(res => console.log(res))
-      .catch(err => console.log(err))
+      .then(() => {
+        this.step = 3
+      })
+      .catch(() => {
+        Swal.fire({
+          icon: 'error',
+          title: '회원가입에 실패했습니다..',
+          text: '계속 문제가 발생할 시 개발진에게 연락주세요'
+        })
+      })
     },
     getFirst: function(credentials){
-      this.firstCredentials = credentials
+      this.firstCredentials = {...credentials}
     },
     getSecond: function(credentials){
-      this.secondCredentials = credentials
+      this.secondCredentials = {...credentials}
     },
     getValidData: function(validData){
       for (const [key, value] of Object.entries(validData)){
@@ -224,6 +236,10 @@ export default {
 
         &:disabled {
           cursor: auto;
+        }
+
+        &:focus {
+          outline: none;
         }
       }
 

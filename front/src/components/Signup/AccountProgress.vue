@@ -32,7 +32,7 @@ export default {
       const msg = []
       Object.keys(this.firstValidData).forEach(key => {
         if (!this.firstValidData[key]){
-          msg.push(temp.key)
+          msg.push(temp[key])
         }
       })
       return msg.join(', ')
@@ -41,10 +41,9 @@ export default {
       return Object.values(this.secondValidData).every(ele => ele)
     },
     secondHelpMessage: function(){
-      const temp = {birth: '생년월일', gender: '성별', character: '캐릭터'}
+      const temp = {birth: '생년월일', gender: '성별', dollType: '캐릭터'}
       const msg = []
       Object.keys(this.secondValidData).forEach(key => {
-        console.log(key)
         if (!this.secondValidData[key]){
           msg.push(temp[key])
         }
