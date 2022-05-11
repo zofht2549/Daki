@@ -49,14 +49,7 @@ export default {
       this.canvasHeight = this.$refs.canvas.clientHeight
     },
     initItems: function(){
-      this.items = items.map(item => {
-        item.width = Number(item.width.replace('%', ''))
-        item.height = Number(item.height.replace('%', ''))
-        item.top = Number(item.top.replace('%', ''))
-        item.left = Number(item.left.replace('%', ''))
-
-        return item
-      })
+      this.items = items
     },
     createNewOne: function(e){
       if (e.target.id == 'canvas-container' && !this.isActive){

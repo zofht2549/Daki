@@ -12,7 +12,7 @@
         </button>
       </div>
     </div>
-    <div id="nav-container" :class="{ active : onClick }">
+    <div id="nav-container" :class="{ active : onClick }" >
     <router-link to="/main" class="logo" />
     <ul class="menu-box">
       <li :class="['menu', {'now': path == '/diary-create'}]">
@@ -31,15 +31,18 @@
         </router-link>
       </li>
       <li class="menu">
-        <a>
+        <a @click="logOut">
           로그아웃
         </a>
       </li>
     </ul>
+    </div>
   </nav>
 </template>
 
 <script>
+import Swal from 'sweetalert2'
+
 export default {
   data: function(){
     return {
@@ -56,6 +59,19 @@ export default {
       }else{
         this.onClick = false
       }
+    },
+    logOut: function(){
+      Swal.fire({
+        icon: 'question',
+        text: '로그아웃 하시겠습니까?',
+        showCancelButton: true
+      }).then(res => {
+        if (res.isConfirmed){
+          window.sessionStorage.clear()
+          this.$store.dispatch('clearUser')
+          this.$router.push('/login')
+        }
+      })
     }
   },
   computed: {

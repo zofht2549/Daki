@@ -1,19 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
+import jwtDecode from 'jwt-decode'
 
 Vue.use(Vuex)
+
+const session = window.sessionStorage
 
 export default new Vuex.Store({
   state: {
     scroll: 0,
     isEnd: false,
-    accessToken: null,
-    credentials:{
-      email:null,
-      password:null,
-      fcmToken:null,
-    }
+    user: null
   },
   mutations: {
     SCROLLED(state, payload){
@@ -22,10 +19,13 @@ export default new Vuex.Store({
     ARRIVED(state, payload){
       state.isEnd = payload
     },
-
     // acounts
-    LOGIN:function(state, data){
-      state.credentials.email = data.email
+    SETUSER(state, payload){
+      session.setItem('user', payload)
+      state.user = JSON.parse(payload)
+    },
+    CLEARUSER(state){
+      state.user = null
     }
   },
   actions: {
@@ -36,30 +36,12 @@ export default new Vuex.Store({
       commit('ARRIVED', payload)
     },
     // accounts
-    login: function({commit}, credentials){
-      console.log('확인',credentials)
-      axios({
-        method: 'POST',
-        url: 'http://k6e105.p.ssafy.io:8080/api/auth/login',
-        // url : `${process.env.VUE_APP_API_URL}/api/auth/login`
-        data:credentials,
-        headers: {
-          "Access-Control-Allow-Origin" : "*",
-          "Access-Control-Allow-Methods" : "GET,POST,PUT,DELETE,OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
-      }
-
-      })
-        .then(res => {
-          console.log('또 확인')
-          // console.log(res)
-          console.log(this.credentials)
-          commit('LOGIN',res.data)
-        })
-        .catch(err =>{
-          console.log('확인확인')
-          console.log(err)
-        })
+    setUser({commit}, credentials){
+      const { accessToken } = credentials
+      commit('SETUSER', JSON.stringify(jwtDecode(accessToken)))
+    },
+    clearUser({ commit }){
+      commit('CLEARUSER')
     }
   },
 })

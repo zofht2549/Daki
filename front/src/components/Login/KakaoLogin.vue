@@ -1,6 +1,6 @@
 <template>
   <button class='social-login kakao-login'>
-      <img src="../../assets/Login/kakao_logo.png" alt="" />
+      <img src="../../assets/Login/kakao_logo.png"/>
       <p>
         Login with Kakao
       </p>

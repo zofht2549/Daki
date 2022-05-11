@@ -19,11 +19,11 @@
     <label for="nickname">
       <h5>닉네임</h5>
       <span>
-        <input type="text" id="nickname" placeholder="닉네임은 2글자 이상, 8글자 이하입니다 " v-model="credentials.nickname">
-        <button :disabled="isValid.nickname" @click.prevent="validator('nickname')">중복확인</button>
+        <input type="text" id="nickname" placeholder="닉네임은 2글자 이상, 8글자 이하입니다 " v-model="credentials.nickName">
+        <button :disabled="isValid.nickName" @click.prevent="validator('nickname')">중복확인</button>
       </span>
-      <div class="help-message-box" v-show="isActive.nickname">
-        <p class="help-message corr" v-if="isValid.nickname">
+      <div class="help-message-box" v-show="isActive.nickName">
+        <p class="help-message corr" v-if="isValid.nickName">
           사용가능한 닉네임입니다.
         </p>
         <p class="help-message warn" v-else>
@@ -74,6 +74,7 @@
 
 <script>
 import customAxios from '../../customAxios.js'
+import Swal from 'sweetalert2'
 
 export default {
   data: function(){
@@ -82,7 +83,7 @@ export default {
       isValid: {...this.validData},
       isActive: {
         email: false,
-        nickname: false,
+        nickName: false,
         password: false,
         passwordConf: false
       }
@@ -94,22 +95,33 @@ export default {
   },
   methods: {
     nextStep: function(){
-      this.$emit('get-credentials', this.credentials)
       this.$emit('next-step', 2)
     },
     validator: function(payload){
       if (payload == 'email'){
         const emailValidator = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/
+        if (!this.credentials.email){
+          return Swal.fire({
+            icon: 'warning',
+            text: '이메일을 입력해주세요!'
+          })
+        }
         if (emailValidator.exec(this.credentials.email)){
           return this.emailCheck()
         }
         this.isActive.email = true
       }
       else if (payload == 'nickname'){
-        if (this.credentials.nickname.length > 1 && this.credentials.nickname.length < 9){
+        if (!this.credentials.nickName){
+          return Swal.fire({
+            icon: 'warning',
+            text: '닉네임을 입력해주세요!'
+          })
+        }
+        if (this.credentials.nickName.length > 1 && this.credentials.nickName.length < 9){
           return this.nicknameCheck()
         }
-        this.isActive.nickname = true
+        this.isActive.nickName = true
       }
       else if (payload == 'password'){
         this.isActive.password = true
@@ -139,48 +151,67 @@ export default {
         method: 'get',
         url: `/api/auth/emailCheck/${this.credentials.email}`
       })
+      .then(() => {
+        Swal.fire({
+          icon: 'success',
+          title: '사용가능한 이메일입니다',
+          text: '다음 단계로 넘어가볼까요?'
+        })
+      })
       .then(() => this.isValid.email = true)
-      .catch()
+      .catch(() => {
+        Swal.fire({
+          icon: 'error',
+          title: '사용중인 이메일이에요',
+          text: '다른 이메일을 입력해주세요'
+        })
+      })
       .finally(() => this.isActive.email = true)
     },
     nicknameCheck: function(){
       customAxios({
         method: 'get',
-        url: `/api/auth/nickNameCheck/${this.credentials.nickname}`
+        url: `/api/auth/nickNameCheck/${this.credentials.nickName}`
       })
-      .then(() => this.isValid.nickname = true)
-      .catch()
-      .finally(() => this.isActive.nickname = true)
+      .then(() => {
+        Swal.fire({
+          icon: 'success',
+          title: '사용가능한 닉네임입니다',
+          text: '다음 단계로 넘어가볼까요?'
+        })
+      })
+      .then(() => this.isValid.nickName = true)
+      .catch(() => {
+        Swal.fire({
+          icon: 'error',
+          title: '사용중인 닉네임이에요',
+          text: '다른 닉네임을 입력해주세요'
+        })
+      })
+      .finally(() => this.isActive.nickName = true)
     }
   },
   watch: {
-    'credentials.email': function(){
-      if (this.isValid.email){
-        this.isValid.email = false
-      }
-      this.isActive.email = false
-    },
-    'credentials.nickname': function(){
-      if (this.isValid.nickname){
-        this.isValid.nickname = false
-      }
-      this.isActive.nickname = false
-    },
-    'credentials.password': function(){
-      this.isActive.password = false
-    },
-    'credentials.passwordConf': function(){
-      this.isActive.passwordConf = false
-    }
+    credentials: {deep: true, handler(){
+      Object.keys(this.credentials).forEach(key => {
+        if (this.credentials[key] !== this.firstCredentials[key]){
+          if (this.isValid[key]){
+            this.isValid[key] = false
+          }
+          this.isActive[key] = false
+        }
+      })
+    }},
+    isValid: {deep:true, handler(){
+      console.log('valid')
+      this.$emit('get-valid-data', this.isValid)
+      this.$emit('get-credentials', this.credentials)
+    }}
   },
   created: function(){
     for (const [key, value] of Object.entries(this.isValid)){
       this.isActive[key] = value
     }
-  },
-  destroyed: function(){
-    this.$emit('get-credentials', this.credentials)
-    this.$emit('get-valid-data', this.isValid)
   }
 }
 </script>

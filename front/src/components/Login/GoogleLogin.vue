@@ -1,6 +1,6 @@
 <template>
   <button class='social-login google-login'>
-      <img src="../../assets/Login/google_logo.png" alt="" />
+      <img src="../../assets/Login/google_logo.png"/>
       <p>
         Sign in with Google
       </p>
