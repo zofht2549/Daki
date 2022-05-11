@@ -8,6 +8,7 @@ import com.daki.common.util.RefreshTokenRepository;
 import com.daki.common.util.SecurityUtil;
 import com.daki.db.entity.Authority;
 import com.daki.db.entity.Doll;
+import com.daki.db.entity.Oauth;
 import com.daki.db.entity.User;
 import com.daki.db.repository.DollRepository;
 import com.daki.db.repository.UserRepository;
@@ -39,8 +40,23 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public User createUser(UserJoinReq userJoinReq){
-        User user = new User(userJoinReq.getEmail(), userJoinReq.getUserName(), userJoinReq.getNickName(), passwordEncoder.encode(userJoinReq.getPassword()),
-                userJoinReq.getBirth(), userJoinReq.isGender(), 0, Authority.valueOf("ROLE_USER"));
+        User user = new User();
+
+        System.out.println("=========================Create User================================");
+        System.out.println(userJoinReq.toString());
+        System.out.println(userJoinReq.getOauth());
+
+        userJoinReq.getOauth();
+
+        if (userJoinReq.getOauth().equals(Oauth.NOT)){
+            user = new User(userJoinReq.getEmail(), userJoinReq.getUserName(), userJoinReq.getNickName(), passwordEncoder.encode(userJoinReq.getPassword()),
+                    userJoinReq.getBirth(), userJoinReq.isGender(), 0, Authority.valueOf("ROLE_USER"), userJoinReq.getOauth());
+        }else{
+            user = new User(userJoinReq.getEmail(), userJoinReq.getUserName(), userJoinReq.getNickName(), passwordEncoder.encode("oauth2"),
+                    userJoinReq.getBirth(), userJoinReq.isGender(), 0, Authority.valueOf("ROLE_USER"), userJoinReq.getOauth());
+        }
+
+        System.out.println(user.toString());
 
         User saveUser = userRepository.save(user);  //회원가입 시킴
 
@@ -58,7 +74,22 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public TokenDto loginUser(UserLoginReq userLoginReq) {
+    public TokenDto loginUser(UserLoginReq userLoginReq, Oauth oauth) {
+        System.out.println("=======================UserServiceImpl Enter========================");
+
+        if(userRepository.countByUserEmailAndOauth(userLoginReq.getEmail(), oauth)==0){
+            System.out.println("이전에 회원가입 한적 없음");
+            return null;
+        }
+
+        if(oauth == Oauth.GOOGLE){
+            userLoginReq.setPassword(passwordEncoder.encode("oauth2"));
+        }
+
+        System.out.println("이전에 회원가입 한 적 있음");
+
+        System.out.println("UserLoginReq : "+userLoginReq.toString());
+
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = userLoginReq.toAuthentication();
         System.out.println(authenticationToken.toString());
@@ -161,5 +192,10 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUserEmail(SecurityUtil.getCurrentUserEmail()).orElseThrow(()
                 -> new RuntimeException("로그인 없음"));
         userRepository.delete(user);
+    }
+
+    @Override
+    public void Test() {
+        System.out.println("==============test=====================");
     }
 }

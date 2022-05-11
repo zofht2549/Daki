@@ -1,6 +1,7 @@
 package com.daki.api.response;
 
 
+import com.daki.db.entity.Oauth;
 import com.daki.db.entity.Skin;
 import com.daki.db.entity.User;
 import io.swagger.annotations.ApiModel;
@@ -17,6 +18,7 @@ public class UserJoinRes {
     private String nickName;
     private String password;
     private String birth;
+    private Oauth oauth;
     private boolean gender;
     private Skin skin;
 
@@ -30,6 +32,7 @@ public class UserJoinRes {
         userJoinRes.setBirth(user.getUserBirth());
         userJoinRes.setGender(user.isUserGender());
         userJoinRes.setSkin(skin);
+        userJoinRes.setOauth(user.getOauth());
 
         return userJoinRes;
     }

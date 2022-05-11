@@ -2,12 +2,13 @@ package com.daki.api.service;
 
 import com.daki.api.request.*;
 import com.daki.common.config.TokenDto;
+import com.daki.db.entity.Oauth;
 import com.daki.db.entity.User;
 
 public interface UserService {
     User createUser(UserJoinReq userJoinReq);
     User getUserByUserId(String email);
-    TokenDto loginUser(UserLoginReq userLoginReq);
+    TokenDto loginUser(UserLoginReq userLoginReq, Oauth oauth);
     Boolean checkEmail(String email);
     Boolean checkNickName(String nickName);
     Boolean checkPassword(UserPasswordReq passwordReq);
@@ -15,5 +16,6 @@ public interface UserService {
     User getMyInfo();
     void modify(UserModifyReq modifyReq);
     void remove();
+    void Test();
 
 }

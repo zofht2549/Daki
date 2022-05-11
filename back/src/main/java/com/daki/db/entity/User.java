@@ -2,10 +2,8 @@ package com.daki.db.entity;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Getter
@@ -41,6 +39,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+    @Enumerated(EnumType.STRING)
+    private Oauth oauth;
+
     public User(){}
 
     public void modify(String password, String nickName){
@@ -48,8 +49,24 @@ public class User {
         this.userPassword = password;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "userNo=" + userNo +
+                ", userEmail='" + userEmail + '\'' +
+                ", userName='" + userName + '\'' +
+                ", userNickname='" + userNickname + '\'' +
+                ", userPassword='" + userPassword + '\'' +
+                ", userBirth='" + userBirth + '\'' +
+                ", userGender=" + userGender +
+                ", userPoint=" + userPoint +
+                ", authority=" + authority +
+                ", oauth=" + oauth +
+                '}';
+    }
+
     @Builder
-    public User(String userEmail, String userName, String userNickname, String userPassword, String userBirth, boolean userGender, int userPoint, Authority authority) {
+    public User(String userEmail, String userName, String userNickname, String userPassword, String userBirth, boolean userGender, int userPoint, Authority authority, Oauth oauth) {
         this.userEmail = userEmail;
         this.userName = userName;
         this.userNickname = userNickname;
@@ -58,9 +75,10 @@ public class User {
         this.userGender = userGender;
         this.userPoint = userPoint;
         this.authority = authority;
+        this.oauth = oauth;
     }
 
-    public User(Long userNo, String userEmail, String userName, String userNickname, String userPassword, String userBirth, boolean userGender, int userPoint) {
+    public User(Long userNo, String userEmail, String userName, String userNickname, String userPassword, String userBirth, boolean userGender, int userPoint, Oauth oauth) {
         this.userNo = userNo;
         this.userEmail = userEmail;
         this.userName = userName;
@@ -69,5 +87,6 @@ public class User {
         this.userBirth = userBirth;
         this.userGender = userGender;
         this.userPoint = userPoint;
+        this.oauth = oauth;
     }
 }

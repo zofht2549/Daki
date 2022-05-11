@@ -9,7 +9,7 @@ import com.daki.api.response.UserJoinRes;
 import com.daki.api.response.UserLoginRes;
 import com.daki.api.service.UserService;
 import com.daki.common.config.TokenDto;
-import com.daki.common.util.JwtTokenUtil;
+import com.daki.db.entity.Oauth;
 import com.daki.db.entity.User;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -34,7 +34,8 @@ public class UserController {
     PasswordEncoder passwordEncoder;
 
     @PostMapping("/signup")
-    @ApiOperation(value = "회원 가입", notes = "회원가입")
+    @ApiOperation(value = "회원 가입",
+            notes = "일반회원가입 : OAUTH2에 NOT입력 / OAUTH2회원가입 : OAUTH2에 해당 값(GOOGLE, KAKAO) 넣고 ID는 OAUTH2 ID입력, PW는 입력 안함")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 401, message = "인증 실패"),
@@ -43,14 +44,14 @@ public class UserController {
     })
     public ResponseEntity<UserJoinRes> join(
             @RequestBody @ApiParam(value="회원가입 정보", required = true) UserJoinReq userJoinReq) {
-//        System.out.println("================================Enter Controller===============================");
-//        System.out.println(userJoinReq.toString());
+
+        System.out.println(userJoinReq.toString());
         User user = userService.createUser(userJoinReq);
 
         return ResponseEntity.status(200).body(UserJoinRes.of(user, userJoinReq.getSkin()));
     }
 
-    @PostMapping("/login")
+    @PostMapping("/basic/login")
     @ApiOperation(value = "로그인", notes = "로그인")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = UserLoginRes.class),
@@ -58,8 +59,10 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음", response = BaseRes.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseRes.class)
     })
-    public ResponseEntity<TokenDto> login(@RequestBody @ApiParam(value="로그인 정보", required = true) UserLoginReq userLoginReq) {
-        return ResponseEntity.ok(userService.loginUser(userLoginReq));
+    public ResponseEntity<TokenDto> login(
+            @RequestBody @ApiParam(value="로그인 정보", required = true) UserLoginReq userLoginReq) {
+        System.out.println("=================Enter Login Controller=======================");
+        return ResponseEntity.ok(userService.loginUser(userLoginReq, Oauth.NOT));
     }
 
     @PostMapping("/reToken")

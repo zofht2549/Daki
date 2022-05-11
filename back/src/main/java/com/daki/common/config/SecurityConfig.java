@@ -1,5 +1,7 @@
 package com.daki.common.config;
 
+import com.daki.api.oauth.dto.common.oauth2.CustomOauth2Service;
+import com.daki.api.oauth.dto.common.oauth2.handler.OAuth2SuccessHandler;
 import com.daki.common.jwt.JwtAccessDeniedHandler;
 import com.daki.common.jwt.JwtAuthenticationEntryPoint;
 import com.daki.common.jwt.JwtSecurityConfig;
@@ -27,6 +29,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final CorsFilter corsFilter;
 
+    private final CustomOauth2Service customOauth2Service;
+    private final OAuth2SuccessHandler successHandler;
+//    private final JwtUtil jwtUtil;
+
 //    public SecurityConfig(
 //            TokenProvider tokenProvider,
 //            CorsFilter corsFilter,
@@ -48,6 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http
                 // token을 사용하는 방식이기 때문에 csrf를 disable합니다.
                 .csrf().disable()
@@ -56,6 +63,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler)
+
+//
 
                 .and()
                 .headers()
@@ -81,7 +90,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 //
                 .and()
-                .apply(new JwtSecurityConfig(tokenProvider));
+                .apply(new JwtSecurityConfig(tokenProvider))
+                .and()
+                .oauth2Login()
+//                .loginPage("/api/auth/login")
+                .successHandler(successHandler)
+                .userInfoEndpoint().userService(customOauth2Service)
+        ;
     }
 
     @Override
@@ -93,7 +108,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/swagger-resources/**");
         web.ignoring().antMatchers("/webjars/**");
         web.ignoring().antMatchers("/api/auth/**");
+        web.ignoring().antMatchers("/api/auth/basic/login");
         web.ignoring().antMatchers("/api/auth");
+//        web.ignoring().antMatchers("/login/oauth2/**");
 
     }
 }
