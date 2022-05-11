@@ -3,39 +3,49 @@
     <div class="nav-mobile">
       <div class="mobile-bar">
         <router-link to="/main">
-          <img src="../assets/logo.png" alt="">
+          <img class="logo-img" src="../assets/logo.png" alt="">
         </router-link>
         
-        <button
+        <!-- <button
           @click="menuClick()">
           메뉴버튼
-        </button>
+        </button> -->
+        <div>
+          <a class="menu-trigger" href="#" @click="menuClick()">
+            <span></span>
+            <span></span>
+            <span></span>
+          </a>
+        </div>
+
       </div>
     </div>
     <div id="nav-container" :class="{ active : onClick }">
-    <router-link to="/main" class="logo" />
-    <ul class="menu-box">
-      <li :class="['menu', {'now': path == '/diary-create'}]">
-        <router-link to="/diary-create">
-          일기쓰기
-        </router-link>
-      </li>
-      <li :class="['menu', {'now': false}]">
-        <router-link to="">
-          일기장
-        </router-link>
-      </li>
-      <li :class="['menu', {'now': path == '/mypage'}]">
-        <router-link to="/mypage">
-          마이페이지
-        </router-link>
-      </li>
-      <li class="menu">
-        <a>
-          로그아웃
-        </a>
-      </li>
-    </ul>
+      <div @click="menuClick()"></div>
+      <router-link to="/main" class="logo" />
+      <ul class="menu-box">
+        <li :class="['menu', {'now': path == '/diary-create'}]">
+          <router-link to="/diary-create">
+            일기쓰기
+          </router-link>
+        </li>
+        <li :class="['menu', {'now': false}]">
+          <router-link to="">
+            일기장
+          </router-link>
+        </li>
+        <li :class="['menu', {'now': path == '/mypage'}]">
+          <router-link to="/mypage">
+            마이페이지
+          </router-link>
+        </li>
+        <li class="menu">
+          <a>
+            로그아웃
+          </a>
+        </li>
+      </ul>
+    </div>
   </nav>
 </template>
 
@@ -69,6 +79,7 @@ export default {
 <style lang="scss">
 @media only screen and (min-width:800px){
   .nav-mobile{
+
     button{
       display: none;
     }
@@ -123,6 +134,49 @@ export default {
   }
 }
 @media only screen and (max-width:799px){
+  .menu-trigger{
+    margin-right:70px;
+    margin-bottom: 50px;
+  }
+  .menu-trigger,
+  .menu-trigger span {
+    display: inline-block;
+    transition: all .4s;
+    box-sizing: border-box;
+  }
+  .menu-trigger{
+    position: relative;
+    width: 50px;
+    height: 44px;
+  }
+  .menu-trigger span{
+    position: absolute;
+    // left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: #fff;
+    border-radius: 4px;
+  }
+  .menu-trigger span:nth-of-type(1){
+    top: 0;
+  }
+  .menu-trigger span:nth-of-type(2){
+    top: 20px;
+  }
+  .menu-trigger span:nth-of-type(3){
+    bottom: 0;
+  }
+  .menu-trigget.active-1 span:nth-of-type(1){
+    -webkit-transform: translateY(20px) rotate(-450deg);
+    transform: translateY(20px) rotate(-450def);
+  }
+  .menu-trigger.active-1 span:nth-of-type(2){
+    opacity: 0;
+  }
+  .menu-trigger.active-1 span:nth-of-type(3){
+    -webkit-transform:translateY(-20px) rotate(45deg);
+    transform: translateY(-20px) rotate(45deg)
+  }
   .nav-mobile{
     width: 100vw;
     height: 80px;
@@ -131,18 +185,20 @@ export default {
     left: 0;
     background-color: #FED771;
     text-align: right;
+    z-index: 10;
+
     & > .mobile-bar{
       display: flex;
       justify-content: space-between;
       height: 100%;
+      position: relative;
 
-        & > button{
-        margin: 10px;
-        padding: 10px;
-        //
-        img{
-          height: 100%;
-        }
+      & > div{
+        padding-top: 15px;
+      }
+      & img {
+        width: 80px;
+        margin-left: 5px;
       }
     }
 
@@ -159,13 +215,23 @@ export default {
         opacity: 1;
         display: block;
         visibility: visible;
-        height: 100vw;
+        height: 100vh;
         float: right;
         top: 60px;
         right: 0px;
         position: fixed;
         z-index: 3;
         margin: 0px;
+
+        & > div:nth-child(1){
+          position: fixed;
+          width: 100vw;
+          height: 100vh;
+          z-index: 0;
+          left: 0;top:0;
+          cursor: pointer;
+          background-color: rgba(0, 0, 0, 0.35);
+        }
 
         @keyframes fadeinRight{
           0%{
@@ -180,16 +246,20 @@ export default {
         & > .menu-box{
           background: #FED771;
           height: 100vw;
-          // height: 100%;
+          height: 100%;
           top: 0px;
+          padding-top: 30px;
           list-style: none;
           text-align: center;
           animation: fadeinRight 1s;
           vertical-align: middle;
+          position: relative;
+          z-index: 10;
 
           & a {
             text-decoration: none;
-            color: #333;
+            color: #fff;
+            font-weight: bold;
           }
           & > .menu{
             width: 200px;
