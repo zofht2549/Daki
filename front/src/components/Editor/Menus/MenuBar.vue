@@ -31,6 +31,10 @@
       <button :class="['redo', {'active':historyInfo[1] > historyInfo[0]}]" title="redo" 
        @click="historyChange('redo')" />
     </div>
+
+    <button class="submit-btn" @click="submitHandler">
+      작성 완료
+    </button>
   </div>
 </template>
 
@@ -85,6 +89,9 @@ export default {
         return
       }
       this.$emit('history-change', payload)
+    },
+    submitHandler: function(){
+      this.$emit('submit')
     }
   },
   watch: {
@@ -97,19 +104,15 @@ export default {
       }
       else {
         this.menu = null
-        this.isActive = false
       }
+      this.isActive = false
     },
     menu: function(){
-      if (this.menu){
-        this.$emit('active-menu', {menu: this.menu, isActive: this.isActive})
-      }
-      else {
-        this.$emit('active-menu', {menu: this.menu, isActive: this.isActive})
-      }
+      this.$emit('active-menu', {menu: this.menu, isActive: this.isActive})
     },
     file: function(){
       if (this.file){
+        console.log(this.file)
         this.$nextTick(() => {
           this.$emit('image-upload', this.file)
         })
@@ -117,8 +120,13 @@ export default {
     },
     isCreated: function(){
       if (this.isCreated){
+        console.log('bye')
         this.isActive = false
         this.file = null
+        if (this.file){
+          console.log('hey')
+          this.file = null
+        }
       }
     }
   }
@@ -224,7 +232,6 @@ export default {
     .do-box {
       display: flex;
       margin-left: auto;
-      margin-right: 1rem;
       align-items: center;
 
       .undo {
@@ -255,6 +262,25 @@ export default {
           cursor: pointer;
           background-image: url('../../../assets/Editor/redo-active.png');
         }
+      }
+    }
+
+    .submit-btn {
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 10px;
+      border: 1px #93D9CE solid;
+      color: #93D9CE;
+      background-color: white;
+      box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.35);
+      margin: 1.5rem;
+      padding: 0.5rem 0.75rem;
+      cursor: pointer;
+
+      &:hover, &:focus {
+        outline: none;
+        background-color: #93D9CE;
+        color: white;
       }
     }
   }

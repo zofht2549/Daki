@@ -12,6 +12,7 @@
     "core-js": "^3.8.3",
     "fabric": "^5.2.1",
     "fs": "^0.0.1-security",
+    "google-auth-library": "^8.0.2",
     "jwt-decode": "^3.1.2",
     "one-colorpicker": "^1.0.12",
     "sweetalert2": "^11.4.13",

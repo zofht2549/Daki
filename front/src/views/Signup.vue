@@ -54,6 +54,13 @@ export default {
       }
     }
   },
+  components: {
+    AccountHeader,
+    AccountProgress,
+    FirstCredentials,
+    SecondCredentials,
+    AccountComplete
+  },
   computed: {
     firstValidData: function(){
       const {email, nickName, password, passwordConf} = this.validData
@@ -113,13 +120,6 @@ export default {
         this.validData[key] = value
       }
     }
-  },
-  components: {
-    AccountHeader,
-    AccountProgress,
-    FirstCredentials,
-    SecondCredentials,
-    AccountComplete
   }
 }
 </script>

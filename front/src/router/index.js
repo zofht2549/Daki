@@ -36,6 +36,11 @@ const routes = [
     path:'/diary-create',
     name:'DiaryCreate',
     component: () => import('../views/DiaryCreate.vue')
+  },
+  {
+    path:'/oauth',
+    name:'Oauth',
+    component: () => import('../views/Oauth.vue')
   }
 ]
 

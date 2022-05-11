@@ -116,6 +116,10 @@ export default {
     align-items: center;
     z-index: 98765432;
 
+    div {
+      display: none;
+    }
+
     .logo {
       width: 75px;
       aspect-ratio: 1/1;

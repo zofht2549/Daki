@@ -1,7 +1,8 @@
 <template>
   <article id="editor" ref="editor">
     <menu-bar :selected="selected" :isCreated="isCreated" :historyInfo="historyInfo"
-     @active-menu="params => activate(params)" @image-upload="file => fileSetter(file)" @history-change="payload => historyChange(payload)" />
+     @active-menu="params => activate(params)" @image-upload="file => fileSetter(file)" @history-change="payload => historyChange(payload)"
+     @submit="submit('manual')" />
     
     <Canvas :type="type" :isActive="isActive" :changes="changes" :file="file" :historyChangeFromMenu="historyChangeFromMenu"
      @deactivate="deactivate" @select="tar => select(tar)" @get-history-info="info => getHistoryInfo(info)" />
@@ -24,6 +25,9 @@ export default {
       historyChangeFromMenu: null
     }
   },
+  props: {
+    title: String
+  },
   components: {
     MenuBar,
     Canvas
@@ -31,6 +35,9 @@ export default {
   computed: {
     isCreated: function(){
       return !this.isActive
+    },
+    items: function(){
+      return this.$children[1].items
     }
   },
   methods: {
@@ -60,10 +67,25 @@ export default {
     },
     historyChange: function(payload){
       this.historyChangeFromMenu = payload
+    },
+    submit: function(type){
+      this.$emit('is-save', type)
+      console.log(this.items, type)
+      setTimeout(() => {
+        this.$emit('is-save')
+      }, 1000)
+    },
+    autoSave: function(){
+      this.submit('auto')
     }
   },
   mounted: function(){
+    window.setInterval(this.autoSave, 150000)
     this.$on('value-change', payload => this.changeSetter(payload))
+  },
+  destroyed: function(){
+    console.log('heuy')
+    window.clearInterval(this.autoSave)
   }
 }
 </script>
