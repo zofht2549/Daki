@@ -42,11 +42,12 @@
 							<span class="content">여</span>
 						</div>
 					</form>
-					<article class="botton-area">
-						<button @click="changePassword()">비밀번호 수정</button>
-						<br>
-						<a href="#">회원탈퇴</a>
-					</article>
+					
+				</article>
+				<article class="botton-area">
+					<button @click="changePassword()">비밀번호 수정</button>
+					<br>
+					<a href="#">회원탈퇴</a>
 				</article>
       </section>
 			<div>
@@ -293,6 +294,8 @@ export default {
 	#mypage-container{
 		width: 100%;
 		padding-top: 20%;
+		padding-left: 16px;
+		padding-right: 16px;
 
 		& > .info{
 
@@ -315,13 +318,55 @@ export default {
 				}
 			}
 			& > article{
+				width: 100%;
 				& > form{
+					width: 100%;
+
+					& > p{
+						font-size: 1.5rem;
+						font-weight: bold;
+					}
 					& > textarea{
-						margin: 10px;
-						width: 100%;
+						display: block;
+						width:100% !important;
 						border-radius: 10px;
+						resize: none;
+						padding: 15px;
+						margin: 10px 0px;
+					}		
+					
+					& > div{
+						display: flex;
+						justify-content: space-between;
+						padding: 10px 0px;
+
+						& > .title{
+							width: 30%;
+							font-size: 1.5rem;
+							font-weight: bold;
+						}
+
+						& > .content{
+							width: 70%;
+							border: none;
+							border-bottom: 1px #cccccc solid;
+							font-size: 1.5rem;
+							margin: 0 1rem;
+							padding: 0.25rem 0.5rem;
+						}
+
+						& > .nickname_button{
+							font-size: 12px;
+							position: absolute;
+							left: 65%;
+							bottom: 25%;
+						}
 					}
 				}
+			}
+
+			& > .botton-area{
+				text-align: center;
 			}
 
 			& > .infomation-box{
@@ -334,6 +379,23 @@ export default {
 						font-weight: bold;
 					}
 				}
+			}
+		}
+		button {
+			font-size: 1.25rem;
+			font-weight: bold;
+			border-radius: 10px;
+			border: 1px #93D9CE solid;
+			color: #93D9CE;
+			background-color: white;
+			box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.35);
+			margin: 2rem 0;
+			padding: 0.5rem 1rem;
+			cursor: pointer;
+
+			&:hover, &:disabled {
+				background-color: #93D9CE;
+				color: white;
 			}
 		}
 	}
