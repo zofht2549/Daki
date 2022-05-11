@@ -2,7 +2,7 @@
   <section id="login-container">
     <account-header title="다이어리 키우기" />
     <article class="login-body">
-      <form action="#">
+      <form @submit.prevent="login">
         <label for="email">
           <span>Email</span>
           <input 
@@ -19,7 +19,7 @@
             placeholder="비밀번호를 입력하세요"
             v-model="credentials.password">
         </label>
-        <button @click="onLogin">로그인</button>
+        <button>로그인</button>
         <router-link to="/signup">
           회원가입
         </router-link>
@@ -36,7 +36,8 @@
 import AccountHeader from '../components/AccountHeader'
 import KakaoLogin from '../components/Login/KakaoLogin'
 import GoogleLogin from '../components/Login/GoogleLogin'
-
+import customAxios from '../customAxios.js'
+import Swal from 'sweetalert2'
 
 export default {
   data:function(){
@@ -53,9 +54,27 @@ export default {
     GoogleLogin
   },
   methods:{
-    onLogin(){
-      this.$store.dispatch('login',this.credentials)
-      console.log('login click')
+    login(){
+      customAxios({
+        method: 'post',
+        url: '/api/auth/login',
+        data: this.credentials
+      })
+      .then(() => {
+        Swal.fire({
+          icon: 'success',
+          title: '로그인 되었습니다',
+          text: '오늘도 다키에서 즐거운 시간 보내세요😎'
+        }).then(() => this.$router.push('/main?tab=calendar'))
+      })
+      .catch(err => {
+        console.log(err)
+        Swal.fire({
+          icon: 'error',
+          title: '로그인에 실패했습니다',
+          text: '입력정보를 확인해주세요'
+        })
+      })
     },
   }
 }

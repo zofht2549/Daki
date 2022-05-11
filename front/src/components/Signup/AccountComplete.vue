@@ -12,7 +12,7 @@
 export default {
   methods: {
     goToMain: function(){
-      this.$router.push('/main')
+      this.$router.push('/login')
     }
   }
 }

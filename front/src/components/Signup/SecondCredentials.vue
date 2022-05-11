@@ -15,11 +15,11 @@
       <span id="gender-box">
         <label for="male">
           남
-          <input type="radio" name="gender" value="male" id="male" v-model="credentials.gender">
+          <input type="radio" name="gender" value="M" id="male" v-model="credentials.gender">
         </label>
         <label for="female">
           여
-          <input type="radio" name="gender" value="female" id="female" v-model="credentials.gender">
+          <input type="radio" name="gender" value="F" id="female" v-model="credentials.gender">
         </label>
       </span>
     </label>
@@ -27,15 +27,15 @@
       <h5>캐릭터</h5>
       <span id="character-box">
         <div class="character">
-          <input type="radio" name="character" value="char-1" id="char-1" v-model="credentials.character">
+          <input type="radio" name="character" :value="1" id="char-1" v-model="credentials.dollType">
           <label for="char-1"/>
         </div>
         <div class="character">
-          <input type="radio" name="character" value="char-2" id="char-2" v-model="credentials.character">
+          <input type="radio" name="character" :value="2" id="char-2" v-model="credentials.dollType">
           <label for="char-2"/>
         </div>
         <div class="character">
-          <input type="radio" name="character" value="char-3" id="char-3" v-model="credentials.character">
+          <input type="radio" name="character" :value="3" id="char-3" v-model="credentials.dollType">
           <label for="char-3"/>
         </div>
       </span>
@@ -61,39 +61,20 @@ export default {
   },
   methods: {
     nextStep: function(){
-      this.$emit('get-credentials', this.credentials)
       this.$emit('next-step', 3)
     }
   },
   watch: {
-    'isValid.birth': function(){
-      if (this.credentials.birth){
-        this.isValid.birth = true
-      }
-      else {
-        this.isValid.birth = false
-      }
-    },
-    'isValid.gender': function(){
-      if (this.credentials.gender){
-        this.isValid.gender = true
-      }
-      else {
-        this.isValid.gender = false
-      }
-    },
-    'isValid.character': function(){
-      if (this.credentials.character){
-        this.isValid.character = true
-      }
-      else {
-        this.isValid.character = false
-      }
-    }
-  },
-  destroyed: function(){
-    this.$emit('get-credentials', this.credentials)
-    this.$emit('get-valid-data', this.isValid)
+    credentials: {deep: true, handler(){
+      Object.keys(this.credentials).forEach(key => {
+        const value = Boolean(this.credentials[key])
+        this.isValid[key] = value
+      })
+      this.$emit('get-credentials', this.credentials)
+    }},
+    isValid: {deep:true, handler(){
+      this.$emit('get-valid-data', this.isValid)
+    }}
   }
 }
 </script>

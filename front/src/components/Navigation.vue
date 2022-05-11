@@ -50,6 +50,8 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
+
 export default {
   data: function(){
     return {
@@ -66,6 +68,19 @@ export default {
       }else{
         this.onClick = false
       }
+    },
+    logOut: function(){
+      Swal.fire({
+        icon: 'question',
+        text: '로그아웃 하시겠습니까?',
+        showCancelButton: true
+      }).then(res => {
+        if (res.isConfirmed){
+          window.sessionStorage.clear()
+          this.$store.dispatch('clearUser')
+          this.$router.push('/login')
+        }
+      })
     }
   },
   computed: {
