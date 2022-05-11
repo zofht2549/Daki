@@ -3,6 +3,8 @@ package com.daki.db.entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -26,6 +28,8 @@ public class Diary {
     private String diaryContent;
 
     @Column(name = "diary_date")
+    @CreatedDate
+    @LastModifiedDate
     private LocalDateTime diaryDate;
 
     @ManyToOne
@@ -33,10 +37,18 @@ public class Diary {
     private User user;
 
 
-    public Diary(String diaryTitle, String diaryContent, LocalDateTime diaryDate, User user) {
+    public Diary(String diaryTitle, String diaryContent, User user) {
         this.diaryTitle = diaryTitle;
         this.diaryContent = diaryContent;
-        this.diaryDate = diaryDate;
+        this.diaryDate = LocalDateTime.now();
+        this.user = user;
+    }
+
+    public Diary(Long diaryNo,String diaryTitle, String diaryContent, User user) {
+        this.diaryNo = diaryNo;
+        this.diaryTitle = diaryTitle;
+        this.diaryContent = diaryContent;
+        this.diaryDate = LocalDateTime.now();
         this.user = user;
     }
 }

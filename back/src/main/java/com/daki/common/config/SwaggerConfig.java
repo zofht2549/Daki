@@ -3,8 +3,10 @@ package com.daki.common.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.ApiKey;
 import springfox.documentation.service.AuthorizationScope;
@@ -36,7 +38,21 @@ public class SwaggerConfig {
 
     @Bean
     public Docket api() {
+        ParameterBuilder parameterBuilder = new ParameterBuilder();
+        parameterBuilder.name("Authorization")
+                .description("Access Token")
+                .modelRef(new ModelRef("string"))
+                .parameterType("header")
+                .required(false)
+                .name("Refresh_Authorization")
+                .description("Refresh Token")
+                .modelRef(new ModelRef("string"))
+                .parameterType("header")
+                .required(false)
+                .build();
+
         return new Docket(DocumentationType.SWAGGER_2)
+//                .globalOperationParameters(parameterBuilder, parameterBuilder)
                 .consumes(getConsumeContentTypes())
                 .produces(getProduceContentTypes())
                 .apiInfo(apiInfo())
@@ -45,12 +61,17 @@ public class SwaggerConfig {
                 .paths(PathSelectors.ant("/api/**"))
                 .build()
                 .securityContexts(newArrayList(securityContext()))
-                .securitySchemes(newArrayList(apiKey()));
+
+                .securitySchemes(newArrayList(apiKey2()));
 
     }
 
     private ApiKey apiKey() {
         return new ApiKey(SECURITY_SCHEMA_NAME, "Authorization", "header");
+    }
+
+    private ApiKey apiKey2() {
+        return new ApiKey(SECURITY_SCHEMA_NAME, "Refresh_Authorization", "header");
     }
 
     private SecurityContext securityContext() {

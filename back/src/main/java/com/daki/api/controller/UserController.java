@@ -17,6 +17,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -58,8 +59,12 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음", response = BaseRes.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseRes.class)
     })
-    public ResponseEntity<TokenDto> login(@RequestBody @ApiParam(value="로그인 정보", required = true) UserLoginReq userLoginReq) {
-        return ResponseEntity.ok(userService.loginUser(userLoginReq));
+    public ResponseEntity<CheckRes> login(@RequestBody @ApiParam(value="로그인 정보", required = true) UserLoginReq userLoginReq) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("Test", "test!!!!!!");
+        Object object = new Object();
+        return userService.loginUser(userLoginReq);
+//        return ResponseEntity.ok(userService.loginUser(userLoginReq));
     }
 
     @PostMapping("/reToken")

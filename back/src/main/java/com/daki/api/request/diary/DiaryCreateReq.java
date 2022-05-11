@@ -16,6 +16,4 @@ public class DiaryCreateReq {
 
     String diaryTitle;
     String diaryContent;
-    LocalDateTime diaryDate;
-    User user;
 }

@@ -19,6 +19,4 @@ public class DiaryUpdateReq {
     private String diaryTitle;
 
     private String diaryContent;
-
-    private LocalDateTime diaryDate;
 }

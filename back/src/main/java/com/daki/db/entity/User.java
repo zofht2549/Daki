@@ -65,4 +65,18 @@ public class User {
         this.userGender = userGender;
         this.userPoint = userPoint;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userNo=" + userNo +
+                ", userEmail='" + userEmail + '\'' +
+                ", userNickname='" + userNickname + '\'' +
+                ", userPassword='" + userPassword + '\'' +
+                ", userBirth='" + userBirth + '\'' +
+                ", userGender='" + userGender + '\'' +
+                ", userPoint=" + userPoint +
+                ", authority=" + authority +
+                '}';
+    }
 }

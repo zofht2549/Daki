@@ -1,6 +1,7 @@
 package com.daki.api.service;
 
 import com.daki.api.request.*;
+import com.daki.api.response.CheckRes;
 import com.daki.common.config.TokenDto;
 import com.daki.common.config.TokenProvider;
 import com.daki.common.util.RefreshToken;
@@ -13,12 +14,16 @@ import com.daki.db.repository.DollRepository;
 import com.daki.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -58,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public TokenDto loginUser(UserLoginReq userLoginReq) {
+    public ResponseEntity loginUser(UserLoginReq userLoginReq) {
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = userLoginReq.toAuthentication();
         System.out.println(authenticationToken.toString());
@@ -77,8 +82,16 @@ public class UserServiceImpl implements UserService {
 
         refreshTokenRepository.save(refreshToken);
 
-        // 5. 토큰 발급
-        return tokenDto;
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("Authorization", "Bearer " + tokenDto.getAccessToken());
+        httpHeaders.set("Refresh_Authorization", tokenDto.getRefreshToken());
+
+        CheckRes checkRes = new CheckRes();
+        checkRes.setStatusText("Login Success");
+
+        return ResponseEntity.ok()
+                .headers(httpHeaders)
+                .body(checkRes);
     }
 
     @Override
@@ -141,8 +154,11 @@ public class UserServiceImpl implements UserService {
     public User getMyInfo() {
 //        String str = SecurityUtil.getCurrentUserEmail();
 //        System.out.println(str);
-        return userRepository.findByUserEmail(SecurityUtil.getCurrentUserEmail()).orElseThrow(()
+        User user = userRepository.findByUserEmail(SecurityUtil.getCurrentUserEmail()).orElseThrow(()
                 -> new RuntimeException("로그인 없음"));
+
+        System.out.println("User : "+user.toString());
+        return user;
     }
 
     @Transactional
@@ -161,5 +177,41 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUserEmail(SecurityUtil.getCurrentUserEmail()).orElseThrow(()
                 -> new RuntimeException("로그인 없음"));
         userRepository.delete(user);
+    }
+
+    @Override
+    public ResponseEntity tokenEnter(HttpServletRequest request, Object body, int status) {
+
+        String refresh = request.getHeader("Refresh_Authorization");
+        if (!tokenProvider.validateToken(refresh)) {
+            throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
+        }
+
+        // 2. Access Token 에서 Member ID 가져오기
+        Authentication authentication = tokenProvider.getAuthentication(request.getHeader("Authorization"));
+
+        // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져옴
+        RefreshToken refreshToken = refreshTokenRepository.findByTokenKey(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
+
+        // 4. Refresh Token 일치하는지 검사
+        if (!refreshToken.getTokenValue().equals(refresh)) {
+            throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
+        }
+
+        // 5. 새로운 토큰 생성
+        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+
+        // 6. 저장소 정보 업데이트
+        RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
+        refreshTokenRepository.save(newRefreshToken);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("Authorization", "Bearer" + tokenDto.getAccessToken());
+        httpHeaders.set("Refresh_Authorization", tokenDto.getRefreshToken());
+
+        return ResponseEntity.status(status)
+                .headers(httpHeaders)
+                .body(body);
     }
 }
