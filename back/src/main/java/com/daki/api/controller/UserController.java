@@ -59,7 +59,7 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음", response = BaseRes.class),
             @ApiResponse(code = 500, message = "서버 오류", response = BaseRes.class)
     })
-    public ResponseEntity<CheckRes> login(@RequestBody @ApiParam(value="로그인 정보", required = true) UserLoginReq userLoginReq) {
+    public ResponseEntity<TokenDto> login(@RequestBody @ApiParam(value="로그인 정보", required = true) UserLoginReq userLoginReq) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("Test", "test!!!!!!");
         Object object = new Object();

@@ -80,18 +80,17 @@ public class TokenProvider {
                 .signWith(key, SignatureAlgorithm.HS512)    // header "alg": "HS512"
 
                 //User 정보 입력
-                .claim("user_no", user.getUserNo())
-                .claim("user_email", user.getUserEmail())
-                .claim("user_nickname", user.getUserNickname())
-                .claim("user_birth", user.getUserBirth())
-                .claim("user_gender", user.getUserGender())
+                .claim("email", user.getUserEmail())
+                .claim("nickName", user.getUserNickname())
+                .claim("birth", user.getUserBirth())
+                .claim("userGender", user.getUserGender())
                 .claim("user_point", user.getUserPoint())
 //                .claim("user_oauth2", user.getOauth2())
 
                 //Doll 정보 입력
+                .claim("dollType", doll.getDollType())
                 .claim("doll_no", doll.getDollNo())
                 .claim("doll_likable", doll.getDollLikeable())
-                .claim("doll_type", doll.getDollType())
 
                 //착용한 Item번호 list
                 .claim("wearItemList", wearItemList)

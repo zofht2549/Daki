@@ -2,6 +2,7 @@ package com.daki.api.service;
 
 import com.daki.api.request.*;
 import com.daki.api.response.CheckRes;
+import com.daki.api.response.UserLoginRes;
 import com.daki.common.config.TokenDto;
 import com.daki.common.config.TokenProvider;
 import com.daki.common.util.RefreshToken;
@@ -91,9 +92,11 @@ public class UserServiceImpl implements UserService {
         CheckRes checkRes = new CheckRes();
         checkRes.setStatusText("Login Success");
 
+
+
         return ResponseEntity.ok()
                 .headers(httpHeaders)
-                .body(checkRes);
+                .body(tokenDto);
     }
 
     @Override
