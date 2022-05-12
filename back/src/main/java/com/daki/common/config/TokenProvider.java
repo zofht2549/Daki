@@ -1,10 +1,17 @@
 package com.daki.common.config;
 
+import com.daki.db.entity.Doll;
+import com.daki.db.entity.UserItem;
+import com.daki.db.repository.DollRepository;
+import com.daki.db.repository.UserItemRepository;
+import com.daki.db.repository.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,14 +20,24 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import java.security.Key;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Component
 public class TokenProvider {
+
+    @Autowired
+    @Lazy
+    UserRepository userRepository;
+
+    @Autowired
+    @Lazy
+    DollRepository dollRepository;
+
+    @Autowired
+    @Lazy
+    UserItemRepository userItemRepository;
 
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_TYPE = "bearer";
@@ -35,12 +52,24 @@ public class TokenProvider {
     }
 
     public TokenDto generateTokenDto(Authentication authentication) {
+        System.out.println("====================Enter TokenProvider => generate TokenDto=======================");
         // 권한들 가져오기
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
+
+        System.out.println(authentication.getName());
+        String email = authentication.getName();
+
+        com.daki.db.entity.User user = userRepository.findByUserEmail(email).get();
+        Doll doll = dollRepository.findByUser(user);
+        List<UserItem> userItemList = userItemRepository.findByDollAndWearFlag(doll, true);
+        List<Long> wearItemList = new ArrayList<>();
+        for (UserItem userItem: userItemList) {
+            wearItemList.add(userItem.getItem().getItemNo());
+        }
 
         // Access Token 생성
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
@@ -49,7 +78,23 @@ public class TokenProvider {
                 .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
                 .setExpiration(accessTokenExpiresIn)        // payload "exp": 1516239022 (예시)
                 .signWith(key, SignatureAlgorithm.HS512)    // header "alg": "HS512"
-                .claim("Test", "Test Success")
+
+                //User 정보 입력
+                .claim("user_no", user.getUserNo())
+                .claim("user_email", user.getUserEmail())
+                .claim("user_nickname", user.getUserNickname())
+                .claim("user_birth", user.getUserBirth())
+                .claim("user_gender", user.getUserGender())
+                .claim("user_point", user.getUserPoint())
+//                .claim("user_oauth2", user.getOauth2())
+
+                //Doll 정보 입력
+                .claim("doll_no", doll.getDollNo())
+                .claim("doll_likable", doll.getDollLikeable())
+                .claim("doll_type", doll.getDollType())
+
+                //착용한 Item번호 list
+                .claim("wearItemList", wearItemList)
                 .compact();
 
         // Refresh Token 생성

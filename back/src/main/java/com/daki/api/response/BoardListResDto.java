@@ -1,7 +1,14 @@
 package com.daki.api.response;
 
+import io.swagger.annotations.ApiModel;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@ApiModel("BoardListResDto")
 public class BoardListResDto {
 
     private Long boardNo;

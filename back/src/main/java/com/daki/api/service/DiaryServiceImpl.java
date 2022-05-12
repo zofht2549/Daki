@@ -31,8 +31,8 @@ public class DiaryServiceImpl implements DiaryService{
     }
 
     @Override
-    public DiaryReadRes readDiary(DiaryReadReq diaryReadReq) {
-        return new DiaryReadRes(diaryRepository.getById(diaryReadReq.getDiaryNo()));
+    public DiaryReadRes readDiary(Long diaryNo) {
+        return new DiaryReadRes(diaryRepository.getById(diaryNo));
     }
 
     @Override
@@ -51,8 +51,8 @@ public class DiaryServiceImpl implements DiaryService{
     }
 
     @Override
-    public DiaryDeleteRes deleteDiary(DiaryDeleteReq diaryDeleteReq) {
-        Diary deleteDiary = diaryRepository.getById(diaryDeleteReq.getDiaryNo());
+    public DiaryDeleteRes deleteDiary(Long diaryNo) {
+        Diary deleteDiary = diaryRepository.getById(diaryNo);
         diaryRepository.delete(deleteDiary);
 
         return new DiaryDeleteRes("Delete success.");

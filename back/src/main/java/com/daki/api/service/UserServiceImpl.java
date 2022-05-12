@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.StringTokenizer;
 
 @Service
 @RequiredArgsConstructor
@@ -83,6 +84,7 @@ public class UserServiceImpl implements UserService {
         refreshTokenRepository.save(refreshToken);
 
         HttpHeaders httpHeaders = new HttpHeaders();
+//        tokenDto.getAccessToken()
         httpHeaders.set("Authorization", "Bearer " + tokenDto.getAccessToken());
         httpHeaders.set("Refresh_Authorization", tokenDto.getRefreshToken());
 
@@ -127,6 +129,8 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
         }
 
+        System.out.println("================Enter Reissue====================");
+        System.out.println("access Token : " + tokenRequestDto.getAccessToken());
         // 2. Access Token 에서 Member ID 가져오기
         Authentication authentication = tokenProvider.getAuthentication(tokenRequestDto.getAccessToken());
 
@@ -187,8 +191,14 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
         }
 
+        StringTokenizer st = new StringTokenizer(request.getHeader("Authorization"));
+
+        String accessTop = st.nextToken();
+        String accessBody = st.nextToken();
+        System.out.println("TOP : " +accessTop);
+        System.out.println("BODY : " +accessBody);
         // 2. Access Token 에서 Member ID 가져오기
-        Authentication authentication = tokenProvider.getAuthentication(request.getHeader("Authorization"));
+        Authentication authentication = tokenProvider.getAuthentication(accessBody);
 
         // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져옴
         RefreshToken refreshToken = refreshTokenRepository.findByTokenKey(authentication.getName())
@@ -203,12 +213,12 @@ public class UserServiceImpl implements UserService {
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
 
         // 6. 저장소 정보 업데이트
-        RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
-        refreshTokenRepository.save(newRefreshToken);
+//        RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
+//        refreshTokenRepository.save(newRefreshToken);
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("Authorization", "Bearer" + tokenDto.getAccessToken());
-        httpHeaders.set("Refresh_Authorization", tokenDto.getRefreshToken());
+        httpHeaders.set("Authorization", "Bearer " + tokenDto.getAccessToken());
+        httpHeaders.set("Refresh_Authorization", refresh);
 
         return ResponseEntity.status(status)
                 .headers(httpHeaders)

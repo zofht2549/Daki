@@ -1,5 +1,9 @@
 package com.daki.api.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModel;
+
+@ApiModel
 public class DollUpdateReq {
 
     private long userNo;
@@ -12,6 +16,7 @@ public class DollUpdateReq {
         return dollLikeable;
     }
 
+    @JsonIgnore
     public void setUserNo(long userNo) {this.userNo = userNo;}
 
     public void setDollLikeable(int dollLikeable) {

@@ -32,6 +32,9 @@ public class User {
     @Column(name = "user_gender")
     private String userGender;  //남자 = "M", 여자 = "F"
 
+//    @Column(name = "user_oauth2")
+//    private Oauth2 oauth2;
+
     @Column(name = "user_point")
     private int userPoint;
 

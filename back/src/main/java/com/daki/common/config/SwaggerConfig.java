@@ -38,18 +38,18 @@ public class SwaggerConfig {
 
     @Bean
     public Docket api() {
-        ParameterBuilder parameterBuilder = new ParameterBuilder();
-        parameterBuilder.name("Authorization")
-                .description("Access Token")
-                .modelRef(new ModelRef("string"))
-                .parameterType("header")
-                .required(false)
-                .name("Refresh_Authorization")
-                .description("Refresh Token")
-                .modelRef(new ModelRef("string"))
-                .parameterType("header")
-                .required(false)
-                .build();
+//        ParameterBuilder parameterBuilder = new ParameterBuilder();
+//        parameterBuilder.name("Authorization")
+//                .description("Access Token")
+//                .modelRef(new ModelRef("string"))
+//                .parameterType("header")
+//                .required(false)
+//                .name("Refresh_Authorization")
+//                .description("Refresh Token")
+//                .modelRef(new ModelRef("string"))
+//                .parameterType("header")
+//                .required(false)
+//                .build();
 
         return new Docket(DocumentationType.SWAGGER_2)
 //                .globalOperationParameters(parameterBuilder, parameterBuilder)
@@ -61,8 +61,9 @@ public class SwaggerConfig {
                 .paths(PathSelectors.ant("/api/**"))
                 .build()
                 .securityContexts(newArrayList(securityContext()))
-
-                .securitySchemes(newArrayList(apiKey2()));
+                .securitySchemes(newArrayList(apiKey()))
+//                .securitySchemes(newArrayList(apiKey2()))
+                ;
 
     }
 
