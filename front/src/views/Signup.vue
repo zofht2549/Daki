@@ -1,8 +1,8 @@
 <template>
   <section id="signup-container">
-    <account-header title="다키에 오신 것을 환영합니다" />
+    <account-header />
     <article class="signup-body">
-      <account-progress :step="step" :direction="direction" :firstValidData="firstValidData" :secondValidData="secondValidData"
+      <account-progress :step="step" :direction="direction" :firstValidData="firstValidData" :secondValidData="secondValidData" :oauth="oauth"
        @change-step="tar => changeStep(Number(tar))" />
 
       <first-credentials v-if="step == 1" :firstCredentials="firstCredentials" :validData="firstValidData"
@@ -32,6 +32,7 @@ export default {
     return {
       step: 1,
       direction: true,
+      oauth: false,
       firstCredentials: {
         email: null,
         nickName: null,
@@ -109,6 +110,12 @@ export default {
         })
       })
     },
+    oAuthSignUp: function(){
+      customAxios({
+        method: 'put',
+        url: '/api/auth/signup'
+      })
+    },
     getFirst: function(credentials){
       this.firstCredentials = {...credentials}
     },
@@ -119,6 +126,11 @@ export default {
       for (const [key, value] of Object.entries(validData)){
         this.validData[key] = value
       }
+    }
+  },
+  created: function(){
+    if (this.oauth){
+      this.step = 2
     }
   }
 }

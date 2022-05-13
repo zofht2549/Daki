@@ -1,15 +1,15 @@
 <template>
-  <div class="progress-box">
-    <hr class="progress-bar">
-    <div :class="['progress', {'done': step > 0, 'warn': step > 0 && !firstValid}]"
+  <div :class="['progress-box', {'oauth': oauth}]">
+    <hr class="progress-bar" ref="progress-bar">
+    <div :class="['progress', {'done': step > 0, 'warn': step > 0 && !firstValid, 'disabled': step == 3}]" v-if="!oauth"
      :title="firstValid ? '':`${firstHelpMessage}를 확인해주세요`" id="1" @click="e => changeStep(e)">
       <p class="progress-text">기본 정보</p>
     </div>
-    <div :class="['progress', {'done': step > 1, 'warn': step > 1 && !secondValid}]" 
+    <div :class="['progress', {'done': step > 1, 'warn': step > 1 && !secondValid, 'disabled': step == 3}]" 
      :title="secondValid ? '':`${secondHelpMessage}를 확인해주세요`" id="2" @click="e => changeStep(e)">
       <p class="progress-text">개인 정보</p>
     </div>
-    <div :class="['progress', {'done': step > 2}]" id="3" @click="e => changeStep(e)">
+    <div :class="['progress', {'done': step > 2, 'disabled': step == 3}]" id="3" @click="e => changeStep(e)">
       <p class="progress-text">가입 완료</p>
     </div>
   </div>
@@ -20,6 +20,7 @@ export default {
   props: {
     step: Number,
     direction: Boolean,
+    oauth: Boolean,
     firstValidData: Object,
     secondValidData: Object
   },
@@ -53,28 +54,44 @@ export default {
   },
   methods: {
     changeStep: function(e){
+      let tar
       if (e.target.id){
-        this.$emit('change-step', e.target.id)
+        tar = e.target.id
       }
       else {
-        this.$emit('change-step', e.target.parentElement.id)
+        tar = e.target.parentElement.id
       }
-    },
-    setProgressBar: function(){
-      const bar = document.querySelectorAll('.progress-bar')[0]
+      if (this.step !== 3){
+        this.$emit('change-step', tar)
+      }
+    }
+  },
+  watch: {
+    step: function(){
+      const bar = this.$refs['progress-bar']
 
       if (this.step == 1 && !this.direction){
         bar.style.animation = 'decrease2 0.5s ease-in both'
       }
       else if (this.step == 2){
-        if (this.direction){
-          bar.style.animation = 'increase1 0.5s ease-in both'
+        if (this.oauth){
+          if (!this.direction){
+            bar.style.animation = 'decrease3 0.5s ease-in both'
+          }
         }
         else {
-          bar.style.animation = 'decrease1 0.5s ease-in both'
+          if (this.direction){
+            bar.style.animation = 'increase1 0.5s ease-in both'
+          }
+          else {
+            bar.style.animation = 'decrease1 0.5s ease-in both'
+          }
         }
       }
       else if (this.step == 3){
+        if (this.oauth){
+          bar.style.animation = 'increase3 0.5s ease-in both'
+        }
         bar.style.animation = 'increase2 0.5s ease-in both'
       }
     }
@@ -82,14 +99,16 @@ export default {
   mounted: function(){
     const dots = document.querySelectorAll('.progress')
 
-    dots.forEach((ele, idx) => {
-      ele.style.left = `${50 * idx}%`
-    })
-
-    this.setProgressBar()
-  },
-  updated: function(){
-    this.setProgressBar()
+    if (this.oauth){
+      dots.forEach((ele, idx) => {
+        ele.style.left = `${100 * idx}%`
+      })
+    }
+    else {
+      dots.forEach((ele, idx) => {
+        ele.style.left = `${50 * idx}%`
+      })
+    }
   }
 }
 </script>
@@ -105,6 +124,10 @@ export default {
     border-top: 1px #777777 solid;
     position: relative;
 
+    &.oauth {
+      width: 10%;
+    }
+
     @keyframes increase1 {
       from {width: 0%;}
       to {width: 50%;}
@@ -115,6 +138,11 @@ export default {
       to {width: 100%;}
     }
 
+    @keyframes increase3 {
+      from {width: 0%;}
+      to {width: 100%;}
+    }
+
     @keyframes decrease1 {
       from {width: 100%;}
       to {width: 50%;}
@@ -122,6 +150,11 @@ export default {
 
     @keyframes decrease2 {
       from {width: 50%;}
+      to {width: 0%;}
+    }
+
+    @keyframes decrease3 {
+      from {width: 100%;}
       to {width: 0%;}
     }
 
@@ -176,6 +209,10 @@ export default {
         .progress-text {
           color: rgb(252, 112, 112);
         }
+      }
+
+      &.disabled {
+        cursor: auto;
       }
     }
   }

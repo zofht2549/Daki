@@ -40,7 +40,7 @@
           </router-link>
         </li>
         <li class="menu">
-          <a>
+          <a @click="logOut">
             로그아웃
           </a>
         </li>

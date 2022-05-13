@@ -12,6 +12,7 @@
 <script>
 import MenuBar from './Menus/MenuBar.vue'
 import Canvas from './Canvas/Canvas.vue'
+import AWS from 'aws-sdk'
 
 export default {
   data: function(){
@@ -69,14 +70,46 @@ export default {
       this.historyChangeFromMenu = payload
     },
     submit: function(type){
+      // const data = {
+      //   title: this.title,
+      //   content: JSON.stringify(this.items)
+      // }
+      // console.log(data)
+      this.fileUploadToS3()
       this.$emit('is-save', type)
-      console.log(this.items, type)
       setTimeout(() => {
         this.$emit('is-save')
       }, 1000)
     },
     autoSave: function(){
       this.submit('auto')
+    },
+    fileUploadToS3: function(){
+      this.items.forEach(ele => {
+        if (ele.imgUrl && ele.imgUrl.slice(8, 15) != 'diarypj'){
+          const credential = {
+            accessKeyId: 'AKIAZYOLGFVFTHMZXGGK',
+            secretAccessKey: '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',
+            region: 'ap-northeast-2'
+          }
+          const s3 = new AWS.S3(credential)
+          console.log(s3)
+          const params = {
+            Bucket: 'diarypj',
+            Key: ele.imgUrl,
+            Body: ele.imgUrl,
+            ContentEncoding: 'base64',
+            ContentType: 'image/*',
+          }
+
+          s3.upload(params, (err, data) => {
+            if (err){
+              console.dir(err)
+            }
+            console.dir(data)
+          })
+        }
+      })
     }
   },
   mounted: function(){

@@ -18,7 +18,7 @@ export default {
         client_id: process.env.VUE_APP_GOOGLE_CLIENT_ID,
         redirect_uri: process.env.VUE_APP_REDIRECT_URI,
         response_type: 'token',
-        scope: 'https://www.googleapis.com/auth/drive.metadata.readonly'
+        scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile'
       }
       for (const key in params){
         url += `${key}=${params[key]}&`

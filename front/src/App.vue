@@ -67,4 +67,8 @@ export default {
       box-sizing: border-box;
     }
   }
+
+  .swal2-container {
+    z-index: 987654321 !important;
+  }
 </style>

@@ -7,11 +7,12 @@
     <label :class="[{'clicked': menu == 'mic'}, 'mic']" title="음성 녹음" for="mic"
      @click="menuClickHandler" />
     <input type="radio" id="mic" value="mic" v-model="menu">
+    <!-- <speech-to-text v-if="menu == 'mic'"/> -->
 
     <label :class="[{'clicked': menu == 'image'}, 'image']" title="이미지" for="image"
      @click="menuClickHandler" />
     <input type="radio" id="image" value="image" v-model="menu">
-    <image-uploader  v-model="file" :maxSize="3" v-show="false"
+    <image-uploader v-model="file" :maxSize="3" v-show="false"
       :id="'file-input'" :maxWidth="500" :maxHeight="500" :preview="false" />
 
     <label :class="[{'clicked': menu == 'sticker'}, 'sticker']" :title="menu == 'sticker' ? false:'스티커'" for="sticker"
@@ -40,6 +41,7 @@
 
 <script>
 import TextOptions from './TextOptions.vue'
+// import SpeechToText from './SpeechToText.vue'
 import ImageUploader from 'vue-image-upload-resize'
 import StickerLoader from './StickerLoader.vue'
 
@@ -59,7 +61,8 @@ export default {
   components: {
     TextOptions,
     ImageUploader,
-    StickerLoader
+    StickerLoader,
+    // SpeechToText
   },
   methods: {
     menuClickHandler: function(e){
@@ -112,7 +115,6 @@ export default {
     },
     file: function(){
       if (this.file){
-        console.log(this.file)
         this.$nextTick(() => {
           this.$emit('image-upload', this.file)
         })
@@ -120,11 +122,9 @@ export default {
     },
     isCreated: function(){
       if (this.isCreated){
-        console.log('bye')
         this.isActive = false
         this.file = null
         if (this.file){
-          console.log('hey')
           this.file = null
         }
       }

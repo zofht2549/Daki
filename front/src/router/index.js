@@ -50,11 +50,15 @@ const router = new VueRouter({
   routes
 })
 
+// const ssession = window.sessionStorage
+
 // eslint-disable-next-line no-unused-vars
 router.beforeEach((to, from, next) => {
   if (to.name == 'Main' && !to.query.tab){
     next({ name: 'Main', query: { tab: 'calendar' } })
   }
+
+
   next()
 })
 
