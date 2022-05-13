@@ -23,7 +23,7 @@ public class OAuthServiceImpl {
 
     //true : 이미 회원가입
     //false : 없음. 새로 회원가입
-    public TokenDto OAuthLogin(String accessToken, String type){
+    public ResponseEntity<TokenDto> OAuthLogin(String accessToken, String type){
         System.out.println(accessToken);
         RestTemplate restTemplate = new RestTemplate();
 
@@ -47,20 +47,23 @@ public class OAuthServiceImpl {
 
         ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class, params);
 
+        System.out.println(response.getBody());
         String email = getEmail(response.getBody());
+
+        System.out.println(response.getBody());
+        String nickname = getNickname(response.getBody(), type);
 
         TokenDto tokenDto = null;
 
         if(!userRepository.existsByUserEmail(email)){
-            System.out.println(1);
-            UserJoinReq userJoinReq = new UserJoinReq(email, null, "oauth", null, null, 0);
+            UserJoinReq userJoinReq = new UserJoinReq(email, nickname, "oauth", null, null, 0);
             userService.createUser(userJoinReq);
         }
 
         UserLoginReq userLoginReq = new UserLoginReq(email, "oauth");
-        tokenDto = userService.loginUser(userLoginReq);
+        ResponseEntity<TokenDto> res = userService.loginUser(userLoginReq);
 
-        return tokenDto;
+        return res;
     }
 
     public String getEmail(Object info){
@@ -84,6 +87,23 @@ public class OAuthServiceImpl {
         }
 
         return email;
+    }
+
+    public String getNickname(Object info, String type){
+        String infoString = info.toString();
+        System.out.println(infoString);
+
+        String delim = null;
+
+        if(type.equals("google") ){ delim = "name="; }
+        if(type.equals("kakao")){ delim = "{nickname="; }
+
+        int startIndex = infoString.indexOf(delim);
+        infoString = infoString.substring(startIndex+delim.length());
+        int endIndex = infoString.indexOf(",");
+        String nickname = infoString.substring(0, endIndex);
+
+        return nickname;
     }
 
 

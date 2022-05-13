@@ -20,11 +20,17 @@ public class OAuthController {
     @Autowired
     OAuthServiceImpl oAuthService;
 
-    //로그인 요청
     @GetMapping("/login")
-    ResponseEntity<TokenDto> OauthLogin(@RequestParam String accessToken, @RequestParam String type){
-        return ResponseEntity.ok(oAuthService.OAuthLogin(accessToken, type));
+    ResponseEntity<TokenDto> OauthLogin(@RequestHeader(value="token") String token, @RequestHeader String type){
+        return oAuthService.OAuthLogin(token, type);
     }
+
+
+    //로그인 요청
+//    @GetMapping("/login")
+//    ResponseEntity<TokenDto> OauthLogin(@RequestParam String accessToken, @RequestParam String type){
+//        return oAuthService.OAuthLogin(accessToken, type);
+//    }
 
 
 
