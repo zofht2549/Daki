@@ -1,6 +1,7 @@
 package com.daki.api.request.diary;
 
 import com.daki.db.entity.User;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,10 +13,10 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ApiModel
+
 public class DiaryCreateReq {
 
     String diaryTitle;
     String diaryContent;
-    LocalDateTime diaryDate;
-    User user;
 }

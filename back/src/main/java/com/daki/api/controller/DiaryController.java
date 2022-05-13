@@ -11,9 +11,12 @@ import com.daki.api.response.diary.DiaryReadRes;
 import com.daki.api.response.diary.DiaryUpdateRes;
 import com.daki.api.service.DiaryService;
 import com.daki.api.service.DiaryServiceImpl;
+import com.daki.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -23,32 +26,39 @@ public class DiaryController {
     @Autowired
     DiaryServiceImpl diaryService;
 
+    @Autowired
+    UserService userService;
+
     @PostMapping
-    public ResponseEntity<DiaryCreateRes> createDiary(@RequestBody DiaryCreateReq diaryCreateReq){
+    public ResponseEntity<DiaryCreateRes> createDiary(@RequestBody DiaryCreateReq diaryCreateReq
+                                                        , HttpServletRequest httpServletRequest){
         DiaryCreateRes diaryCreateRes = diaryService.createDiary(diaryCreateReq);
 
-        return ResponseEntity.status(200).body(diaryCreateRes);
+        return userService.tokenEnter(httpServletRequest, diaryCreateRes, 200);
     }
 
-    @GetMapping
-    public ResponseEntity<DiaryReadRes> readDiary(@PathVariable DiaryReadReq diaryReadReq){
-        DiaryReadRes diaryReadRes = diaryService.readDiary(diaryReadReq);
+    @GetMapping("/{diaryNo}")
+    public ResponseEntity<DiaryReadRes> readDiary(@PathVariable Long diaryNo,
+                                                  HttpServletRequest httpServletRequest){
+        DiaryReadRes diaryReadRes = diaryService.readDiary(diaryNo);
 
-        return ResponseEntity.status(200).body(diaryReadRes);
+        return userService.tokenEnter(httpServletRequest, diaryReadRes, 200);
     }
 
     @PutMapping
-    public ResponseEntity<DiaryUpdateRes> updateDiary(@RequestBody DiaryUpdateReq diaryUpdateReq){
+    public ResponseEntity<DiaryUpdateRes> updateDiary(@RequestBody DiaryUpdateReq diaryUpdateReq,
+                                                      HttpServletRequest httpServletRequest){
         DiaryUpdateRes diaryUpdateRes = diaryService.updateDiary(diaryUpdateReq);
 
-        return ResponseEntity.status(200).body(diaryUpdateRes);
+        return userService.tokenEnter(httpServletRequest, diaryUpdateRes, 200);
     }
 
-    @DeleteMapping
-    public ResponseEntity<DiaryDeleteRes> deleteDiary(@PathVariable DiaryDeleteReq diaryDeleteReq){
-        DiaryDeleteRes diaryDeleteRes = diaryService.deleteDiary(diaryDeleteReq);
-
-        return ResponseEntity.status(200).body(diaryDeleteRes);
+    @DeleteMapping("/{diaryNo}")
+    public ResponseEntity<DiaryDeleteRes> deleteDiary(@PathVariable Long diaryNo,
+                                                      HttpServletRequest httpServletRequest){
+        DiaryDeleteRes diaryDeleteRes = diaryService.deleteDiary(diaryNo);
+        System.out.println("====================Success diary delete=======================");
+        return userService.tokenEnter(httpServletRequest, diaryDeleteRes, 200);
     }
 
 

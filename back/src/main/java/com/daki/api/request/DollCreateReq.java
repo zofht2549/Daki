@@ -1,5 +1,8 @@
 package com.daki.api.request;
 
+import io.swagger.annotations.ApiModel;
+
+@ApiModel
 public class DollCreateReq {
 
     private int dollLikeable;

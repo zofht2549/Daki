@@ -1,5 +1,9 @@
 package com.daki.api.response;
 
+import io.swagger.annotations.ApiModel;
+
+@ApiModel
+
 public class DollCreateRes {
 
     private Long dollNo;
