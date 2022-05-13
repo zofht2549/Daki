@@ -102,7 +102,7 @@ public class UserInfoController {
     public ResponseEntity<CheckRes> nickNameCheck(@PathVariable("nickName") String nickName) {
         boolean findCheck = userService.checkNickName(nickName);
         if(findCheck) return ResponseEntity.status(401).body(CheckRes.of("Fail"));
-        else return ResponseEntity.status(401).body(CheckRes.of("OK"));
+        else return ResponseEntity.status(200).body(CheckRes.of("OK"));
     }
 
 }
