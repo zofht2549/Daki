@@ -35,6 +35,7 @@
           </router-link>
         </li>
         <li :class="['menu', {'now': path == '/mypage'}]">
+          <!-- <router-link :to="{name:'Mypage',params:{ nickName: }}"> -->
           <router-link to="/mypage">
             마이페이지
           </router-link>
@@ -86,7 +87,8 @@ export default {
   computed: {
     path: function(){
       return this.$route.path
-    }
+    },
+
   }
 }
 </script>
@@ -94,7 +96,7 @@ export default {
 <style lang="scss">
 @media only screen and (min-width:800px){
   .nav-mobile{
-
+    display: none;
     button{
       display: none;
     }
@@ -115,7 +117,10 @@ export default {
     justify-content: space-between;
     align-items: center;
     z-index: 98765432;
-
+    
+    & > div{
+      display: none;
+    }
     .logo {
       width: 75px;
       aspect-ratio: 1/1;

@@ -274,7 +274,8 @@ export default {
         font-family: kyobo;
         font-weight: 400;
         font-size: 64px;
-        margin: 20%;
+        // margin:0% 20%;
+        padding: 20%;
         color: #fff;
       }
       & > .mobile-img{
@@ -289,6 +290,10 @@ export default {
 
     & > .bgcolor{
       background-image: url("@/assets/landing/paper_bg.png");
+      font-family: kyobo;
+      text-align: center;
+      font-size: 32px;
+      padding: 20px;
 
       & > .door_upper{
         display: none;
@@ -304,8 +309,9 @@ export default {
     & > .edit-bg{
       
       // text-align: center;
+      // margin-left: auto;
       & > article{
-
+        text-align: center;
         display: flex;
         & > img{
           width: 100px;
@@ -315,6 +321,13 @@ export default {
           font-family: kyobo;
         }
       }
+    }
+    & > .bottom-section{
+      text-align: center;
+    }
+
+    & > footer{
+      text-align: center;
     }
   }
 }

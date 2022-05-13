@@ -17,7 +17,6 @@ export default {
             // console.log(this.item.image)
             this.$emit('itemImage', this.item.name)
             this.$emit('categoryNum', this.item.categories)
-            console.log('카테고리 넘버',this.item.categories)
         }
     }
 }
