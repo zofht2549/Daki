@@ -5,18 +5,17 @@ import com.daki.api.request.diary.DiaryCreateReq;
 import com.daki.api.request.diary.DiaryDeleteReq;
 import com.daki.api.request.diary.DiaryReadReq;
 import com.daki.api.request.diary.DiaryUpdateReq;
-import com.daki.api.response.diary.DiaryCreateRes;
-import com.daki.api.response.diary.DiaryDeleteRes;
-import com.daki.api.response.diary.DiaryReadRes;
-import com.daki.api.response.diary.DiaryUpdateRes;
+import com.daki.api.response.diary.*;
 import com.daki.api.service.DiaryService;
 import com.daki.api.service.DiaryServiceImpl;
 import com.daki.api.service.UserService;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -29,17 +28,31 @@ public class DiaryController {
     @Autowired
     UserService userService;
 
+    @GetMapping("/findPage/{pageNo}")
+    public ResponseEntity<DiaryCreateRes> findPage(@PathVariable("pageNo") int pageNo,
+                                                   HttpServletRequest httpServletRequest){
+        List<DiaryTitleRes> resList = diaryService.findTitleByPageNo(pageNo);
+        return userService.tokenEnter(httpServletRequest, resList, 200);
+    }
+
+    @GetMapping("/findDate/{year}/{month}")
+    public ResponseEntity<DiaryCreateRes> findDate(@PathVariable("year") int year,
+                                                   @PathVariable("month") int month,
+                                                   HttpServletRequest httpServletRequest){
+        List<DiaryTitleRes> resList = diaryService.findTitleByDate(year, month);
+        return userService.tokenEnter(httpServletRequest, resList, 200);
+    }
+
     @PostMapping
     public ResponseEntity<DiaryCreateRes> createDiary(@RequestBody DiaryCreateReq diaryCreateReq
                                                         , HttpServletRequest httpServletRequest){
         DiaryCreateRes diaryCreateRes = diaryService.createDiary(diaryCreateReq);
-
         return userService.tokenEnter(httpServletRequest, diaryCreateRes, 200);
     }
 
     @GetMapping("/{diaryNo}")
     public ResponseEntity<DiaryReadRes> readDiary(@PathVariable Long diaryNo,
-                                                  HttpServletRequest httpServletRequest){
+                                                  HttpServletRequest httpServletRequest) throws ParseException {
         DiaryReadRes diaryReadRes = diaryService.readDiary(diaryNo);
 
         return userService.tokenEnter(httpServletRequest, diaryReadRes, 200);

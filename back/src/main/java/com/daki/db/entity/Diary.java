@@ -24,7 +24,7 @@ public class Diary {
     @Column(name = "diary_title")
     private String diaryTitle;
 
-    @Column(name = "diary_content")
+    @Column(name = "diary_content", columnDefinition = "LONGTEXT")
     private String diaryContent;
 
     @Column(name = "diary_date")

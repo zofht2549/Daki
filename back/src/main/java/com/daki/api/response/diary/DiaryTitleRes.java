@@ -12,21 +12,16 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @ApiModel
-
-public class DiaryUpdateRes {
-
+public class DiaryTitleRes {
     private Long diaryNo;
 
     private String title;
 
-    private String content;
-
     private LocalDateTime diaryDate;
 
-    public DiaryUpdateRes(Diary diary) {
+    public DiaryTitleRes(Diary diary) {
         this.diaryNo = diary.getDiaryNo();
         this.title = diary.getDiaryTitle();
-        this.content = diary.getDiaryContent();
         this.diaryDate = diary.getDiaryDate();
     }
 

@@ -17,16 +17,16 @@ public class DiaryReadRes {
 
     private Long diaryNo;
 
-    private String diaryTitle;
+    private String title;
 
-    private String diaryContent;
+    private String content;
 
     private LocalDateTime diaryDate;
 
     public DiaryReadRes(Diary diary) {
         this.diaryNo = diary.getDiaryNo();
-        this.diaryTitle = diary.getDiaryTitle();
-        this.diaryContent = diary.getDiaryContent();
+        this.title = diary.getDiaryTitle();
+        this.content = diary.getDiaryContent();
         this.diaryDate = diary.getDiaryDate();
     }
 }

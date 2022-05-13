@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.json.simple.JSONObject;
 
 import java.time.LocalDateTime;
 
@@ -17,6 +18,6 @@ import java.time.LocalDateTime;
 
 public class DiaryCreateReq {
 
-    String diaryTitle;
-    String diaryContent;
+    String title;
+    String content;
 }
