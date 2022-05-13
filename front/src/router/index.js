@@ -28,7 +28,7 @@ const routes = [
     component: () => import('../views/Main.vue')
   },
   {
-    path:'/mypage',
+    path:'/mypage/:nickName',
     name:'Mypage',
     component: () => import('../views/MyPage.vue')
   },
