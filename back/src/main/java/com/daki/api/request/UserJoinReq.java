@@ -2,10 +2,12 @@ package com.daki.api.request;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @ApiModel("JoinRequest")
+@AllArgsConstructor
 public class UserJoinReq {
     @ApiModelProperty(name="이메일(=ID)")
     String email;
@@ -20,7 +22,7 @@ public class UserJoinReq {
     String birth;
 
     @ApiModelProperty(name="성별")
-    String userGender;
+    String gender;
 
     @ApiModelProperty(name="캐릭터 종류")
     int dollType;

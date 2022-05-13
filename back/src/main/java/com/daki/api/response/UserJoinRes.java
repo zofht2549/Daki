@@ -15,7 +15,7 @@ public class UserJoinRes {
     private String nickName;
     private String password;
     private String birth;
-    private String userGender;
+    private String Gender;
     private int dollType;
 
     public static UserJoinRes of(User user, int dollType) {
@@ -25,7 +25,7 @@ public class UserJoinRes {
         userJoinRes.setNickName(user.getUserNickname());
         userJoinRes.setPassword(user.getUserPassword());
         userJoinRes.setBirth(user.getUserBirth());
-        userJoinRes.setUserGender(user.getUserGender());
+        userJoinRes.setGender(user.getUserGender());
         userJoinRes.setDollType(dollType);
 
         return userJoinRes;

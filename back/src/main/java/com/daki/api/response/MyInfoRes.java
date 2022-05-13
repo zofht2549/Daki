@@ -14,7 +14,7 @@ public class MyInfoRes {
     private String email;
     private String nickName;
     private String birth;
-    private String userGender;
+    private String gender;
 //    private Doll doll;
 
     public static MyInfoRes of(User user) {
@@ -23,7 +23,7 @@ public class MyInfoRes {
         myInfoRes.setEmail(user.getUserEmail());
         myInfoRes.setNickName(user.getUserNickname());
         myInfoRes.setBirth(user.getUserBirth());
-        myInfoRes.setUserGender(user.getUserGender());
+        myInfoRes.setGender(user.getUserGender());
 
         return myInfoRes;
     }

@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(UserJoinReq userJoinReq){
         User user = new User(userJoinReq.getEmail(), userJoinReq.getNickName(), passwordEncoder.encode(userJoinReq.getPassword()),
-                userJoinReq.getBirth(), userJoinReq.getUserGender(), 0, Authority.valueOf("ROLE_USER"));
+                userJoinReq.getBirth(), userJoinReq.getGender(), 0, Authority.valueOf("ROLE_USER"));
 
         User saveUser = userRepository.save(user);  //회원가입 시킴
 

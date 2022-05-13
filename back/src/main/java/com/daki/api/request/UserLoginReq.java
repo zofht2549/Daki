@@ -2,6 +2,7 @@ package com.daki.api.request;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 @Getter
 @Setter
 @ApiModel("LoginRequest")
+@AllArgsConstructor
 public class UserLoginReq {
     @ApiModelProperty(name="이메일(=ID)")
     String email;
