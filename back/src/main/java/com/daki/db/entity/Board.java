@@ -1,6 +1,7 @@
 package com.daki.db.entity;
 
 import com.daki.api.request.BoardModifyReqDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -33,6 +34,8 @@ public class Board {
     @ManyToOne
     @JoinColumn(name = "user_no")
     private User user;
+
+    public Board(){}
 
     public Board(String boardHeadLine, String boardTitle, String boardContent, LocalDateTime boardDate, User user) {
         this.boardHeadLine = boardHeadLine;

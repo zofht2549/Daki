@@ -1,6 +1,9 @@
 package com.daki.api.response;
 
 import com.daki.db.entity.Doll;
+import io.swagger.annotations.ApiModel;
+
+@ApiModel
 
 public class DollLikeableUpdateRes {
 

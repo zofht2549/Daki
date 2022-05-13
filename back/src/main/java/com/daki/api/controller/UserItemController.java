@@ -4,10 +4,12 @@ import com.daki.api.request.UserItemUpdateWearStateReq;
 import com.daki.api.response.UserItemReadResInterface;
 import com.daki.api.response.UserItemUpdateWearStateRes;
 import com.daki.api.service.UserItemServiceImpl;
+import com.daki.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -18,18 +20,23 @@ public class UserItemController {
     @Autowired
     UserItemServiceImpl useritemService;
 
-    @GetMapping
-    ResponseEntity<List<UserItemReadResInterface>> readUserItem(@RequestParam Long dollNo){
+    @Autowired
+    UserService userService;
+
+    @GetMapping("{dollNo}")
+    ResponseEntity<List<UserItemReadResInterface>> readUserItem(@PathVariable Long dollNo,
+                                                                HttpServletRequest httpServletRequest){
         List<UserItemReadResInterface> userItemReadRes = useritemService.readUserItem(dollNo);
 
-        return ResponseEntity.status(200).body(userItemReadRes);
+        return userService.tokenEnter(httpServletRequest, userItemReadRes, 200);
     }
 
     @PutMapping("/wear")
-    ResponseEntity<UserItemUpdateWearStateRes> updateWearState(@RequestBody UserItemUpdateWearStateReq userItemUpdateWearStateReq){
+    ResponseEntity<UserItemUpdateWearStateRes> updateWearState(@RequestBody UserItemUpdateWearStateReq userItemUpdateWearStateReq,
+                                                               HttpServletRequest httpServletRequest){
         UserItemUpdateWearStateRes userItemUpdateWearStateRes = useritemService.updateWearState(userItemUpdateWearStateReq);
 
-        return ResponseEntity.status(200).body(userItemUpdateWearStateRes);
+        return userService.tokenEnter(httpServletRequest, userItemUpdateWearStateRes, 200);
     }
 
 }

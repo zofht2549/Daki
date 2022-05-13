@@ -4,6 +4,7 @@ package com.daki.api.request;
 import com.daki.db.entity.Board;
 import com.daki.db.entity.Reply;
 import com.daki.db.entity.User;
+import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@ApiModel
 public class ReplyRegistReqDto {
 
     private String comment;

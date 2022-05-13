@@ -4,6 +4,7 @@ package com.daki.api.service;
 import com.daki.api.request.DollLikeableUpdateReq;
 import com.daki.api.request.DollUpdateReq;
 import com.daki.api.response.*;
+import com.daki.common.util.SecurityUtil;
 import com.daki.db.entity.Doll;
 import com.daki.db.entity.User;
 import com.daki.db.repository.DollRepository;
@@ -28,8 +29,11 @@ public class DollServiceImpl implements DollService{
     }
 
     public DollUpdateRes updateDollInfo(DollUpdateReq dollUpdateReq){
-        User user = userRepository.getById(dollUpdateReq.getUserNo());
+
+        User user = userRepository.findByUserEmail(SecurityUtil.getCurrentUserEmail()).orElseThrow(()
+                -> new RuntimeException("토큰 잘못됨"));
         Doll findDoll = dollRepository.findByUser(user);
+
         Doll updateDoll = new Doll(findDoll.getDollNo(), dollUpdateReq.getDollLikeable(), findDoll.getUser(), dollUpdateReq.getDollType());
 
         DollUpdateRes dollUpdateRes = new DollUpdateRes(dollRepository.save(updateDoll));

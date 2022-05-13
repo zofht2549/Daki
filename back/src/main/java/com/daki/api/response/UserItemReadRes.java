@@ -4,9 +4,11 @@ import com.daki.db.entity.Doll;
 import com.daki.db.entity.Item;
 import com.daki.db.entity.ItemType;
 import com.daki.db.entity.UserItem;
+import io.swagger.annotations.ApiModel;
 
 import javax.persistence.*;
 import java.util.List;
+@ApiModel
 
 public class UserItemReadRes {
 

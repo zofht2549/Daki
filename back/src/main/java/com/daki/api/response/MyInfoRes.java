@@ -2,6 +2,7 @@ package com.daki.api.response;
 
 
 import com.daki.db.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +11,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MyInfoRes {
+
+    @JsonIgnore
+    private Long no;
 
     private String email;
     private String nickName;
