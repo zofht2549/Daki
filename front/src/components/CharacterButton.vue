@@ -31,7 +31,7 @@ export default {
 		return {
 			popupView : false,
 			itemList:{
-				// ItemImageBackground : 'background1',
+				ItemImageBackground : null,
 				ItemImageCloth : null,
 				ItemImageHair : null,
 				ItemImageDeco : null
@@ -50,8 +50,8 @@ export default {
 			this.itemList.ItemImageHair = this.$store.state.charItemList.ItemImageHair
 			this.itemList.ItemImageDeco = this.$store.state.charItemList.ItemImageDeco
 
-			this.$emit('change-item')
-		}
+			this.$emit('change')
+		},
 	},
 
 	created: function(){

@@ -41,7 +41,7 @@ export default{
             Dummmy:Dummmy,
             Hello : null,
             ItemImage : null,
-            CategoriesNum : null,
+            CategoriesNum : 0,
         }
     },
     props:{

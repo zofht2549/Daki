@@ -65,7 +65,7 @@
       </section>
 			<div>
 				<character-button
-					@change-item="getCharItem()">
+					@change="getCharItem()">
 				</character-button>
 			</div>
 			<div class="change-password" :class="{ active : passwordView }">
@@ -119,16 +119,16 @@ export default {
 		changeNickname(){
 			this.nicknameView = (this.nicknameView) ? false : true
 		},
-		getCharItem(){
-			console.log('데이터 넘어오는가 확인')
-			this.itemList.ItemImageBackground = this.store.state.charItemList.ItemImageBackground
+		async getCharItem(){
+			console.log('읽었나');
+			this.itemList.ItemImageBackground = this.$store.state.charItemList.ItemImageBackground
 			this.itemList.ItemImageCloth = this.$store.state.charItemList.ItemImageCloth
 			this.itemList.ItemImageHair = this.$store.state.charItemList.ItemImageHair
 			this.itemList.ItemImageDeco = this.$store.state.charItemList.ItemImageDeco
 		}
   },
 	created: function(){
-		console.log('mypage data')
+		console.log('mypage data');
 		this.itemList.ItemImageBackground = this.$store.state.charItemList.ItemImageBackground
 		this.itemList.ItemImageCloth = this.$store.state.charItemList.ItemImageCloth
 		this.itemList.ItemImageHair = this.$store.state.charItemList.ItemImageHair
