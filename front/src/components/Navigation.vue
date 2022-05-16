@@ -40,7 +40,7 @@
           </router-link>
         </li>
         <li class="menu">
-          <a>
+          <a @click="logOut">
             로그아웃
           </a>
         </li>
@@ -118,11 +118,12 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 10;
+    z-index: 98765432;
     
     & > div{
       display: none;
     }
+
     .logo {
       width: 75px;
       aspect-ratio: 1/1;

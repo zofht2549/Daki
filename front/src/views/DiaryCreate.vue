@@ -2,16 +2,18 @@
   <section id="diary-create-container">
     <navigation />
 
-    <editor ref="editor" />
+    <div class="title-box">
+      <input type="text" class="title" placeholder="제목" v-model="title">
+    </div>
 
-    <button class="submit-btn" @click="submitClick">
-      작성 완료
-    </button>
+    <editor ref="editor" :title="title" @is-save="type => save(type)" />
 
     <div v-if="isSave" class="save-box">
       <div class="auto-save">
         <img class="auto-img" src="../assets/loading.gif">
-        <p class="auto-msg">저장중입니다</p>
+        <p class="auto-msg">
+          {{ saveMessage }}
+        </p>
       </div>
     </div>
   </section>
@@ -19,11 +21,12 @@
 
 <script>
 import Navigation from '../components/Navigation.vue'
-import Editor from '../components/DiaryCreate/Editor.vue'
+import Editor from '../components/Editor/Editor.vue'
 
 export default {
   data: function(){
     return {
+      title: null,
       isSave: false
     }
   },
@@ -31,30 +34,21 @@ export default {
     Navigation,
     Editor
   },
-  methods: {
-    submitClick: function(){
-      this.isSave = true
-      this.submitItems()
-    },
-    submitItems: function(){
-      const editor = this.$refs.editor
-      const canvas = editor.$children[1]
-      const items = canvas.items
-      console.log(items)
-      setTimeout(() => {
-        this.isSave = false
-      }, 1000);
-    },
-    autoSave: function(){
-      this.isSave = true
-      this.submitItems()
+  computed: {
+    saveMessage: function(){
+      if (this.isSave == 'manual'){
+        return '저장중입니다..'
+      }
+      else if (this.isSave == 'auto'){
+        return '자동 저장중입니다..'
+      }
+      return ''
     }
   },
-  created: function(){
-    window.setInterval(this.autoSave, 150000)
-  },
-  destroyed: function(){
-    window.clearInterval(this.autoSave)
+  methods: {
+    save: function(type){
+      this.isSave = type
+    }
   }
 }
 </script>
@@ -70,22 +64,34 @@ export default {
     flex-wrap: wrap;
     justify-content: center;
 
-    .submit-btn {
-      font-size: 1.25rem;
-      font-weight: bold;
-      border-radius: 10px;
-      border: 1px #93D9CE solid;
-      color: #93D9CE;
-      background-color: white;
-      box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.35);
-      margin-bottom: 5rem;
-      padding: 1rem;
-      width: 20%;
-      cursor: pointer;
 
-      &:hover {
-        background-color: #93D9CE;
-        color: white;
+    .title-box {
+      width: 100%;
+      height: 75px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 2rem 3rem 0;
+      padding: 0.5rem;
+      border-bottom: 1px #cccccc solid;
+
+      .title {
+        width: 80%;
+        border: none;
+        font-size: 2rem;
+        padding: 0;
+
+        &:focus {
+          outline: none;
+
+          &::placeholder {
+            color: transparent;
+          }
+        }
+
+        &::placeholder {
+          color: #cccccc;
+        }
       }
     }
 

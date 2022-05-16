@@ -16,23 +16,23 @@ export const items = [
       align: 'center'
     }
   },
-  {
-    type: 'image',
-    top: 20,
-    left: 30,
-    width: 20,
-    height: 20,
-    imgUrl: 'https://cdn-icons-png.flaticon.com/512/7417/7417594.png',
-    content: null,
-    fontStyle: {
-      size: null,
-      color: null,
-      family: null,
-      weight: null,
-      underline: false,
-      align: null
-    }
-  },
+  // {
+  //   type: 'image',
+  //   top: 20,
+  //   left: 30,
+  //   width: 20,
+  //   height: 20,
+  //   imgUrl: 'https://cdn-icons-png.flaticon.com/512/7417/7417594.png',
+  //   content: null,
+  //   fontStyle: {
+  //     size: null,
+  //     color: null,
+  //     family: null,
+  //     weight: null,
+  //     underline: false,
+  //     align: null
+  //   }
+  // },
   {
     type: 'text',
     top: 30,

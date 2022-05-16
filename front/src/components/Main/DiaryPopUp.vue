@@ -1,5 +1,5 @@
 <template>
-  <div id="popup-container" @click="closePopUp">
+  <div id="popup-container" @click="closePopUp" ref="popup">
     <div class="popup-box">
       <img src="../../assets/close.png" class="close"
       @click="closePopUp">
@@ -43,6 +43,14 @@ export default {
         this.$emit('close-pop-up')
       }
     }
+  },
+  mounted: function(){
+    const body = document.querySelector('body')
+    body.style.overflowY = 'hidden'
+  },
+  destroyed: function(){
+    const body = document.querySelector('body')
+    body.style.overflowY = 'scroll'
   }
 }
 </script>
@@ -53,12 +61,12 @@ export default {
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100%;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: rgba(0, 0, 0, 0.35);
-    z-index: 20;
+    z-index: 987654321;
 
     .popup-box {
       background-color: white;

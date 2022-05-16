@@ -12,13 +12,12 @@ const CustomAxios = axios.create({
 })
 
 CustomAxios.interceptors.request.use(
-  function CustomInterceptorRequest(config){
-    return {...config,
-      headers: {
-        'accessToken': session.getItem('accessToken'),
-        'refreshToken': session.getItem('refreshToken')
-      }
-    }
+  function CustomInterceptorRequest(config){ 
+    const temp = {...config}
+    temp.headers.accessToken = session.getItem('accessToken')
+    temp.headers.refreshToken = session.getItem('refreshToken')
+
+    return temp
   }
 )
 
