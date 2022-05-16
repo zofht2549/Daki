@@ -59,7 +59,10 @@
         <img src="@/assets/landing/door_botton.png" alt="">
       </div>
       <div>
-        <button class="start">시작하기</button>
+        <button class="start"
+          @click="goToLogin">
+          시작하기
+        </button>
       </div>
     </section>
 
@@ -261,11 +264,10 @@ export default {
 
     & > .main{
       background-color: #FED771;
-      height: 100vw;
+      height: 100vh;
       top: 0;
-      position: relative;
+      // position: relative;
       // height: 100%;
-
       & > .image{
         display: none;
       }
@@ -280,7 +282,8 @@ export default {
       }
       & > .mobile-img{
         bottom: 0;
-        position: relative;
+        right: 0;
+        position: absolute;
         text-align: right;
         & > img{
           width: 300px;
@@ -308,13 +311,15 @@ export default {
 
     & > .edit-bg{
       
-      // text-align: center;
+      text-align: center;
       // margin-left: auto;
       & > article{
-        text-align: center;
-        display: flex;
+        padding: 10%;
         & > img{
           width: 100px;
+          margin: auto;
+          display: block;
+          text-align: center;
         }
         & > span{
           font-size: 24px;
@@ -323,6 +328,7 @@ export default {
       }
     }
     & > .bottom-section{
+      margin: 10%;
       text-align: center;
     }
 
