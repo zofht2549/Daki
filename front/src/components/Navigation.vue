@@ -35,7 +35,7 @@
           </router-link>
         </li>
         <li :class="['menu', {'now': path == '/mypage'}]">
-          <router-link to="/mypage">
+          <router-link :to="{name:'Mypage',params:{ nickName: user.nickName}}">
             마이페이지
           </router-link>
         </li>
@@ -51,6 +51,7 @@
 
 <script>
 import Swal from 'sweetalert2'
+import { mapState } from 'vuex'
 
 export default {
   data: function(){
@@ -86,15 +87,18 @@ export default {
   computed: {
     path: function(){
       return this.$route.path
-    }
-  }
+    },
+    ...mapState([
+      'user'
+    ])
+  },
 }
 </script>
 
 <style lang="scss">
 @media only screen and (min-width:800px){
   .nav-mobile{
-
+    display: none;
     button{
       display: none;
     }
@@ -115,8 +119,8 @@ export default {
     justify-content: space-between;
     align-items: center;
     z-index: 98765432;
-
-    div {
+    
+    & > div{
       display: none;
     }
 
@@ -198,7 +202,7 @@ export default {
   }
   .nav-mobile{
     width: 100vw;
-    height: 80px;
+    height: 50px;
     position: fixed;
     top: 0;
     left: 0;
@@ -216,7 +220,7 @@ export default {
         padding-top: 15px;
       }
       & img {
-        width: 80px;
+        width: 50px;
         margin-left: 5px;
       }
     }
@@ -236,7 +240,7 @@ export default {
         visibility: visible;
         height: 100vh;
         float: right;
-        top: 60px;
+        top: 30px;
         right: 0px;
         position: fixed;
         z-index: 3;

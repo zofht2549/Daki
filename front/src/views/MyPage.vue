@@ -4,10 +4,23 @@
       <section class="info">
 				<article class="char-box">
 					<div class="char">
-						<img src="@/assets/landing/character.png" alt="">
+						<!-- <img src="@/assets/landing/character.png" alt=""> -->
+						<img src="@/assets/character/head.png" alt="">
+						<div class="parts background">
+							<img :src="require(`@/assets/character/${this.itemList.ItemImageBackground}.png`)" alt="배경">
+						</div>
+						<div class="parts head">
+							<img :src="require(`@/assets/character/${this.itemList.ItemImageHair}.png`)" alt="머리">
+						</div>
+						<div class="parts cloth">
+							<img :src="require(`@/assets/character/${this.itemList.ItemImageCloth}.png`)" alt="옷">
+						</div>
+						<div class="parts deco">
+							<img :src="require(`@/assets/character/${this.itemList.ItemImageDeco}.png`)" alt="장식">
+						</div>
 					</div>
 					<div class="char-info">
-						<div class="nickname">닉네임</div>
+						<div class="nickname">{{ user.nickName}}</div>
 						<div><img src="@/assets/coin.png" alt=""><span>5000P</span><button>포인트 충전</button></div>
 						<a>캐릭터 변경</a>
 					</div>
@@ -27,7 +40,7 @@
 						</div>
 						<div for="nickname">
 							<span class="title">닉네임</span>
-							<span class="content">닉네임</span>
+							<span class="content">{{ user.nickName }}</span>
 							<button
 								class="nickname_button" @click="changeNickname()">
 								닉네임 변경
@@ -51,7 +64,9 @@
 				</article>
       </section>
 			<div>
-				<character-button></character-button>
+				<character-button
+					@change="getCharItem()">
+				</character-button>
 			</div>
 			<div class="change-password" :class="{ active : passwordView }">
 				<change-password @close-pop-up="changePassword()" />
@@ -68,6 +83,7 @@ import Navigation from '../components/Navigation.vue'
 import ChangePassword from '@/components/Mypage/ChangePassword.vue'
 import ChangeNickname from '@/components/Mypage/ChangeNickname.vue'
 import CharacterButton from '@/components/CharacterButton.vue'
+import { mapState } from 'vuex'
 
 export default {
   name: 'MyPage',
@@ -75,10 +91,17 @@ export default {
 		return {
 			
 			popupVal : false,
-			target : false,
+			// target : false,
 
 			passwordView : false,
 			nicknameView : false,
+
+			itemList:{
+				ItemImageBackground : null,
+				ItemImageCloth : null,
+				ItemImageHair : null,
+				ItemImageDeco : null
+			},
 		}
 	},
   components:{
@@ -91,17 +114,30 @@ export default {
 		openPop(){
 			this.view = (this.view) ? false : true; 
 		},
-    showDateDiary: function(t){
-      this.target = t
-    },
 		changePassword(){
 			this.passwordView = (this.passwordView) ? false : true
 		},
 		changeNickname(){
 			this.nicknameView = (this.nicknameView) ? false : true
+		},
+		async getCharItem(){
+			this.itemList.ItemImageBackground = this.$store.state.charItemList.ItemImageBackground
+			this.itemList.ItemImageCloth = this.$store.state.charItemList.ItemImageCloth
+			this.itemList.ItemImageHair = this.$store.state.charItemList.ItemImageHair
+			this.itemList.ItemImageDeco = this.$store.state.charItemList.ItemImageDeco
 		}
-
-  }
+  },
+	created: function(){
+		this.itemList.ItemImageBackground = this.$store.state.charItemList.ItemImageBackground
+		this.itemList.ItemImageCloth = this.$store.state.charItemList.ItemImageCloth
+		this.itemList.ItemImageHair = this.$store.state.charItemList.ItemImageHair
+		this.itemList.ItemImageDeco = this.$store.state.charItemList.ItemImageDeco
+	},
+	computed:{
+		...mapState([
+      'user'
+    ])
+	}
 }
 </script>
 <style lang="scss">
@@ -184,11 +220,41 @@ export default {
 					text-align: center;
 					vertical-align: top;
 					display: table-cell;
+					position: relative;
 
 					& > img{
 						width: 80%;
 						height: 80%;
 						object-fit:contain;
+					}
+					& > img{
+						width: 100%;
+						height: 100%;
+						left: 0; top: 0;
+						object-fit: contain;
+						position: absolute;
+						z-index: -2;
+					}
+					& > .parts{
+						position: absolute;
+						width: 100%; height: 100%;
+						left: 0px;
+						top: 0px;
+						z-index: -1;
+
+						& > img {
+							& {
+								width: 100%; height: 100%;
+							}
+						}
+					}
+
+					& > .background{
+						//position: absolute;
+						//width: 100%; height: 100%;
+						//left: 0; top: 0;
+						position: absolute;
+						z-index: -3;
 					}
 				}
 				& .char-info{
@@ -260,9 +326,9 @@ export default {
 						}
 					}
 				}
-				.botton-area{
+			}
+			& > .botton-area{
 					text-align: center;
-				}
 			}
 		}
 
@@ -311,9 +377,39 @@ export default {
 					width: 150px;
 					height: 150px;
 					// margin: auto;
+					position: relative;
 
 					& > img{
 						width: 80%;
+					}
+					& > img{
+						width: 100%;
+						height: 100%;
+						left: 0; top: 0;
+						object-fit: contain;
+						position: absolute;
+						z-index: -2;
+					}
+					& > .parts{
+						position: absolute;
+						width: 100%; height: 100%;
+						left: 0px;
+						top: 0px;
+						z-index: -1;
+
+						& > img {
+							& {
+								width: 100%; height: 100%;
+							}
+						}
+					}
+
+					& > .background{
+						//position: absolute;
+						//width: 100%; height: 100%;
+						//left: 0; top: 0;
+						position: absolute;
+						z-index: -3;
 					}
 				}
 			}

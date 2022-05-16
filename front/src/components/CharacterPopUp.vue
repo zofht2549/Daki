@@ -1,5 +1,5 @@
 <template>
-  <div id="popup-container">
+  <div id="char-popup-container">
     <div @click="closePopUp()">
 
     </div>
@@ -14,16 +14,16 @@
               <!-- 캐릭터 파츠 -->
 
               <div class="parts background">
-                <img :src="require(`@/assets/character/${this.ItemImageBackground}.png`)" alt="배경">
+                <img :src="require(`@/assets/character/${this.itemList.ItemImageBackground}.png`)" alt="배경">
               </div>
               <div class="parts head">
-                <img :src="require(`@/assets/character/${this.ItemImageHair}.png`)" alt="머리">
+                <img :src="require(`@/assets/character/${this.itemList.ItemImageHair}.png`)" alt="머리">
               </div>
               <div class="parts cloth">
-                <img :src="require(`@/assets/character/${this.ItemImageCloth}.png`)" alt="옷">
+                <img :src="require(`@/assets/character/${this.itemList.ItemImageCloth}.png`)" alt="옷">
               </div>
               <div class="parts deco">
-                <img :src="require(`@/assets/character/${this.ItemImageDeco}.png`)" alt="장식">
+                <img :src="require(`@/assets/character/${this.itemList.ItemImageDeco}.png`)" alt="장식">
               </div>
               
             </div>
@@ -40,6 +40,9 @@
               <div>
                 <img src="@/assets/coin.png" alt=""><span>5000P</span><button>포인트 충전</button>
               </div>
+              <div>
+                <button @click="charSave()">저장</button>
+              </div>
             </div>
 
           </article>
@@ -47,10 +50,10 @@
             <h3>인벤토리</h3>
             <div class="inventory">
               <div class="tab-box">
-                <span @click="() => tab = 0" :class="{'tab':true, 'active': tab == 0}">옷</span>
-                <span @click="() => tab = 1" :class="{'tab':true, 'active': tab == 1}">머리</span>
-                <span @click="() => tab = 2" :class="{'tab':true, 'active': tab == 2}">배경</span>
-                <span @click="() => tab = 3" :class="{'tab':true, 'active': tab == 3}">장식</span>
+                <span @click="temp(0)" :class="{'tab':true, 'active': tab == 0}">옷</span>
+                <span @click="temp(1)" :class="{'tab':true, 'active': tab == 1}">머리</span>
+                <span @click="temp(2)" :class="{'tab':true, 'active': tab == 2}">배경</span>
+                <span @click="temp(3)" :class="{'tab':true, 'active': tab == 3}">장식</span>
               </div>
               <inventory-box :tab="tab"
                 @itemImage="itemImage"
@@ -67,17 +70,27 @@ import InventoryBox from '@/components/character/InventoryBox.vue'
 
 export default {
 	data: () => {
-	return {
-		tab: 0,
-		target: null,
-    ItemImageBackground : 'background1',
-    CategoryNum : null,
-    ItemImageCloth : 'cloth1',
-    ItemImageHair : 'hair1',
-    ItemImageDeco : 'deco1'
+    return {
+      tab: 0,
+      target: null,
+      itemList:{
+        ItemImageBackground : 'background1',
+        ItemImageCloth : 'cloth1',
+        ItemImageHair : 'hair1',
+        ItemImageDeco : 'deco1'
+      },
+      
+      CategoryNum : null,
 
-	}
-},
+
+    }
+  },
+  watch: {
+    /* eslint-disable */
+    tab: function (val) {
+      this.fullName = val + ' ' + this.lastName
+    },
+  },
   props:{
     popupVal: String,
   },
@@ -85,6 +98,10 @@ export default {
 		InventoryBox,
 	},
   methods: {
+    temp(index){
+      this.tab = index;
+      this.CategoryNum = this.tab;
+    },
     closePopUp: function(){
         this.$emit('close-pop-up');
     },
@@ -92,35 +109,27 @@ export default {
       this.CategoryNum = data
     },
     itemImage(data){
-      console.log('카테고리 넘버 (최종)',this.CategoryNum)
       if(this.CategoryNum == 0){
-        this.ItemImageCloth = data
-        console.log('옷',data)
+        this.itemList.ItemImageCloth = data
       }else if(this.CategoryNum == 1){
-        this.ItemImageHair = data
-        console.log('머리',data)
+        this.itemList.ItemImageHair = data
       }else if(this.CategoryNum == 2){
-        this.ItemImageBackground = data
-        console.log('배경',data)
+        this.itemList.ItemImageBackground = data
       }else{
-        this.ItemImageDeco = data
-        console.log('데코',data)
+        this.itemList.ItemImageDeco = data
       }
-      // console.log(data)
-      // console.log('확인', this.ItemImage)
     },
+    charSave:function(){
+      this.$store.dispatch('userCharData',this.itemList)
+      this.$emit('change-item')
+    }
   },
-  watch:{
-  },
-  // created(){
-  //   console.log(`@/assets/character/${itemImage}.png`)
-  // }
 }
 </script>
 
 <style lang="scss">
 @media only screen and (min-width:800px){
-  #popup-container {
+  #char-popup-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -155,7 +164,7 @@ export default {
       -ms-transform: translate(-50%, -50%);
       -o-transform: translate(-50%, -50%);
       transform: translate(-50%, -50%);
-      z-index: 1;
+      z-index: 2;
 
       .close {
         width: 20px;
@@ -298,7 +307,8 @@ export default {
             & > .inventory{
               box-shadow: inset 1px 2px 4px rgba(0, 0, 0, 0.25);
               border-radius: 10px;
-              height: 90%;
+              height: 400px;
+              overflow-y: scroll;
 
               & > .tab-box{
                 display: flex;
@@ -313,7 +323,7 @@ export default {
 
                 }
                 & > .active {
-                  animation: scale-up 0.1s ease-in forwards;
+                  // animation: scale-up 0.1s ease-in forwards;
                   background-color: #93D9CE;
                   color: white;
                   box-shadow: inset 1px 2px 4px rgba(0, 0, 0, 0.25);
@@ -328,7 +338,7 @@ export default {
   }
 }
 @media only screen and (max-width:799px){
-  #popup-container {
+  #char-popup-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -337,8 +347,9 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-top: 80px;
     //background-color: rgba(0, 0, 0, 0.35);
-    z-index: 3;
+    z-index: 20;
 
     & > div:nth-child(1){
       position:absolute;
@@ -363,7 +374,7 @@ export default {
       -ms-transform: translate(-50%, -50%);
       -o-transform: translate(-50%, -50%);
       transform: translate(-50%, -50%);
-      z-index: 1;
+      z-index: 15;
 
       .close {
         width: 20px;
@@ -394,7 +405,7 @@ export default {
                 width: 120px;
                 border-radius: 10px;
                 position: absolute;
-                z-index: 1;
+                z-index: 10;
                 font-size: 16px;
               }
             }
@@ -423,13 +434,14 @@ export default {
                 }
               }
               & > button{
-                font-size: 1rem;
-                font-weight: 100;
-                margin: 10px;
-                padding: 2px 5px;
+                // font-size: 1rem;
+                // font-weight: 100;
+                // margin: 10px;
+                // padding: 2px 5px;
 
-                display: table-cell;
-                vertical-align: middle;
+                // display: table-cell;
+                // vertical-align: middle;
+                display: none;
               }
             }
 
@@ -440,9 +452,9 @@ export default {
 						& > .char{
 							//width: 300px;
 							//height: 300px;
-							width: 240px;
-              height: 240px;
-              border: 10px solid black;
+							width: 180px;
+              height: 180px;
+              border: 5px solid black;
 							border-radius: 10px;
 							text-align: center;
 							display: table-cell;
@@ -518,7 +530,7 @@ export default {
 
                 }
                 & > .active {
-                  animation: scale-up 0.1s ease-in forwards;
+                  // animation: scale-up 0.1s ease-in forwards;
                   background-color: #93D9CE;
                   color: white;
                   box-shadow: inset 1px 2px 4px rgba(0, 0, 0, 0.25);

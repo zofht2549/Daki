@@ -41,7 +41,7 @@ export default{
             Dummmy:Dummmy,
             Hello : null,
             ItemImage : null,
-            CategoriesNum : null,
+            CategoriesNum : 0,
         }
     },
     props:{
@@ -55,7 +55,6 @@ export default{
         categoryNum(data){
             this.CategoriesNum = data
             this.$emit('categoryNum', data)
-            console.log('카테고리 넘버 (중간)',data)
         }
     },
     created(){
@@ -63,7 +62,7 @@ export default{
             return (item.categories == this.tab);
         });
 
-        console.log(this.Dummmy);
+        // console.log(this.Dummmy);
     },
     watch:{
         matchingTab: function(){
@@ -75,7 +74,7 @@ export default{
             this.Hello = this.Dummmy.filter((item) =>{
                 return (item.categories == this.tab)
             })
-            console.log(this.tab)
+            // console.log(this.tab)
         }
     }
 }
