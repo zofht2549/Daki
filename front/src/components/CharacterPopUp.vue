@@ -118,19 +118,12 @@ export default {
       }else{
         this.itemList.ItemImageDeco = data
       }
-      // console.log(data)
-      // console.log('확인', this.ItemImage)
     },
     charSave:function(){
       this.$store.dispatch('userCharData',this.itemList)
       this.$emit('change-item')
     }
   },
-  watch:{
-  },
-  // created(){
-  //   console.log(`@/assets/character/${itemImage}.png`)
-  // }
 }
 </script>
 
@@ -314,7 +307,8 @@ export default {
             & > .inventory{
               box-shadow: inset 1px 2px 4px rgba(0, 0, 0, 0.25);
               border-radius: 10px;
-              height: 90%;
+              height: 400px;
+              overflow-y: scroll;
 
               & > .tab-box{
                 display: flex;
@@ -329,7 +323,7 @@ export default {
 
                 }
                 & > .active {
-                  animation: scale-up 0.1s ease-in forwards;
+                  // animation: scale-up 0.1s ease-in forwards;
                   background-color: #93D9CE;
                   color: white;
                   box-shadow: inset 1px 2px 4px rgba(0, 0, 0, 0.25);
@@ -355,7 +349,7 @@ export default {
     align-items: center;
     padding-top: 80px;
     //background-color: rgba(0, 0, 0, 0.35);
-    z-index: 5;
+    z-index: 20;
 
     & > div:nth-child(1){
       position:absolute;
@@ -380,7 +374,7 @@ export default {
       -ms-transform: translate(-50%, -50%);
       -o-transform: translate(-50%, -50%);
       transform: translate(-50%, -50%);
-      z-index: 1;
+      z-index: 15;
 
       .close {
         width: 20px;
@@ -411,7 +405,7 @@ export default {
                 width: 120px;
                 border-radius: 10px;
                 position: absolute;
-                z-index: 1;
+                z-index: 10;
                 font-size: 16px;
               }
             }
@@ -440,13 +434,14 @@ export default {
                 }
               }
               & > button{
-                font-size: 1rem;
-                font-weight: 100;
-                margin: 10px;
-                padding: 2px 5px;
+                // font-size: 1rem;
+                // font-weight: 100;
+                // margin: 10px;
+                // padding: 2px 5px;
 
-                display: table-cell;
-                vertical-align: middle;
+                // display: table-cell;
+                // vertical-align: middle;
+                display: none;
               }
             }
 
@@ -457,9 +452,9 @@ export default {
 						& > .char{
 							//width: 300px;
 							//height: 300px;
-							width: 240px;
-              height: 240px;
-              border: 10px solid black;
+							width: 180px;
+              height: 180px;
+              border: 5px solid black;
 							border-radius: 10px;
 							text-align: center;
 							display: table-cell;
@@ -535,7 +530,7 @@ export default {
 
                 }
                 & > .active {
-                  animation: scale-up 0.1s ease-in forwards;
+                  // animation: scale-up 0.1s ease-in forwards;
                   background-color: #93D9CE;
                   color: white;
                   box-shadow: inset 1px 2px 4px rgba(0, 0, 0, 0.25);

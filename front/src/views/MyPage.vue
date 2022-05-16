@@ -20,7 +20,7 @@
 						</div>
 					</div>
 					<div class="char-info">
-						<div class="nickname">닉네임</div>
+						<div class="nickname">{{ user.nickName}}</div>
 						<div><img src="@/assets/coin.png" alt=""><span>5000P</span><button>포인트 충전</button></div>
 						<a>캐릭터 변경</a>
 					</div>
@@ -40,7 +40,7 @@
 						</div>
 						<div for="nickname">
 							<span class="title">닉네임</span>
-							<span class="content">닉네임</span>
+							<span class="content">{{ user.nickName }}</span>
 							<button
 								class="nickname_button" @click="changeNickname()">
 								닉네임 변경
@@ -83,6 +83,7 @@ import Navigation from '../components/Navigation.vue'
 import ChangePassword from '@/components/Mypage/ChangePassword.vue'
 import ChangeNickname from '@/components/Mypage/ChangeNickname.vue'
 import CharacterButton from '@/components/CharacterButton.vue'
+import { mapState } from 'vuex'
 
 export default {
   name: 'MyPage',
@@ -120,7 +121,6 @@ export default {
 			this.nicknameView = (this.nicknameView) ? false : true
 		},
 		async getCharItem(){
-			console.log('읽었나');
 			this.itemList.ItemImageBackground = this.$store.state.charItemList.ItemImageBackground
 			this.itemList.ItemImageCloth = this.$store.state.charItemList.ItemImageCloth
 			this.itemList.ItemImageHair = this.$store.state.charItemList.ItemImageHair
@@ -128,11 +128,15 @@ export default {
 		}
   },
 	created: function(){
-		console.log('mypage data');
 		this.itemList.ItemImageBackground = this.$store.state.charItemList.ItemImageBackground
 		this.itemList.ItemImageCloth = this.$store.state.charItemList.ItemImageCloth
 		this.itemList.ItemImageHair = this.$store.state.charItemList.ItemImageHair
 		this.itemList.ItemImageDeco = this.$store.state.charItemList.ItemImageDeco
+	},
+	computed:{
+		...mapState([
+      'user'
+    ])
 	}
 }
 </script>
@@ -322,9 +326,9 @@ export default {
 						}
 					}
 				}
-				.botton-area{
+			}
+			& > .botton-area{
 					text-align: center;
-				}
 			}
 		}
 

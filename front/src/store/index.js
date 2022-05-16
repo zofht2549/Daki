@@ -49,8 +49,6 @@ export default new Vuex.Store({
       state.charItemList.ItemImageCloth = itemList.ItemImageCloth
       state.charItemList.ItemImageDeco = itemList.ItemImageDeco
       state.charItemList.ItemImageHair = itemList.ItemImageHair
-      console.log('왜 못읽지',state.charItemList)
-      console.log('이것도 못읽나',itemList)
     }
   },
   actions: {
@@ -88,7 +86,6 @@ export default new Vuex.Store({
 
     // char
     userCharData({commit},itemList){
-      console.log('아이템 리스트',itemList)
       commit('USER_CHAR_DATA',itemList)
     }
   },
