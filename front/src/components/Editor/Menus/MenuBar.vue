@@ -7,11 +7,12 @@
     <label :class="[{'clicked': menu == 'mic'}, 'mic']" title="음성 녹음" for="mic"
      @click="menuClickHandler" />
     <input type="radio" id="mic" value="mic" v-model="menu">
+    <!-- <speech-to-text v-if="menu == 'mic'"/> -->
 
     <label :class="[{'clicked': menu == 'image'}, 'image']" title="이미지" for="image"
      @click="menuClickHandler" />
     <input type="radio" id="image" value="image" v-model="menu">
-    <image-uploader  v-model="file" :maxSize="3" v-show="false"
+    <image-uploader v-model="file" :maxSize="3" v-show="false"
       :id="'file-input'" :maxWidth="500" :maxHeight="500" :preview="false" />
 
     <label :class="[{'clicked': menu == 'sticker'}, 'sticker']" :title="menu == 'sticker' ? false:'스티커'" for="sticker"
@@ -31,11 +32,16 @@
       <button :class="['redo', {'active':historyInfo[1] > historyInfo[0]}]" title="redo" 
        @click="historyChange('redo')" />
     </div>
+
+    <button class="submit-btn" @click="submitHandler">
+      작성 완료
+    </button>
   </div>
 </template>
 
 <script>
 import TextOptions from './TextOptions.vue'
+// import SpeechToText from './SpeechToText.vue'
 import ImageUploader from 'vue-image-upload-resize'
 import StickerLoader from './StickerLoader.vue'
 
@@ -55,7 +61,8 @@ export default {
   components: {
     TextOptions,
     ImageUploader,
-    StickerLoader
+    StickerLoader,
+    // SpeechToText
   },
   methods: {
     menuClickHandler: function(e){
@@ -85,6 +92,9 @@ export default {
         return
       }
       this.$emit('history-change', payload)
+    },
+    submitHandler: function(){
+      this.$emit('submit')
     }
   },
   watch: {
@@ -97,16 +107,11 @@ export default {
       }
       else {
         this.menu = null
-        this.isActive = false
       }
+      this.isActive = false
     },
     menu: function(){
-      if (this.menu){
-        this.$emit('active-menu', {menu: this.menu, isActive: this.isActive})
-      }
-      else {
-        this.$emit('active-menu', {menu: this.menu, isActive: this.isActive})
-      }
+      this.$emit('active-menu', {menu: this.menu, isActive: this.isActive})
     },
     file: function(){
       if (this.file){
@@ -119,6 +124,9 @@ export default {
       if (this.isCreated){
         this.isActive = false
         this.file = null
+        if (this.file){
+          this.file = null
+        }
       }
     }
   }
@@ -224,7 +232,6 @@ export default {
     .do-box {
       display: flex;
       margin-left: auto;
-      margin-right: 1rem;
       align-items: center;
 
       .undo {
@@ -255,6 +262,25 @@ export default {
           cursor: pointer;
           background-image: url('../../../assets/Editor/redo-active.png');
         }
+      }
+    }
+
+    .submit-btn {
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 10px;
+      border: 1px #93D9CE solid;
+      color: #93D9CE;
+      background-color: white;
+      box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.35);
+      margin: 1.5rem;
+      padding: 0.5rem 0.75rem;
+      cursor: pointer;
+
+      &:hover, &:focus {
+        outline: none;
+        background-color: #93D9CE;
+        color: white;
       }
     }
   }

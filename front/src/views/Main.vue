@@ -52,10 +52,22 @@ export default {
 </script>
 
 <style lang="scss">
+@media screen and (max-width: 799px) {
+  #main-container {
+    width: 100%;
+    min-width: 400px;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  #main-container {
+    width: 70%;
+  }
+}
+
   #main-container {
     border-left: 1px #cccccc solid;
     border-right: 1px #cccccc solid;
-    width: 70%;
     min-height: 100vh;
     padding-top: 100px;
 
@@ -70,6 +82,7 @@ export default {
 
       .tab {
         width: 25%;
+        min-width: 75px;
         height: 60px;
         background-color: #cccccc;
         color: #777777;
@@ -78,6 +91,8 @@ export default {
         align-items: center;
         font-size: 1.5rem;
         font-weight: bold;
+        word-break: keep-all;
+        text-align: center;
         margin: 0 3rem;
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
