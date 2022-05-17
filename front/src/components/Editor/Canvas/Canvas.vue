@@ -205,12 +205,12 @@ export default {
     },
     /// S3 파일 삭제 ///
     fileRemoveFromS3: function(url){
-      const credentials = JSON.parse(process.env.VUE_APP_AWS_CREDENTIALS)
+      const credentials = JSON.parse(process.env.VUE_APP_AWS_S3_CREDENTIALS)
       const s3 = new AWS.S3(credentials)
       const fileName = url.replace('https://diarypj.s3.ap-northeast-2.amazonaws.com/', '')
       
       s3.deleteObject({
-        Bucket: 'diarypj',
+        Bucket: process.env.VUE_APP_AWS_S3_BUCKET,
         Key: fileName.replace('%40', '@')
       })
 

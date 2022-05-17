@@ -7,7 +7,7 @@
     <label :class="[{'clicked': menu == 'mic'}, 'mic']" title="음성 녹음" for="mic"
      @click="menuClickHandler" />
     <input type="radio" id="mic" value="mic" v-model="menu">
-    <!-- <speech-to-text v-if="menu == 'mic'"/> -->
+    <speech-to-text v-if="menu == 'mic'"/>
 
     <label :class="[{'clicked': menu == 'image'}, 'image']" title="이미지" for="image"
      @click="menuClickHandler" />
@@ -41,7 +41,7 @@
 
 <script>
 import TextOptions from './TextOptions.vue'
-// import SpeechToText from './SpeechToText.vue'
+import SpeechToText from './SpeechToText.vue'
 import ImageUploader from 'vue-image-upload-resize'
 import StickerLoader from './StickerLoader.vue'
 import AWS from 'aws-sdk'
@@ -63,7 +63,7 @@ export default {
     TextOptions,
     ImageUploader,
     StickerLoader,
-    // SpeechToText
+    SpeechToText
   },
   computed: {
     user: function(){
@@ -105,11 +105,11 @@ export default {
       const body = document.querySelector('body')
       body.style.cursor = 'wait'
 
-      const credentials = JSON.parse(process.env.VUE_APP_AWS_CREDENTIALS)
+      const credentials = JSON.parse(process.env.VUE_APP_AWS_S3_CREDENTIALS)
       const s3 = new AWS.S3(credentials)
 
       const params = {
-        Bucket: 'diarypj',
+        Bucket: process.env.VUE_APP_AWS_S3_BUCKET,
         Key: `${this.user.email}/${file.name}`,
         ACL: 'public-read',
         Body: file,

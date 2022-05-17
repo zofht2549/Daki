@@ -31,7 +31,6 @@ export default new Vuex.Store({
     SETUSER(state, payload){
       session.setItem('user', payload)
       state.user = JSON.parse(payload)
-      console.log(state.user)
     },
     GETUSER(state, user){
       state.user = user
