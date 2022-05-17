@@ -38,7 +38,10 @@ export default {
       this.$nextTick(() => {
         this.height = this.$refs.app.clientHeight
       })
-    },
+    }
+  },
+  created: function(){
+    this.$store.dispatch('getUser')
   },
   mounted: function(){
     this.getHeight()

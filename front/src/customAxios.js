@@ -5,7 +5,7 @@ store.getters.config
 
 const session = window.sessionStorage
 
-export const URL = 'http://k6e105.p.ssafy.io:8080'
+export const URL = 'https://k6e105.p.ssafy.io:8080'
 
 const CustomAxios = axios.create({
   baseURL: URL,
