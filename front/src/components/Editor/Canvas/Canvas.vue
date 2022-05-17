@@ -6,7 +6,7 @@
      @value-change="payload => valueChange(payload)"
      ref="canvas-item"/>
 
-    <img v-if="file && isActive" :src="file" class="image-preview" ref="preview"
+    <img v-if="file && isActive" :src="file" class="image-preview" ref="preview" @load="loadPreview"
      :style="{top: `${mouseY}%`, left: `${mouseX}%`}" >
   </div>
 </template>
@@ -14,6 +14,7 @@
 <script>
 import {items} from './Dummy.js'
 import CanvasItem from './CanvasItem.vue'
+import AWS from 'aws-sdk'
 
 export default {
   data: function(){
@@ -54,7 +55,6 @@ export default {
     createNewOne: function(e){
       if (e.target.id == 'canvas-container' && !this.isActive){
         this.selected = null
-        this.$emit('select', null)
       }
       if (this.isActive){
         const canvas = this.$refs.canvas
@@ -85,8 +85,7 @@ export default {
         }
 
         this.items.push(temp)
-        this.selected = this.$refs['canvas-item'].length
-        this.$emit('select', temp)
+        this.selected = this.items.length - 1
       }
       this.$emit('deactivate')
       this.$refs.canvas.style.cursor = 'auto'
@@ -202,11 +201,26 @@ export default {
       if (this.selected == idx){
         return
       }
-      const tar = this.items[idx]
       this.selected = idx
-      this.$emit('select', tar)
     },
-    removeItem: function(){
+    /// S3 파일 삭제 ///
+    fileRemoveFromS3: function(url){
+      const credentials = JSON.parse(process.env.VUE_APP_AWS_S3_CREDENTIALS)
+      const s3 = new AWS.S3(credentials)
+      const fileName = url.replace('https://diarypj.s3.ap-northeast-2.amazonaws.com/', '')
+      
+      s3.deleteObject({
+        Bucket: process.env.VUE_APP_AWS_S3_BUCKET,
+        Key: fileName.replace('%40', '@')
+      })
+
+      return new Promise(resolve => resolve())
+    },
+    removeItem: async function(){
+      const selectedItem = this.items[this.selected]
+      if (selectedItem.type == 'image'){
+        await this.fileRemoveFromS3(selectedItem.imgUrl)
+      }
       this.items.splice(this.selected, 1)
       this.$emit('select', null)
     },
@@ -224,12 +238,21 @@ export default {
         this.$set(this.items, this.selected, tar)
       }
     },
+    /// add mouse-move event when preview was loaded ///
+    loadPreview: function(){
+      if (this.file){
+        const canvas = this.$refs.canvas
+        canvas.addEventListener('mousemove', this.mouseMove)
+      }
+    },
     /// new image, sticker assistant ///
     mouseMove: function(e){
-      if (this.mouseX == null){
+      // const canvas = this.$refs.canvas
+      // console.dir(canvas)
+      if (this.mouseX === null){
         this.mouseX = ((e.offsetX - this.$refs.preview.width / 2) / this.canvasWidth) * 100
       }
-      if (this.mouseY == null){
+      if (this.mouseY === null){
         this.mouseY = ((e.offsetY - this.$refs.preview.height / 2) / this.canvasHeight) * 100
       }
       this.mouseX += (e.movementX / this.canvasWidth) * 100
@@ -242,10 +265,10 @@ export default {
         this.selected = null
       }
     },
+    selected: function(){
+      this.$emit('select', this.items[this.selected])
+    },
     type: function(){
-      if (!this.type){
-        this.selected = null
-      }
       this.cursorType = this.type
     },
     cursorType: function(){
@@ -253,7 +276,7 @@ export default {
         this.$refs.canvas.style.cursor = 'text'
       }
       else if (this.cursorType == 'image' || this.cursorType == 'sticker'){
-        this.$refs.canvas.style.cursor = 'none'
+        this.$refs.canvas.style.cursor = 'grabbing'
       }
       else {
         this.$refs.canvas.style.cursor = 'auto'
@@ -267,10 +290,7 @@ export default {
     },
     file: function(){
       const canvas = this.$refs.canvas
-      if (this.file){
-        canvas.addEventListener('mousemove', this.mouseMove)
-      }
-      else {
+      if (!this.file){
         canvas.removeEventListener('mousemove', this.mouseMove)
       }
     },

@@ -31,7 +31,9 @@ export default new Vuex.Store({
     SETUSER(state, payload){
       session.setItem('user', payload)
       state.user = JSON.parse(payload)
-      console.log(state.user)
+    },
+    GETUSER(state, user){
+      state.user = user
     },
     CLEARUSER(state){
       state.user = null
@@ -62,8 +64,16 @@ export default new Vuex.Store({
     setUser({commit}, credentials){
       const { accessToken } = credentials
       commit('SETUSER', JSON.stringify(jwtDecode(accessToken)))
-
-      
+    },
+    getUser({commit}){
+      const session = window.sessionStorage
+      try {
+        const user = JSON.parse(session.getItem('user'))
+        commit('GETUSER', user)
+      }
+      catch {
+        return
+      }
     },
     clearUser({ commit }){
       commit('CLEARUSER')

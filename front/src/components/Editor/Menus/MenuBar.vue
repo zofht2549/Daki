@@ -7,13 +7,13 @@
     <label :class="[{'clicked': menu == 'mic'}, 'mic']" title="음성 녹음" for="mic"
      @click="menuClickHandler" />
     <input type="radio" id="mic" value="mic" v-model="menu">
-    <!-- <speech-to-text v-if="menu == 'mic'"/> -->
+    <speech-to-text v-if="menu == 'mic'"/>
 
     <label :class="[{'clicked': menu == 'image'}, 'image']" title="이미지" for="image"
      @click="menuClickHandler" />
     <input type="radio" id="image" value="image" v-model="menu">
-    <image-uploader v-model="file" :maxSize="3" v-show="false"
-      :id="'file-input'" :maxWidth="500" :maxHeight="500" :preview="false" />
+    <image-uploader v-show="false" @input="fileUploadToS3" 
+     :outputFormat="'file'" :id="'file-input'" :maxWidth="500" :maxHeight="500" :preview="false" />
 
     <label :class="[{'clicked': menu == 'sticker'}, 'sticker']" :title="menu == 'sticker' ? false:'스티커'" for="sticker"
      @click="menuClickHandler">
@@ -41,9 +41,10 @@
 
 <script>
 import TextOptions from './TextOptions.vue'
-// import SpeechToText from './SpeechToText.vue'
+import SpeechToText from './SpeechToText.vue'
 import ImageUploader from 'vue-image-upload-resize'
 import StickerLoader from './StickerLoader.vue'
+import AWS from 'aws-sdk'
 
 export default {
   data: function(){
@@ -62,7 +63,12 @@ export default {
     TextOptions,
     ImageUploader,
     StickerLoader,
-    // SpeechToText
+    SpeechToText
+  },
+  computed: {
+    user: function(){
+      return this.$store.state.user
+    }
   },
   methods: {
     menuClickHandler: function(e){
@@ -75,7 +81,6 @@ export default {
         this.isActive = true
         if (e.target.htmlFor == 'image'){
           document.querySelector('#file-input').click()
-          this.menu = null
         }
       }
     },
@@ -95,6 +100,32 @@ export default {
     },
     submitHandler: function(){
       this.$emit('submit')
+    },
+    fileUploadToS3: async function(file){
+      const body = document.querySelector('body')
+      body.style.cursor = 'wait'
+
+      const credentials = JSON.parse(process.env.VUE_APP_AWS_S3_CREDENTIALS)
+      const s3 = new AWS.S3(credentials)
+
+      const params = {
+        Bucket: process.env.VUE_APP_AWS_S3_BUCKET,
+        Key: `${this.user.email}/${file.name}`,
+        ACL: 'public-read',
+        Body: file,
+        ContentType: file.type,
+      }
+
+      await s3.upload(params, (err, data) => {
+        if (err){
+          console.dir('에러!', err)
+        }
+        else {
+          this.file = data.Location
+        }
+      })
+
+      body.style.cursor = 'auto'
     }
   },
   watch: {
@@ -118,6 +149,9 @@ export default {
         this.$nextTick(() => {
           this.$emit('image-upload', this.file)
         })
+      }
+      else {
+        this.menu = null
       }
     },
     isCreated: function(){
