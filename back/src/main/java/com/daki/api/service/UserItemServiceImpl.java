@@ -44,7 +44,11 @@ public class UserItemServiceImpl implements UserItemService{
         Item item = itemRepository.getById(userItemUpdateWearStateReq.getItemNo());
         UserItem findUserItem = userItemRepository.findByDollAndItem(doll, item);
 
-        UserItem updateItem = new UserItem(findUserItem.getUserItemNo(), !findUserItem.isWearFlag(), doll, item);
+        int wearFlag = findUserItem.getWearFlag();
+        if(wearFlag ==0) wearFlag =1;
+        else wearFlag = 0;
+
+        UserItem updateItem = new UserItem(findUserItem.getUserItemNo(), wearFlag, doll, item);
         UserItemUpdateWearStateRes userItemUpdateWearStateRes = new UserItemUpdateWearStateRes(userItemRepository.save(updateItem));
 
         return userItemUpdateWearStateRes;

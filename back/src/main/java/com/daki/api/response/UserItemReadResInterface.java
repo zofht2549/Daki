@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 public interface UserItemReadResInterface {
     public Long getItemItemNo();
 
-    public boolean isWearFlag();
+    public int getWearFlag();
 
-    public ItemType getItemItemType();
+    public int getItemItemCategories();
 
     public String getItemItemName();
 

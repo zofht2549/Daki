@@ -14,7 +14,7 @@ public class UserItemReadRes {
 
     private Long userItemNo;
 
-    private boolean wearFlag;
+    private int wearFlag;
 
     private ItemType itemType;
 
@@ -26,7 +26,7 @@ public class UserItemReadRes {
         return userItemNo;
     }
 
-    public boolean isWearFlag() {
+    public int getWearFlag() {
         return wearFlag;
     }
 
@@ -46,7 +46,7 @@ public class UserItemReadRes {
         this.userItemNo = userItemNo;
     }
 
-    public void setWearFlag(boolean wearFlag) {
+    public void setWearFlag(int wearFlag) {
         this.wearFlag = wearFlag;
     }
 
@@ -63,7 +63,7 @@ public class UserItemReadRes {
     }
 
     public UserItemReadRes(){}
-    public UserItemReadRes(Long userItemNo, boolean wearFlag, ItemType itemType, String itemName, String itemImage) {
+    public UserItemReadRes(Long userItemNo, int wearFlag, ItemType itemType, String itemName, String itemImage) {
         this.userItemNo = userItemNo;
         this.wearFlag = wearFlag;
         this.itemType = itemType;

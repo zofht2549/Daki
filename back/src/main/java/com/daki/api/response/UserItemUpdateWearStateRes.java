@@ -9,7 +9,7 @@ public class UserItemUpdateWearStateRes {
 
     Long userItemNo;
 
-    boolean wearFlag;
+    int wearFlag;
 
     Long dollNo;
 
@@ -23,11 +23,11 @@ public class UserItemUpdateWearStateRes {
         this.userItemNo = userItemNo;
     }
 
-    public boolean isWearFlag() {
+    public int getWearFlag() {
         return wearFlag;
     }
 
-    public void setWearFlag(boolean wearFlag) {
+    public void setWearFlag(int wearFlag) {
         this.wearFlag = wearFlag;
     }
 
@@ -52,7 +52,7 @@ public class UserItemUpdateWearStateRes {
 
     public UserItemUpdateWearStateRes(UserItem userItem) {
         this.userItemNo = userItem.getUserItemNo();
-        this.wearFlag = userItem.isWearFlag();
+        this.wearFlag = userItem.getWearFlag();
         this.dollNo = userItem.getDoll().getDollNo();
         this.itemNo = userItem.getItem().getItemNo();
     }

@@ -65,7 +65,7 @@ public class TokenProvider {
 
         com.daki.db.entity.User user = userRepository.findByUserEmail(email).get();
         Doll doll = dollRepository.findByUser(user);
-        List<UserItem> userItemList = userItemRepository.findByDollAndWearFlag(doll, true);
+        List<UserItem> userItemList = userItemRepository.findByDollAndWearFlag(doll, 1);
         List<Long> wearItemList = new ArrayList<>();
         for (UserItem userItem: userItemList) {
             wearItemList.add(userItem.getItem().getItemNo());
