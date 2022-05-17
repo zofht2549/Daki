@@ -1,6 +1,8 @@
 package com.daki.api.controller;
 
+import com.daki.api.request.UserItemCreateReq;
 import com.daki.api.request.UserItemUpdateWearStateReq;
+import com.daki.api.response.UserItemCreateRes;
 import com.daki.api.response.UserItemReadResInterface;
 import com.daki.api.response.UserItemUpdateWearStateRes;
 import com.daki.api.service.UserItemServiceImpl;
@@ -29,6 +31,14 @@ public class UserItemController {
         List<UserItemReadResInterface> userItemReadRes = useritemService.readUserItem(dollNo);
 
         return userService.tokenEnter(httpServletRequest, userItemReadRes, 200);
+    }
+
+    @PostMapping
+    ResponseEntity<UserItemCreateRes> createUserItem(@RequestBody UserItemCreateReq userItemCreateReq,
+                                                     HttpServletRequest httpServletRequest){
+        UserItemCreateRes userItemCreateRes = useritemService.createUserItem(userItemCreateReq);
+
+        return userService.tokenEnter(httpServletRequest, userItemCreateRes, 200);
     }
 
     @PutMapping("/wear")
