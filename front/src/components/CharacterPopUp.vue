@@ -28,20 +28,20 @@
               
             </div>
             <div class="char-info">
-              <div class="nickname">닉네임</div>
+              <div class="nickname">{{ user.nickName }}</div>
               <div class="tooltip">
-                LV 20
-                <progress class="progress-tag" value="100" max="200"></progress>
+                {{ level }} LV
+                <progress class="progress-tag" :value="user.doll_likable" max="200"></progress>
                 <div class="tooltip-text">
                   <img src="@/assets/heart.png" alt="">
-                  100/200
+                  {{ user.doll_likable }}/200
                 </div>
               </div>
               <div>
                 <img src="@/assets/coin.png" alt=""><span>5000P</span><button>포인트 충전</button>
               </div>
               <div>
-                <button @click="charSave()">저장</button>
+                <button class="save" @click="charSave()">저장</button>
               </div>
             </div>
 
@@ -56,8 +56,13 @@
                 <span @click="temp(3)" :class="{'tab':true, 'active': tab == 3}">장식</span>
               </div>
               <inventory-box :tab="tab"
-                @itemImage="itemImage"
-                @categoryNum="categoryNum"/>
+                @itemImage="itemImage"/>
+            </div>
+          </article>
+          <article>
+            <div class="mobile-button">
+              <button @click="charSave()">저장</button>
+              <button @click="closePopUp()">나가기</button>
             </div>
           </article>
       </section>
@@ -67,6 +72,7 @@
 
 <script>
 import InventoryBox from '@/components/character/InventoryBox.vue'
+import { mapState } from 'vuex'
 
 export default {
 	data: () => {
@@ -80,9 +86,9 @@ export default {
         ItemImageDeco : 'deco1'
       },
       
-      CategoryNum : null,
-
-
+      CategoryNum : 0,
+      
+      level: 0
     }
   },
   watch: {
@@ -105,9 +111,9 @@ export default {
     closePopUp: function(){
         this.$emit('close-pop-up');
     },
-    categoryNum(data){
-      this.CategoryNum = data
-    },
+    // categoryNum(data){
+    //   this.CategoryNum = data
+    // },
     itemImage(data){
       if(this.CategoryNum == 0){
         this.itemList.ItemImageCloth = data
@@ -124,6 +130,11 @@ export default {
       this.$emit('change-item')
     }
   },
+  computed:{
+		...mapState([
+      'user'
+    ])
+	}
 }
 </script>
 
@@ -233,6 +244,9 @@ export default {
                   display: table-cell;
                   vertical-align: middle;
                 }
+                & > .save{
+                  padding: 10px 35%;
+                }
               }
 
               & > .nickname{
@@ -242,8 +256,6 @@ export default {
             }
 
 						& > .char{
-							//width: 300px;
-							//height: 300px;
 							width: 240px;
               height: 240px;
               border: 10px solid black;
@@ -331,6 +343,9 @@ export default {
                 }
               }
             }
+            & > .mobile-button{
+              display: none;
+            }
           }
 
       }
@@ -351,14 +366,6 @@ export default {
     //background-color: rgba(0, 0, 0, 0.35);
     z-index: 20;
 
-    & > div:nth-child(1){
-      position:absolute;
-      width: 100%; height: 100%;
-      z-index: 0;
-      left: 0; top: 0;
-      cursor: pointer;
-      background-color: rgba(0,0,0,0.35);
-    }
 
     .popup-box {
       position: absolute;
@@ -367,7 +374,7 @@ export default {
       width: 100%;
       height: 100%;
       align-items: center;
-      padding: 3rem;
+      padding: 50px 16px 0px 16px;
       border-radius: 10px;
       -webkit-transform: translate(-50%, -50%);
       -moz-transform: translate(-50%, -50%);
@@ -433,15 +440,10 @@ export default {
                   background-color: yellow;
                 }
               }
-              & > button{
-                // font-size: 1rem;
-                // font-weight: 100;
-                // margin: 10px;
-                // padding: 2px 5px;
-
-                // display: table-cell;
-                // vertical-align: middle;
-                display: none;
+              & > div{
+                & > button{
+                  display: none;
+                }
               }
             }
 
@@ -472,6 +474,7 @@ export default {
 
               & > div{
                 position: relative;
+
               }
 							& > img{
 								width: 100%;
@@ -536,6 +539,15 @@ export default {
                   box-shadow: inset 1px 2px 4px rgba(0, 0, 0, 0.25);
                   border-radius: 10px 10px 0px 0px;
                 }
+              }
+            }
+
+            & > div{
+              
+              text-align: center;
+              & > button{
+                width: 45%;
+                padding: 20px 0px;
               }
             }
           }

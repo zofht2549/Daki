@@ -48,11 +48,11 @@
 						</div>
 						<div for="birth">
 							<span class="title">생년월일</span>
-							<span class="content">1997-10-07</span>
+							<span class="content">{{ user.birth }}</span>
 						</div>
 						<div for="gender">
 							<span class="title">성별</span>
-							<span class="content">여</span>
+							<span class="content">{{ user.userGender }}</span>
 						</div>
 					</form>
 					

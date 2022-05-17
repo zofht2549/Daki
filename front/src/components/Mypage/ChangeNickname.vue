@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     closePopUp: function(){
-        this.$emit('close-pop-up');
+        this.$emit('close-pop-up',false);
     }
   }
 }

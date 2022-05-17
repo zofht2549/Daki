@@ -158,8 +158,8 @@ export default {
 }
 @media only screen and (max-width:799px){
   .menu-trigger{
-    margin-right:70px;
-    margin-bottom: 50px;
+    margin-right:50px;
+    margin-bottom: 30px;
   }
   .menu-trigger,
   .menu-trigger span {
@@ -169,8 +169,8 @@ export default {
   }
   .menu-trigger{
     position: relative;
-    width: 50px;
-    height: 44px;
+    width: 30px;
+    height: 30px;
   }
   .menu-trigger span{
     position: absolute;
@@ -184,7 +184,7 @@ export default {
     top: 0;
   }
   .menu-trigger span:nth-of-type(2){
-    top: 20px;
+    top: 13px;
   }
   .menu-trigger span:nth-of-type(3){
     bottom: 0;
@@ -283,6 +283,7 @@ export default {
             text-decoration: none;
             color: #fff;
             font-weight: bold;
+            font-size: 16px;
           }
           & > .menu{
             width: 200px;
