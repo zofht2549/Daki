@@ -261,6 +261,7 @@ export default {
 
                &::-webkit-input-placeholder{
                 color: transparent;
+                font-size: 16px;
               }
             }
 

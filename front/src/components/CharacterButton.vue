@@ -62,6 +62,7 @@ export default {
 }
 </script>
 <style lang="scss">
+	@media only screen and (min-width:800px){
     #character-container{
       position: fixed;
       bottom:10%;
@@ -97,4 +98,46 @@ export default {
         }
       }
     }
+	}
+	@media only screen and (max-width:799px){
+		#character-container{
+      position: fixed;
+      bottom: 0;
+      right: -30px;
+
+			& > div{
+				& > img{
+					width: 80%;
+					height: 80%;
+				}
+				& > .parts{
+					position: absolute;
+					// width: 80%; height: 80%;
+					left: 0px;
+					top: 0px;
+					z-index: 2;
+
+					& > img {
+						& {
+							width: 80%; height: 80%;
+						}
+					}
+				}
+			}
+
+      & > .character-popup{
+        & {
+          opacity: 0;
+          display: none;
+          visibility: hidden;
+        }
+
+        &.active {
+          opacity: 1;
+          display: block;
+          visibility: visible;
+        }
+      }
+    }
+	}
 </style>
