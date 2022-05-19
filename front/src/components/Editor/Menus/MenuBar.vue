@@ -4,10 +4,11 @@
      @click="menuClickHandler" />
     <input type="radio" id="text" value="text" v-model="menu">
 
-    <label :class="[{'clicked': menu == 'mic'}, 'mic']" title="음성 녹음" for="mic"
-     @click="menuClickHandler" />
+    <label :class="[{'clicked': menu == 'mic'}, 'mic']" title="음성녹음:Beta" for="mic"
+     @click="menuClickHandler">
+      <speech-to-text v-if="menu == 'mic' && selected" :selected="selected" />
+    </label>
     <input type="radio" id="mic" value="mic" v-model="menu">
-    <speech-to-text v-if="menu == 'mic'"/>
 
     <label :class="[{'clicked': menu == 'image'}, 'image']" title="이미지" for="image"
      @click="menuClickHandler" />
@@ -45,6 +46,7 @@ import SpeechToText from './SpeechToText.vue'
 import ImageUploader from 'vue-image-upload-resize'
 import StickerLoader from './StickerLoader.vue'
 import AWS from 'aws-sdk'
+import Swal from 'sweetalert2'
 
 export default {
   data: function(){
@@ -142,7 +144,29 @@ export default {
       this.isActive = false
     },
     menu: function(){
-      this.$emit('active-menu', {menu: this.menu, isActive: this.isActive})
+      if (this.menu != 'mic'){
+        this.$emit('active-menu', {menu: this.menu, isActive: this.isActive})
+      }
+      else {
+        if (!this.selected){
+          Swal.fire({
+            icon: 'info',
+            text: '입력할 텍스트 박스를 선택해주세요'
+          })
+          .then(() => {
+            this.menu = null
+          })
+        }
+        else if (this.selected.type != 'text'){
+          Swal.fire({
+            icon: 'info',
+            text: '텍스트 박스에만 사용 가능합니다'
+          })
+          .then(() => {
+            this.menu = null
+          })
+        }
+      }
     },
     file: function(){
       if (this.file){
@@ -172,7 +196,7 @@ export default {
     width: 100%;
     height: 70px;
     background-color: white;
-    border-bottom: 1px #cccccc solid;
+    border: 1px #cccccc solid;
     display: flex;
     align-items: center;
 

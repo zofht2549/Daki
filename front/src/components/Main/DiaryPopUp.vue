@@ -4,11 +4,12 @@
       <img src="../../assets/close.png" class="close"
       @click="closePopUp">
       <span class="popup-header">
-        <h3>{{ target }}</h3>
+        <h3>{{ target.date }}</h3>
         <h3>OOO님의 일기</h3>
       </span>
       <ol class="popup-list">
-        <li v-for="(diary, idx) of diaries" :key="diary.title" class="list-item">
+        <li v-for="(diary, idx) of target.diaries" :key="diary.title + idx" class="list-item"
+         @click="e => goToDetail(e, idx)" >
           <p class="items">
             {{idx + 1}}
           </p>
@@ -17,7 +18,7 @@
           </p>
           <span class="btn-box">
             <button class="popup-btn edit"/>
-            <button class="popup-btn delete"/>
+            <button class="popup-btn delete" @click="deleteDiary(idx)" />
           </span>
         </li>
       </ol>
@@ -26,22 +27,59 @@
 </template>
 
 <script>
-import Dummy from './Dummy.js'
+import customAxios from '@/customAxios'
+import Swal from 'sweetalert2'
 
 export default {
-  props: {
-    target: String
-  },
-  computed: {
-    diaries: function(){
-      return Dummy[this.target]
+  data: function(){
+    return {
+      changes: false,
+      diaries: this.target.diaries
     }
+  },
+  props: {
+    target: Object
   },
   methods: {
     closePopUp: function(e){
-      if (e.target.id == 'popup-container' || e.target.className == 'close'){
+      if (!e || e.target.id == 'popup-container' || e.target.className == 'close'){
         this.$emit('close-pop-up')
       }
+    },
+    goToDetail: function(e, idx){
+      if (e.target.className == 'list-item'){
+        const diary = this.target.diaries[idx]
+        this.$router.push(`/diary/${diary.diaryNo}`)
+      }
+    },
+    deleteDiary: function(idx){
+      const diary = this.target.diaries[idx]
+      
+      Swal.fire({
+        icon: 'warning',
+        text: '소중한 추억을 삭제하실건가요?',
+        showConfirmButton: true,
+        showCancelButton: true
+      })
+      .then(res => {
+        if (res.isConfirmed){
+          customAxios({
+            method: 'delete',
+            url: `/api/diary/${diary.diaryNo}`
+          })
+          .then(() => {
+            Swal.fire({
+              icon: 'success',
+              text: '삭제되었습니다 😥'
+            })
+            .then(() => {
+              this.changes = true
+              this.diaries.splice(idx, 1)
+            })
+          })
+        }
+        else {return}
+      })
     }
   },
   mounted: function(){
@@ -51,6 +89,9 @@ export default {
   destroyed: function(){
     const body = document.querySelector('body')
     body.style.overflowY = 'scroll'
+    if (this.changes){
+      this.$emit('change-diaries', true)
+    }
   }
 }
 </script>

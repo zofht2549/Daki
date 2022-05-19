@@ -18,7 +18,7 @@ export default new Vuex.Store({
       ItemImageCloth : 'cloth1',
       ItemImageHair : 'hair1',
       ItemImageDeco : 'deco1'
-    },
+    }
   },
   mutations: {
     SCROLLED(state, payload){
@@ -27,7 +27,6 @@ export default new Vuex.Store({
     ARRIVED(state, payload){
       state.isEnd = payload
     },
-    // acounts
     SETUSER(state, payload){
       session.setItem('user', payload)
       state.user = JSON.parse(payload)
@@ -38,14 +37,6 @@ export default new Vuex.Store({
     CLEARUSER(state){
       state.user = null
     },
-
-    // get user data
-
-    // GET_USER_DATA(state){
-    //   state.nickName = null
-    // }
-
-    // char
     USER_CHAR_DATA(state, itemList){
       state.charItemList.ItemImageBackground = itemList.ItemImageBackground
       state.charItemList.ItemImageCloth = itemList.ItemImageCloth
@@ -60,10 +51,9 @@ export default new Vuex.Store({
     arrivedEnd({ commit }, payload){
       commit('ARRIVED', payload)
     },
-    // accounts
     setUser({commit}, credentials){
-      const { accessToken } = credentials
-      commit('SETUSER', JSON.stringify(jwtDecode(accessToken)))
+      const { authorization } = credentials
+      commit('SETUSER', JSON.stringify(jwtDecode(authorization)))
     },
     getUser({commit}){
       const session = window.sessionStorage
@@ -78,25 +68,8 @@ export default new Vuex.Store({
     clearUser({ commit }){
       commit('CLEARUSER')
     },
-
-    // get user data
-
-    // getUserNickName({ commit }){
-    //   const token = localStorage.getItem('jwt')
-    //   axios({
-    //     method:'GET',
-    //     url:`${process.env.VUE_APP_API_URL}/member`,
-    //     headers: { Authorization:`Bearer ${token}`}
-    //   })
-    //   .then(res => {
-    //     console.log(res)
-    //     commit('GET_USER_DATA',res.data)
-    //   })
-    // },
-
-    // char
     userCharData({commit},itemList){
       commit('USER_CHAR_DATA',itemList)
     }
-  },
+  }
 })

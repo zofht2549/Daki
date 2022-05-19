@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@google-cloud/speech": "^4.10.2",
@@ -25,6 +26,7 @@
     "node-record-lpcm16": "^1.0.1",
     "one-colorpicker": "^1.0.12",
     "os-browserify": "^0.3.0",
+    "patch-package": "^6.4.7",
     "path-browserify": "^1.0.1",
     "process": "^0.11.10",
     "request": "^2.79.0",
@@ -37,10 +39,11 @@
     "util": "^0.12.4",
     "v-calendar": "^2.4.1",
     "vue": "^2.6.14",
-    "vue-audio-recorder": "^3.0.1",
+    "vue-audio-visual": "^2.4.1",
     "vue-image-upload-resize": "^2.3.0",
     "vue-perfect-scrollbar": "^0.2.1",
     "vue-router": "^3.5.1",
+    "vue-speech": "^0.1.0",
     "vuex": "^3.6.2",
     "zlib-browserify": "^0.0.3"
   },
