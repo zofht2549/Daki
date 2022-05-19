@@ -1,18 +1,16 @@
 package com.daki.api.request;
 
-import com.daki.db.entity.Skin;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @ApiModel("JoinRequest")
+@AllArgsConstructor
 public class UserJoinReq {
     @ApiModelProperty(name="이메일(=ID)")
     String email;
-
-    @ApiModelProperty(name="유저 이름")
-    String userName;
 
     @ApiModelProperty(name="닉네임")
     String nickName;
@@ -24,9 +22,9 @@ public class UserJoinReq {
     String birth;
 
     @ApiModelProperty(name="성별")
-    boolean gender;
+    String gender;
 
-    @ApiModelProperty(name="피부색")
-    Skin skin;
+    @ApiModelProperty(name="캐릭터 종류")
+    int dollType;
 
 }

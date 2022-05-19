@@ -1,6 +1,5 @@
 package com.daki.api.request;
 
-import com.daki.db.entity.Skin;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;

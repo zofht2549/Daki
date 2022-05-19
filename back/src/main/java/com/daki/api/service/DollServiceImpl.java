@@ -1,12 +1,11 @@
 package com.daki.api.service;
 
 
-import com.daki.api.request.DollCreateReq;
 import com.daki.api.request.DollLikeableUpdateReq;
 import com.daki.api.request.DollUpdateReq;
 import com.daki.api.response.*;
+import com.daki.common.util.SecurityUtil;
 import com.daki.db.entity.Doll;
-import com.daki.db.entity.Skin;
 import com.daki.db.entity.User;
 import com.daki.db.repository.DollRepository;
 import com.daki.db.repository.UserRepository;
@@ -24,15 +23,18 @@ public class DollServiceImpl implements DollService{
 
     public DollReadRes readDollInfo(Long dollNo){
         Doll doll = dollRepository.getById(dollNo);
-        DollReadRes dollReadRes = new DollReadRes(doll.getDollNo(), doll.getDollLikeable(), doll.getSkin());
+        DollReadRes dollReadRes = new DollReadRes(doll.getDollNo(), doll.getDollLikeable(), doll.getDollType());
 
         return dollReadRes;
     }
 
     public DollUpdateRes updateDollInfo(DollUpdateReq dollUpdateReq){
-        User user = userRepository.getById(dollUpdateReq.getUserNo());
+
+        User user = userRepository.findByUserEmail(SecurityUtil.getCurrentUserEmail()).orElseThrow(()
+                -> new RuntimeException("토큰 잘못됨"));
         Doll findDoll = dollRepository.findByUser(user);
-        Doll updateDoll = new Doll(findDoll.getDollNo(), dollUpdateReq.getDollLikeable(), findDoll.getUser(), dollUpdateReq.getSkin());
+
+        Doll updateDoll = new Doll(findDoll.getDollNo(), dollUpdateReq.getDollLikeable(), findDoll.getUser(), dollUpdateReq.getDollType());
 
         DollUpdateRes dollUpdateRes = new DollUpdateRes(dollRepository.save(updateDoll));
 
@@ -55,7 +57,7 @@ public class DollServiceImpl implements DollService{
         if(changedLikeable<0) changedLikeable = 0;
         if(changedLikeable>100) changedLikeable = 100;
 
-        Doll updateDoll = new Doll(findDoll.getDollNo(), changedLikeable, findDoll.getUser(), findDoll.getSkin());
+        Doll updateDoll = new Doll(findDoll.getDollNo(), changedLikeable, findDoll.getUser(), findDoll.getDollType());
 
         DollLikeableUpdateRes dollLikeableUpdateRes = new DollLikeableUpdateRes(dollRepository.save(updateDoll));
 

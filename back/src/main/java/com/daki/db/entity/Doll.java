@@ -21,23 +21,22 @@ public class Doll {
     @JoinColumn(name = "user_no")
     private User user;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "doll_skin")
-    private Skin skin;
+    @Column(name = "doll_type")
+    private int dollType;
 
     public Doll(){}
 
-    public Doll(int dollLikeable, User user, Skin skin) {
+    public Doll(int dollLikeable, User user, int dollType) {
         this.dollLikeable = dollLikeable;
         this.user = user;
-        this.skin = skin;
+        this.dollType = dollType;
     }
 
-    public Doll(Long dollNo, int dollLikeable, User user, Skin skin) {
+    public Doll(Long dollNo, int dollLikeable, User user, int dollType) {
         this.dollNo = dollNo;
         this.dollLikeable = dollLikeable;
         this.user = user;
-        this.skin = skin;
+        this.dollType = dollType;
     }
 
     @Override
@@ -46,7 +45,7 @@ public class Doll {
                 "dollNo=" + dollNo +
                 ", dollLikeable=" + dollLikeable +
                 ", user=" + user +
-                ", skin=" + skin +
+                ", skin=" + dollType +
                 '}';
     }
 }

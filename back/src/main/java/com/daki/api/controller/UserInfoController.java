@@ -16,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/member")
@@ -33,8 +35,8 @@ public class UserInfoController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<MyInfoRes> join() {
-        return ResponseEntity.status(200).body(MyInfoRes.of(userService.getMyInfo()));
+    public ResponseEntity<MyInfoRes> findMyInfo(HttpServletRequest httpServletRequest) {
+        return userService.tokenEnter(httpServletRequest, MyInfoRes.of(userService.getMyInfo()), 200);
     }
 
     @GetMapping("/test")
@@ -55,7 +57,7 @@ public class UserInfoController {
         try {
             userService.modify(modifyReq);
         }catch (Exception e){
-            return ResponseEntity.status(200).body(BaseRes.of(500, "Fail"));
+            return ResponseEntity.status(500).body(BaseRes.of(500, "Fail"));
         }
         return ResponseEntity.status(200).body(BaseRes.of(200, "Success"));
     }
@@ -71,7 +73,6 @@ public class UserInfoController {
     public ResponseEntity<BaseRes> remove() {
         try {
             userService.remove();
-
         }catch (Exception e){
             return ResponseEntity.status(500).body(BaseRes.of(500, "Fail"));
         }
@@ -100,8 +101,8 @@ public class UserInfoController {
     })
     public ResponseEntity<CheckRes> nickNameCheck(@PathVariable("nickName") String nickName) {
         boolean findCheck = userService.checkNickName(nickName);
-        if(findCheck) return ResponseEntity.status(401).body(CheckRes.of("Fail"));
-        else return ResponseEntity.status(401).body(CheckRes.of("OK"));
+        if(findCheck) return ResponseEntity.status(500).body(CheckRes.of("Fail"));
+        else return ResponseEntity.status(200).body(CheckRes.of("OK"));
     }
 
 }

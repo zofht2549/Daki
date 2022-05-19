@@ -1,34 +1,36 @@
 package com.daki.api.request;
 
-import com.daki.db.entity.Skin;
-import com.daki.db.entity.User;
+import io.swagger.annotations.ApiModel;
 
-import javax.persistence.*;
-
+@ApiModel
 public class DollCreateReq {
 
     private int dollLikeable;
 
     private String userNickname;
 
-    private Skin skin;
+    private int dollType;
 
     public int getDollLikeable() {
         return dollLikeable;
+    }
+
+    public int getDollType() {
+        return dollType;
+    }
+
+    public void setDollType(int dollType) {
+        this.dollType = dollType;
     }
 
     public String getUserNickname() {
         return userNickname;
     }
 
-    public Skin getSkin() {
-        return skin;
-    }
-
-    public DollCreateReq(int dollLikeable, String userNickname, Skin skin) {
+    public DollCreateReq(int dollLikeable, String userNickname, int dollType) {
         this.dollLikeable = dollLikeable;
         this.userNickname = userNickname;
-        this.skin = skin;
+        this.dollType = dollType;
     }
 
 }

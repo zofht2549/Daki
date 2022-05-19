@@ -1,10 +1,8 @@
 package com.daki.api.response;
 
-import com.daki.db.entity.Doll;
-import com.daki.db.entity.Skin;
-import com.daki.db.entity.User;
+import io.swagger.annotations.ApiModel;
 
-import javax.persistence.*;
+@ApiModel
 
 public class DollCreateRes {
 
@@ -12,12 +10,12 @@ public class DollCreateRes {
 
     private int dollLikeable;
 
-    private Skin skin;
+    private int dollType;
 
-    public DollCreateRes(Long dollNo, int dollLikeable, Skin skin) {
+    public DollCreateRes(Long dollNo, int dollLikeable, int dollType) {
         this.dollNo = dollNo;
         this.dollLikeable = dollLikeable;
-        this.skin = skin;
+        this.dollType = dollType;
     }
 
 }

@@ -94,6 +94,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/webjars/**");
         web.ignoring().antMatchers("/api/auth/**");
         web.ignoring().antMatchers("/api/auth");
+        web.ignoring().antMatchers("/api/oauth");
+        web.ignoring().antMatchers("/api/oauth/**");
 
     }
 }

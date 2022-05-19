@@ -6,9 +6,12 @@ import com.daki.api.request.DollUpdateReq;
 import com.daki.api.response.*;
 import com.daki.api.service.DollService;
 import com.daki.api.service.DollServiceImpl;
+import com.daki.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -18,29 +21,39 @@ public class DollController {
     @Autowired
     DollServiceImpl dollService;
 
-    @GetMapping
-    public ResponseEntity<DollReadRes> getDollInfo(@RequestParam(value = "dollNo") Long dollNo){
+    @Autowired
+    UserService userService;
+
+    @GetMapping("/{dollNo}")
+    public ResponseEntity<DollReadRes> getDollInfo(@PathVariable Long dollNo,
+                                                   HttpServletRequest httpServletRequest){
         DollReadRes dollReadRes = dollService.readDollInfo(dollNo);
-        return ResponseEntity.status(200).body(dollReadRes);
+        return userService.tokenEnter(httpServletRequest,dollReadRes, 200);
     }
 
     @PutMapping
-    public ResponseEntity<DollUpdateRes> updateDollInfo(@RequestBody DollUpdateReq dollUpdateReq){
+    public ResponseEntity<DollUpdateRes> updateDollInfo(@RequestBody DollUpdateReq dollUpdateReq,
+                                                        HttpServletRequest httpServletRequest){
         DollUpdateRes dollUpdateRes = dollService.updateDollInfo(dollUpdateReq);
-        return ResponseEntity.status(200).body(dollUpdateRes);
+        return userService.tokenEnter(httpServletRequest, dollUpdateRes, 200);
+
     }
 
-    @DeleteMapping
-    public ResponseEntity<DollDeleteRes> deleteDoll(@RequestParam Long dollNo){
+    @DeleteMapping("/{dollNo}")
+    public ResponseEntity<DollDeleteRes> deleteDoll(@PathVariable Long dollNo,
+                                                    HttpServletRequest httpServletRequest){
         DollDeleteRes dollDeleteRes = dollService.deleteDoll(dollNo);
-        return ResponseEntity.status(200).body(dollDeleteRes);
+        return userService.tokenEnter(httpServletRequest, dollDeleteRes, 200);
+
     }
 
     @PutMapping("/likeable")
-    public ResponseEntity<DollLikeableUpdateRes> updateDollLikeable(@RequestBody DollLikeableUpdateReq dollLikeableUpdateReq){
+    public ResponseEntity<DollLikeableUpdateRes> updateDollLikeable(@RequestBody DollLikeableUpdateReq dollLikeableUpdateReq,
+                                                                    HttpServletRequest httpServletRequest){
         DollLikeableUpdateRes dollLikeableUpdateRes = dollService.updateDollLikeable(dollLikeableUpdateReq);
 
-        return ResponseEntity.status(200).body(dollLikeableUpdateRes);
+        return userService.tokenEnter(httpServletRequest, dollLikeableUpdateRes, 200);
+
     }
 
 

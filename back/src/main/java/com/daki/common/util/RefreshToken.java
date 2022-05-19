@@ -15,7 +15,6 @@ import javax.persistence.Table;
 public class RefreshToken {
 
     @Id
-
     private String tokenKey;
     private String tokenValue;
 

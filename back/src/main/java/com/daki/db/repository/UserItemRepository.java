@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserItemRepository extends JpaRepository<UserItem, Long> {
 
@@ -20,6 +21,8 @@ public interface UserItemRepository extends JpaRepository<UserItem, Long> {
     List<UserItemReadResInterface> findByDoll(@Param("doll") Doll doll);
 
     UserItem findByDollAndItem(Doll doll, Item item);
+    List<UserItem> findByDollAndWearFlag(Doll doll, int wearFlag);
+
 //    @Query(value="select * from user_item where doll_no=:doll_no", nativeQuery = true)
 //    List<UserItem> findByDoll2(@Param("doll_no") Long dollNo);
 }

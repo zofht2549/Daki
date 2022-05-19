@@ -15,7 +15,7 @@ public class UserItem {
     private Long userItemNo;
 
     @Column(name = "wear_flag")
-    private boolean wearFlag;
+    private int wearFlag;
 
     @ManyToOne
     @JoinColumn(name = "doll_no")
@@ -27,13 +27,13 @@ public class UserItem {
 
     public UserItem(){}
 
-    public UserItem(boolean wearFlag, Doll doll, Item item) {
+    public UserItem(int wearFlag, Doll doll, Item item) {
         this.wearFlag = wearFlag;
         this.doll = doll;
         this.item = item;
     }
 
-    public UserItem(Long userItemNo, boolean wearFlag, Doll doll, Item item) {
+    public UserItem(Long userItemNo, int wearFlag, Doll doll, Item item) {
         this.userItemNo = userItemNo;
         this.wearFlag = wearFlag;
         this.doll = doll;

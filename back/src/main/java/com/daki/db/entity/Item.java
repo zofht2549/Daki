@@ -14,9 +14,9 @@ public class Item {
     @Column(name = "item_no")
     private Long itemNo;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "item_type")
-    private ItemType itemType;
+//    @Enumerated(EnumType.STRING)
+    @Column(name = "item_categories")
+    private int itemCategories;
 
     @Column(name = "item_name")
     private String itemName;
@@ -24,11 +24,15 @@ public class Item {
     @Column(name = "item_image")
     private String itemImage;
 
+    @Column(name = "item_price")
+    private int itemPrice;
+
     public Item(){}
 
-    public Item(ItemType itemType, String itemName, String itemImage) {
-        this.itemType = itemType;
+    public Item(int itemCategories, String itemName, String itemImage, int itemPrice) {
+        this.itemCategories = itemCategories;
         this.itemName = itemName;
         this.itemImage = itemImage;
+        this.itemPrice = itemPrice;
     }
 }
