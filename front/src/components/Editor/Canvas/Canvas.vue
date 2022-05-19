@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import {items} from './Dummy.js'
+// import {items} from './Dummy.js'
 import CanvasItem from './CanvasItem.vue'
 import AWS from 'aws-sdk'
 
@@ -35,6 +35,7 @@ export default {
     }
   },
   props: {
+    initialItems: Array,
     type: String,
     isActive: Boolean,
     changes: Object,
@@ -45,12 +46,12 @@ export default {
     CanvasItem
   },
   methods: {
+    init: function(){
+      this.items = this.initialItems
+    },
     getCanvasSize: function(){
       this.canvasWidth = this.$refs.canvas.clientWidth
       this.canvasHeight = this.$refs.canvas.clientHeight
-    },
-    initItems: function(){
-      this.items = items
     },
     createNewOne: function(e){
       if (e.target.id == 'canvas-container' && !this.isActive){
@@ -225,11 +226,14 @@ export default {
       this.$emit('select', null)
     },
     valueChange: function(payload){
-      console.log(payload)
-      const tar = {...this.items[this.selected]}
+      const tar = {...this.items[this.selected], fontStyle: {...this.items[this.selected].fontStyle}}
       let flag = false
       for (const key of Object.keys(payload)){
-        if (tar[key] != payload[key]){
+        if (tar.fontStyle[key] && tar.fontStyle[key] != payload[key]){
+          tar.fontStyle[key] = payload[key]
+          flag = true
+        }
+        else if (tar[key] != payload[key]) {
           tar[key] = payload[key]
           flag = true
         }
@@ -247,8 +251,6 @@ export default {
     },
     /// new image, sticker assistant ///
     mouseMove: function(e){
-      // const canvas = this.$refs.canvas
-      // console.dir(canvas)
       if (this.mouseX === null){
         this.mouseX = ((e.offsetX - this.$refs.preview.width / 2) / this.canvasWidth) * 100
       }
@@ -260,6 +262,9 @@ export default {
     }
   },
   watch: {
+    initialItems: function(){
+      this.init()
+    },
     isActive: function(){
       if (this.isActive){
         this.selected = null
@@ -284,8 +289,7 @@ export default {
     },
     changes: function(){
       if (this.changes){
-        const key = Object.keys(this.changes)[0]
-        this.$set(this.items[this.selected].fontStyle, key, this.changes[key])
+        this.valueChange(this.changes)
       }
     },
     file: function(){
@@ -322,10 +326,8 @@ export default {
       this.historyChange = true
     }
   },
-  created: function(){
-    this.initItems()
-  },
   mounted: function(){
+    this.init()
     this.getCanvasSize()
     window.addEventListener('resize', this.getCanvasSize)
     document.addEventListener('keydown', this.keyAction)

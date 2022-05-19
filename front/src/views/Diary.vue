@@ -1,16 +1,12 @@
 <template>
-  <section id="diary-create-container">
+  <section id="diary-create-container" :key="$route.path">
     <navigation />
 
-    <div class="title-box">
-      <input type="text" class="title" placeholder="제목" v-model="title">
-    </div>
-
-    <editor ref="editor" :title="title" @is-save="type => save(type)" />
+    <editor ref="editor" :diaryId="diaryId" @is-save="type => save(type)" />
 
     <div v-if="isSave" class="save-box">
       <div class="auto-save">
-        <img class="auto-img" src="../assets/loading.gif">
+        <img class="auto-img" src="../assets/loading-daki.gif">
         <p class="auto-msg">
           {{ saveMessage }}
         </p>
@@ -29,6 +25,9 @@ export default {
       title: null,
       isSave: false
     }
+  },
+  props: {
+    diaryId: Number
   },
   components: {
     Navigation,
@@ -63,37 +62,6 @@ export default {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-
-
-    .title-box {
-      width: 100%;
-      height: 75px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 2rem 3rem 0;
-      padding: 0.5rem;
-      border-bottom: 1px #cccccc solid;
-
-      .title {
-        width: 80%;
-        border: none;
-        font-size: 2rem;
-        padding: 0;
-
-        &:focus {
-          outline: none;
-
-          &::placeholder {
-            color: transparent;
-          }
-        }
-
-        &::placeholder {
-          color: #cccccc;
-        }
-      }
-    }
 
     .save-box {
       position: fixed;

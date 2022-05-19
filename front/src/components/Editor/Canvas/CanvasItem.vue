@@ -40,7 +40,10 @@ export default {
       resizable: false,
       draggable: false,
       contextable: false,
-      context: { top: 0, left: 0 }
+      context: { top: 0, left: 0 },
+      initialPosition: {
+        top: this.top, left: this.left
+      }
     }
   },
   props: {
@@ -83,7 +86,6 @@ export default {
     },
     /// 리사이즈 ///
     dragResize: function(){
-      console.log('why?')
       this.resizable = true
       const canvas = document.querySelector('#canvas-container')
       canvas.addEventListener('mousemove', this.resize)
