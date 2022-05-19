@@ -7,16 +7,20 @@
 						<!-- <img src="@/assets/landing/character.png" alt=""> -->
 						<img src="@/assets/character/head.png" alt="">
 						<div class="parts background">
-							<img :src="require(`@/assets/character/${this.itemList.ItemImageBackground}.png`)" alt="배경">
+							<!-- <img :src="require(`@/assets/character/${this.itemList.ItemImageBackground}.png`)" alt="배경"> -->
+							<img :src="`${this.itemList.ItemImageBackground}`" alt="">
 						</div>
 						<div class="parts head">
-							<img :src="require(`@/assets/character/${this.itemList.ItemImageHair}.png`)" alt="머리">
+							<!-- <img :src="require(`@/assets/character/${this.itemList.ItemImageHair}.png`)" alt="머리"> -->
+							<img :src="`${this.itemList.ItemImageHair}`" alt="">
 						</div>
 						<div class="parts cloth">
-							<img :src="require(`@/assets/character/${this.itemList.ItemImageCloth}.png`)" alt="옷">
+							<!-- <img :src="require(`@/assets/character/${this.itemList.ItemImageCloth}.png`)" alt="옷"> -->
+							<img :src="`${this.itemList.ItemImageCloth}`" alt="">
 						</div>
 						<div class="parts deco">
-							<img :src="require(`@/assets/character/${this.itemList.ItemImageDeco}.png`)" alt="장식">
+							<!-- <img :src="require(`@/assets/character/${this.itemList.ItemImageDeco}.png`)" alt="장식"> -->
+							<img :src="`${this.itemList.ItemImageDeco}`" alt="">
 						</div>
 					</div>
 					<div class="char-info">
@@ -120,22 +124,49 @@ export default {
 		changeNickname(){
 			this.nicknameView = (this.nicknameView) ? false : true
 		},
-		async getCharItem(){
-			this.itemList.ItemImageBackground = this.$store.state.charItemList.ItemImageBackground
-			this.itemList.ItemImageCloth = this.$store.state.charItemList.ItemImageCloth
-			this.itemList.ItemImageHair = this.$store.state.charItemList.ItemImageHair
-			this.itemList.ItemImageDeco = this.$store.state.charItemList.ItemImageDeco
+		getCharItem(){
+		this.itemList.ItemImageBackground = this.$store.state.wearItem.itemBackground.itemImage
+		this.itemList.ItemImageCloth = this.$store.state.wearItem.itemCloth.itemImage
+		this.itemList.ItemImageHair = this.$store.state.wearItem.itemHair.itemImage
+		this.itemList.ItemImageDeco = this.$store.state.wearItem.itemDeco.itemImage
+		console.log('getchar확인',this.itemList.ItemImageBackground)
+		console.log('getchar이미지 확인',this.itemList.ItemImageBackground.itemImage)
 		}
   },
 	created: function(){
-		this.itemList.ItemImageBackground = this.$store.state.charItemList.ItemImageBackground
-		this.itemList.ItemImageCloth = this.$store.state.charItemList.ItemImageCloth
-		this.itemList.ItemImageHair = this.$store.state.charItemList.ItemImageHair
-		this.itemList.ItemImageDeco = this.$store.state.charItemList.ItemImageDeco
+		// this.itemList.ItemImageBackground = this.$store.state.charItemList.ItemImageBackground
+		// this.itemList.ItemImageBackground = this.$store.state.wearItem.itemBackground
+		// this.itemList.ItemImageCloth = this.$store.state.wearItem.itemCloth
+		// this.itemList.ItemImageHair = this.$store.state.wearItem.itemHair
+		// this.itemList.ItemImageDeco = this.$store.state.wearItem.itemDeco
+		// console.log('확인',this.itemList.ItemImageBackground)
+
+
+
+    this.dollNo = this.$store.state.user.doll_no
+    console.log(this.dollNo)
+    this.$store.dispatch('userItemList',this.dollNo)
+		for(var i = 1 ; i < this.$store.state.userItemList.length; i++){
+			if(this.$store.state.userItemList[i].itemCategory == 2 && this.$store.state.userItemList[i].wearFlag == 1){
+				this.itemList.ItemImageBackground = this.$store.state.userItemList[i].itemImage
+			}
+			else if(this.$store.state.userItemList[i].itemCategory == 0 && this.$store.state.userItem[i].wearFlag == 1){
+				this.itemList.ItemImageCloth = this.$store.state.userItemList[i].itemImage
+			}
+			else if(this.$store.state.userItemList[i].itemCategory == 1 && this.$store.userItem[i].wearFlag == 1){
+				this.itemList.ItemImageHair = this.$store.state.userItemList[i].itemImage
+			}
+			else if(this.$store.state.userItemList[i].itemCategory == 3 && this.$store.state.userItem[i].wearFlag == 1){
+				this.itemList.ItemImageDeco = this.$store.state.userItemList[i].itemImage
+			}
+		}
+
 	},
 	computed:{
 		...mapState([
-      'user'
+      'user',
+			'charItemList',
+			'wearItem'
     ])
 	}
 }

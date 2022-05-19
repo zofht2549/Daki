@@ -1,36 +1,17 @@
 <template>
     <div id="inventory-container">
         <item-card
-            v-for="item in Hello" :key="item.id"
+            v-for="item in Hello" :key="item.itemNo"
             :item="item"
             :tab="tab"
             @itemImage="itemImage"
             @categoryNum="categoryNum"></item-card>
-            <!-- {{ item.title }} -->
-
-        <!-- <div class="item">
-            <img src="@/assets/character/item.png" alt="">
-            <p>item name</p>
-        </div>
-        <div class="item">
-            <img src="@/assets/character/item.png" alt="">
-            <p>item name</p>
-            <div class="unused">
-                <div>
-                    <div><img src="@/assets/coin.png" alt=""> 1000P</div>
-                    <div><img src="@/assets/heart.png" alt=""> +5</div>
-                </div>
-            </div>
-        </div>
-        <div class="item">
-            <img src="@/assets/character/item.png" alt="">
-            <p>item name</p>
-        </div> -->
     </div>
 </template>
 <script>
-import Dummmy from './Dummmy.js'
+// import Dummmy from './Dummmy.js'
 import ItemCard from '@/components/character/ItemCard.vue'
+import { mapState } from 'vuex'
 
 export default{
     components:{
@@ -38,7 +19,7 @@ export default{
     },
     data: () => {
         return{
-            Dummmy:Dummmy,
+            // Dummmy:Dummmy,
             Hello : null,
             ItemImage : null,
             CategoriesNum : 0,
@@ -58,25 +39,30 @@ export default{
         }
     },
     created(){
-        this.Hello = this.Dummmy.filter((item) => {
-            return (item.categories == this.tab);
+        this.Hello = this.$store.state.userItemList.filter((item) => {
+            return (item.itemCategories == this.tab);
         });
 
         // console.log(this.Dummmy);
     },
     watch:{
         matchingTab: function(){
-            this.Hello = this.Dummmy.filter((item) =>{
-                return (item.categories == this.tab)
+            this.Hello = this.$store.state.userItemList.filter((item) =>{
+                return (item.itemCategories == this.tab)
             })
         },
         tab:function(){
-            this.Hello = this.Dummmy.filter((item) =>{
-                return (item.categories == this.tab)
+            this.Hello = this.$store.state.userItemList.filter((item) =>{
+                return (item.itemCategories == this.tab)
             })
             // console.log(this.tab)
         }
-    }
+    },
+	computed:{
+		...mapState([
+		'userItemList'
+		])
+	}
 }
 </script>
 <style lang="scss">

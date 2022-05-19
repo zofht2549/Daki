@@ -3,13 +3,16 @@
     <div @click="openPopup()">
       <img src="@/assets/character/head.png" alt="">
 			<div class="parts head">
-				<img :src="require(`@/assets/character/${this.itemList.ItemImageHair}.png`)" alt="머리">
+				<!-- <img :src="require(`@/assets/character/${this.itemList.ItemImageHair}.png`)" alt="머리"> -->
+				<img :src="`${this.itemList.ItemImageHair}`" alt="">
 			</div>
 			<div class="parts cloth">
-				<img :src="require(`@/assets/character/${this.itemList.ItemImageCloth}.png`)" alt="옷">
+				<!-- <img :src="require(`@/assets/character/${this.itemList.ItemImageCloth}.png`)" alt="옷"> -->
+				<img :src="`${this.itemList.ItemImageCloth}`" alt="">
 			</div>
 			<div class="parts deco">
-				<img :src="require(`@/assets/character/${this.itemList.ItemImageDeco}.png`)" alt="장식">
+				<!-- <img :src="require(`@/assets/character/${this.itemList.ItemImageDeco}.png`)" alt="장식"> -->
+				<img :src="`${this.itemList.ItemImageDeco}`" alt="">
 			</div>
     </div>
 
@@ -24,6 +27,7 @@
 </template>
 <script>
 import CharacterPopUp from '@/components/CharacterPopUp.vue'
+import { mapState } from 'vuex'
 
 export default {
 	name: 'CharacterButton',
@@ -46,9 +50,9 @@ export default {
 			this.popupView = (this.popupView) ? false : true;
 		},
 		getCharItem(){
-			this.itemList.ItemImageCloth = this.$store.state.charItemList.ItemImageCloth
-			this.itemList.ItemImageHair = this.$store.state.charItemList.ItemImageHair
-			this.itemList.ItemImageDeco = this.$store.state.charItemList.ItemImageDeco
+			this.itemList.ItemImageCloth = this.$store.state.wearItem.itemCloth.itemImage
+			this.itemList.ItemImageHair = this.$store.state.wearItem.itemHair.itemImage
+			this.itemList.ItemImageDeco = this.$store.state.wearItem.itemDeco.itemImage
 
 			this.$emit('change')
 		},
@@ -58,6 +62,11 @@ export default {
 		this.itemList.ItemImageCloth = this.$store.state.charItemList.ItemImageCloth
 		this.itemList.ItemImageHair = this.$store.state.charItemList.ItemImageHair
 		this.itemList.ItemImageDeco = this.$store.state.charItemList.ItemImageDeco
+	},
+	computed:{
+		...mapState([
+      'userItemList'
+    ])
 	}
 }
 </script>
