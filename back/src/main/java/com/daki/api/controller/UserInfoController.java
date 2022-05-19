@@ -57,7 +57,7 @@ public class UserInfoController {
         try {
             userService.modify(modifyReq);
         }catch (Exception e){
-            return ResponseEntity.status(200).body(BaseRes.of(500, "Fail"));
+            return ResponseEntity.status(500).body(BaseRes.of(500, "Fail"));
         }
         return ResponseEntity.status(200).body(BaseRes.of(200, "Success"));
     }
@@ -101,7 +101,7 @@ public class UserInfoController {
     })
     public ResponseEntity<CheckRes> nickNameCheck(@PathVariable("nickName") String nickName) {
         boolean findCheck = userService.checkNickName(nickName);
-        if(findCheck) return ResponseEntity.status(401).body(CheckRes.of("Fail"));
+        if(findCheck) return ResponseEntity.status(500).body(CheckRes.of("Fail"));
         else return ResponseEntity.status(200).body(CheckRes.of("OK"));
     }
 

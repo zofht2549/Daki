@@ -2,11 +2,8 @@ package com.daki.api.controller;
 
 
 import com.daki.api.request.diary.DiaryCreateReq;
-import com.daki.api.request.diary.DiaryDeleteReq;
-import com.daki.api.request.diary.DiaryReadReq;
 import com.daki.api.request.diary.DiaryUpdateReq;
 import com.daki.api.response.diary.*;
-import com.daki.api.service.DiaryService;
 import com.daki.api.service.DiaryServiceImpl;
 import com.daki.api.service.UserService;
 import org.json.simple.parser.ParseException;
@@ -15,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -29,17 +28,17 @@ public class DiaryController {
     UserService userService;
 
     @GetMapping("/findPage/{pageNo}")
-    public ResponseEntity<DiaryCreateRes> findPage(@PathVariable("pageNo") int pageNo,
+    public ResponseEntity<DiaryTitlePageRes> findPage(@PathVariable("pageNo") int pageNo,
                                                    HttpServletRequest httpServletRequest){
-        List<DiaryTitleRes> resList = diaryService.findTitleByPageNo(pageNo);
+        List<DiaryTitlePageRes> resList = diaryService.findTitleByPageNo(pageNo);
         return userService.tokenEnter(httpServletRequest, resList, 200);
     }
 
     @GetMapping("/findDate/{year}/{month}")
-    public ResponseEntity<DiaryCreateRes> findDate(@PathVariable("year") int year,
-                                                   @PathVariable("month") int month,
-                                                   HttpServletRequest httpServletRequest){
-        List<DiaryTitleRes> resList = diaryService.findTitleByDate(year, month);
+    public ResponseEntity<Map<LocalDate, List<DiaryTitleDateRes>>> findDate(@PathVariable("year") int year,
+                                                                            @PathVariable("month") int month,
+                                                                            HttpServletRequest httpServletRequest){
+        Map<LocalDate, List<DiaryTitleDateRes>> resList = diaryService.findTitleByDate(year, month);
         return userService.tokenEnter(httpServletRequest, resList, 200);
     }
 

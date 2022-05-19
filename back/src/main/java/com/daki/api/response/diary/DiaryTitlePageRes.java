@@ -12,14 +12,14 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @ApiModel
-public class DiaryTitleRes {
+public class DiaryTitlePageRes {
     private Long diaryNo;
 
     private String title;
 
     private LocalDateTime diaryDate;
 
-    public DiaryTitleRes(Diary diary) {
+    public DiaryTitlePageRes(Diary diary) {
         this.diaryNo = diary.getDiaryNo();
         this.title = diary.getDiaryTitle();
         this.diaryDate = diary.getDiaryDate();

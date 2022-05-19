@@ -7,18 +7,17 @@ import com.daki.db.entity.Diary;
 import com.daki.db.entity.User;
 import com.daki.db.repository.DiaryRepository;
 import com.daki.db.repository.UserRepository;
-import com.fasterxml.jackson.core.JsonParser;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DiaryServiceImpl implements DiaryService{
@@ -71,24 +70,35 @@ public class DiaryServiceImpl implements DiaryService{
     }
 
     @Override
-    public List<DiaryTitleRes> findTitleByDate(int year, int month) {
+    public Map<LocalDate, List<DiaryTitleDateRes>> findTitleByDate(int year, int month) {
         User user = userRepository.findByUserEmail(SecurityUtil.getCurrentUserEmail()).orElseThrow(()
                 -> new RuntimeException("로그인 없음"));
 
         LocalDateTime startDate = LocalDateTime.of(year, month, 1, 0,0,0);
         LocalDateTime endDate = LocalDateTime.of(year, month+1, 1, 0,0,0);
         List<Diary> diaryList = diaryRepository.findAllByDiaryDateBetweenOrderByDiaryDateAsc(startDate, endDate);
-        List<DiaryTitleRes> resList = new ArrayList<>();
+        Map<LocalDate, List<DiaryTitleDateRes>> resList = new HashMap<>();
+
         for (Diary diary:diaryList) {
             if(diary.getUser().getUserNo()!=user.getUserNo()) continue;
-            DiaryTitleRes res = new DiaryTitleRes(diary);
-            resList.add(res);
+            DiaryTitleDateRes res = new DiaryTitleDateRes(diary);
+            LocalDate dataCheck = diary.getDiaryDate().toLocalDate();
+            List<DiaryTitleDateRes> valueList;
+            if(resList.containsKey(dataCheck)){
+                valueList = resList.get(dataCheck);
+                valueList.add(res);
+            }else {
+                valueList = new ArrayList<>();
+                valueList.add(res);
+            }
+            resList.put(dataCheck, valueList);
+
         }
         return resList;
     }
 
     @Override
-    public List<DiaryTitleRes> findTitleByPageNo(int pageNo) {
+    public List<DiaryTitlePageRes> findTitleByPageNo(int pageNo) {
         User user = userRepository.findByUserEmail(SecurityUtil.getCurrentUserEmail()).orElseThrow(()
                 -> new RuntimeException("로그인 없음"));
         List<Diary> diaryList = new ArrayList<>();
@@ -104,9 +114,9 @@ public class DiaryServiceImpl implements DiaryService{
         }
 
 
-        List<DiaryTitleRes> resList = new ArrayList<>();
+        List<DiaryTitlePageRes> resList = new ArrayList<>();
         for (Diary diary:diaryList) {
-                DiaryTitleRes res = new DiaryTitleRes(diary);
+                DiaryTitlePageRes res = new DiaryTitlePageRes(diary);
                 resList.add(res);
         }
 

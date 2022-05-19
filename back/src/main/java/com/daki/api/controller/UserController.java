@@ -88,7 +88,7 @@ public class UserController {
     })
     public ResponseEntity<CheckRes> emailCheck(@PathVariable("userEmail") String userEmail) {
         boolean findCheck = userService.checkEmail(userEmail);
-        if(findCheck) return ResponseEntity.status(401).body(CheckRes.of("Fail"));
+        if(findCheck) return ResponseEntity.status(500).body(CheckRes.of("Fail"));
         else return ResponseEntity.status(200).body(CheckRes.of("OK"));
     }
 
@@ -101,7 +101,7 @@ public class UserController {
     })
     public ResponseEntity<CheckRes> nickNameCheck(@PathVariable("nickName") String nickName) {
         boolean findCheck = userService.checkNickName(nickName);
-        if(findCheck) return ResponseEntity.status(401).body(CheckRes.of("Fail"));
+        if(findCheck) return ResponseEntity.status(500).body(CheckRes.of("Fail"));
         else return ResponseEntity.status(200).body(CheckRes.of("OK"));
     }
 
