@@ -14,16 +14,16 @@
               <!-- 캐릭터 파츠 -->
 
               <div class="parts background">
-                <img :src="require(`@/assets/character/${this.itemList.ItemImageBackground}.png`)" alt="배경">
+                <img :src="`${this.itemList.ItemImageBackground}`" alt="">
               </div>
               <div class="parts head">
-                <img :src="require(`@/assets/character/${this.itemList.ItemImageHair}.png`)" alt="머리">
+                <img :src="`${this.itemList.ItemImageHair}`" alt="">
               </div>
               <div class="parts cloth">
-                <img :src="require(`@/assets/character/${this.itemList.ItemImageCloth}.png`)" alt="옷">
+                <img :src="`${this.itemList.ItemImageCloth}`" alt="">
               </div>
               <div class="parts deco">
-                <img :src="require(`@/assets/character/${this.itemList.ItemImageDeco}.png`)" alt="장식">
+                <img :src="`${this.itemList.ItemImageDeco}`" alt="">
               </div>
               
             </div>
@@ -80,15 +80,21 @@ export default {
       tab: 0,
       target: null,
       itemList:{
-        ItemImageBackground : 'background1',
-        ItemImageCloth : 'cloth1',
-        ItemImageHair : 'hair1',
-        ItemImageDeco : 'deco1'
+        ItemImageBackground : null,
+        ItemImageCloth : null,
+        ItemImageHair : null,
+        ItemImageDeco : null
       },
+      // wearItem:{
+      //   itemBackground : null,
+      //   itemCloth : null,
+      //   itemHair : null,
+      //   itemDeco : null
+      // },
       
       CategoryNum : 0,
       
-      level: 0
+      level: 0,
     }
   },
   watch: {
@@ -115,6 +121,7 @@ export default {
     //   this.CategoryNum = data
     // },
     itemImage(data){
+      this.wearItem = data
       if(this.CategoryNum == 0){
         this.itemList.ItemImageCloth = data
       }else if(this.CategoryNum == 1){
@@ -126,15 +133,30 @@ export default {
       }
     },
     charSave:function(){
-      this.$store.dispatch('userCharData',this.itemList)
+      // this.$store.dispatch('userCharData',this.itemList)
       this.$emit('change-item')
+      console.log('현재 입고 있는 옷',this.itemList)
+      console.log('저장할거',this.wearItem)
+      this.$store.dispatch('userItemWear',this.itemList)
     }
   },
   computed:{
 		...mapState([
-      'user'
+      'user',
+      'charItemList',
+      'userItemList',
+      'wearItem'
     ])
-	}
+	},
+  created(){
+    console.log('현재 입고 있는 옷',this.wearItem)
+    console.log('데이터 들어왔나 확인',this.itemList)
+    // itemList.ItemImageBackground = this.$store.state.wearItem.itemBackground
+
+
+
+
+  }
 }
 </script>
 

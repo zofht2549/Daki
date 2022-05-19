@@ -1,8 +1,8 @@
 <template>
     <div id="item-box-container"
         @click="dressUp()">
-        <img :src="`${item.image}`" alt="">
-        {{ item.title }}
+        <img :src="`${item.itemImage}`" alt="">
+        {{ item.itemName }}
     </div>
 </template>
 <script>
@@ -15,8 +15,10 @@ export default {
     methods:{
         dressUp(){
             // console.log(this.item.image)
-            this.$emit('itemImage', this.item.name)
-            this.$emit('categoryNum', this.item.categories)
+            this.$emit('itemImage', this.item.itemImage)
+            // this.$emit('categoryNum', this.item.categories)
+            // console.log('출력',this.item)
+            this.$store.dispatch('changeItem',this.item)
         }
     }
 }
