@@ -1,10 +1,14 @@
 <template>
   <article id="editor" ref="editor">
+    <div class="title-box">
+      <input type="text" class="title" placeholder="제목" v-model="title">
+    </div>
+
     <menu-bar :selected="selected" :isCreated="isCreated" :historyInfo="historyInfo"
      @active-menu="params => activate(params)" @image-upload="file => fileSetter(file)" @history-change="payload => historyChange(payload)"
      @submit="submit('manual')" />
     
-    <Canvas :type="type" :isActive="isActive" :changes="changes" :file="file" :historyChangeFromMenu="historyChangeFromMenu"
+    <Canvas :type="type" :initialItems="initialItems" :isActive="isActive" :changes="changes" :file="file" :historyChangeFromMenu="historyChangeFromMenu"
      @deactivate="deactivate" @select="tar => select(tar)" @get-history-info="info => getHistoryInfo(info)" />
   </article>
 </template>
@@ -13,10 +17,13 @@
 import MenuBar from './Menus/MenuBar.vue'
 import Canvas from './Canvas/Canvas.vue'
 import customAxios from '@/customAxios'
+import Swal from 'sweetalert2'
 
 export default {
   data: function(){
     return {
+      title: null,
+      initialItems: [],
       type: null,
       isActive: false,
       selected: null,
@@ -27,7 +34,7 @@ export default {
     }
   },
   props: {
-    title: String
+    diaryId: Number
   },
   components: {
     MenuBar,
@@ -42,6 +49,17 @@ export default {
     }
   },
   methods: {
+    getInitialItems: function(){
+      customAxios({
+        method: 'get',
+        url: `/api/diary/${this.diaryId}`
+      })
+      .then(res => {
+        this.initialItems = JSON.parse(res.data.content)
+        this.title = res.data.title != '제목 없음' ? res.data.title:null
+      })
+      .catch(err => console.log(err))
+    },
     activate: function(params){
       this.type = params.menu
       this.isActive = params.isActive
@@ -73,30 +91,61 @@ export default {
       this.$emit('is-save', type)
 
       const data = {
-        title: this.title,
-        content: JSON.stringify(this.items)
+        title: this.title ? this.title:'제목 없음',
+        content: JSON.stringify(this.items),
+        diaryNo: this.diaryId
       }
-      customAxios({
-        method: 'post',
-        url: '/api/diary',
-        data: data
-      })
-      .then(res => {
-        console.log(res)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-      .finally(() => {
-        this.$emit('is-save')
-      })
+
+      if (type == 'manual'){
+        let method;
+        if (this.diaryId){
+          method = 'put'
+        }
+        else {
+          method = 'post'
+        }
+        customAxios({
+          method: method,
+          url: '/api/diary',
+          data: data
+        })
+        .then(() => {
+          Swal.fire({
+            icon: 'success',
+            text: '일기가 작성되었어요!'
+          })
+          .then(() => this.$router.push({name: 'Main', params: {forced: true}, query: {tab: 'calendar'}}))
+        })
+        .catch(() => {
+          Swal.fire({
+            icon: 'warning',
+            text: '일기를 작성하지 못했어요'
+          })
+        })
+        .finally(() => this.$emit('is-save'))
+      }
+      else {
+        customAxios({
+          method: 'put',
+          url: `/api/diary/${this.diaryId}`,
+          data: data
+        })
+        .finally(() => this.$emit('is-save'))
+      }
     },
     autoSave: function(){
       this.submit('auto')
     },
   },
+  created: function(){
+    if (this.diaryId){
+      this.getInitialItems()
+    }
+  },
   mounted: function(){
-    window.setInterval(this.autoSave, 150000)
+    if (this.diaryId){
+      window.setInterval(this.autoSave, 150000)
+    }
     this.$on('value-change', payload => this.changeSetter(payload))
   },
   destroyed: function(){
@@ -110,9 +159,39 @@ export default {
     width: 100%;
     min-height: 125vh;
     margin: 3rem;
-    border: 1px #cccccc solid;
+    border: none;
     background-color: #cccccc;
     display: flex;
     flex-direction: column;
+
+    .title-box {
+      width: 100%;
+      height: 75px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 2rem;
+      background-color: white;
+
+      .title {
+        width: 100%;
+        border: none;
+        font-size: 2rem;
+        padding: 0.5rem;
+        border-bottom: 1px #cccccc solid;
+
+        &:focus {
+          outline: none;
+
+          &::placeholder {
+            color: transparent;
+          }
+        }
+
+        &::placeholder {
+          color: #cccccc;
+        }
+      }
+    }
   }
 </style>

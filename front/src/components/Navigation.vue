@@ -22,14 +22,14 @@
     </div>
     <div id="nav-container" :class="{ active : onClick }">
       <div @click="menuClick()"></div>
-      <router-link to="/main" class="logo" />
+      <router-link to="/main?tab=calendar" class="logo" />
       <ul class="menu-box">
-        <li :class="['menu', {'now': path == '/diary-create'}]">
-          <router-link to="/diary-create">
+        <li :class="['menu', {'now': path == '/diary'}]">
+          <router-link to="/diary">
             일기쓰기
           </router-link>
         </li>
-        <li :class="['menu', {'now': false}]">
+        <li :class="['menu', {'now': path.includes('/diary/')}]">
           <router-link to="">
             일기장
           </router-link>

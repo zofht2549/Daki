@@ -22,6 +22,9 @@ export default {
   computed: {
     isEnd: function(){
       return store.state.isEnd
+    },
+    path: function(){
+      return this.$route.path
     }
   },
   watch: {
@@ -31,6 +34,9 @@ export default {
           this.getHeight()
         }, 1000)
       }
+    },
+    path: function(){
+      window.scrollTo({top: 0, behavior: 'smooth'})
     }
   },
   methods: {

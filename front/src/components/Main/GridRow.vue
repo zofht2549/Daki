@@ -1,13 +1,13 @@
 <template>
   <div :class="['grid-row', `row-${num}`]">
     <button v-if="num == 0" class="create-btn">+</button>
-    <card v-for="item of items" :key="item.title" :item="item"/>
+    <card v-for="item of items" :key="item.title + item.diaryNo" :item="item"/>
     <transition name="markers-show">
       <div class="markers" v-show="showMarkers">
         <div v-for="marker in markers" :key="marker"
         :class="['marker', `marker-${marker}`]"
-        :style="{ backgroundColor: colors(marker) }" >
-          <span class="marker-arrow" :style="{ borderRight: `10px ${colors(marker)} solid` }" />
+        :style="{ backgroundColor: colors[marker.slice(5, 7)] }" >
+          <span class="marker-arrow" :style="{ borderRight: `10px ${colors[marker.slice(5, 7)]} solid` }" />
           {{ marker }}
         </div>
       </div>
@@ -54,18 +54,17 @@ export default {
       const p = this.offset - this.scroll
 
       return (p >= h * 0.25 && p <= h * 0.75) ? true:false
+    },
+    colors: function(){
+      const colors = {
+        '01': 'dodgerblue', '02': 'darkturquoise', '03': 'lightsalmon', '04': 'lightcoral',
+        '05': 'darkOrange', '06': 'yellowGreen', '07': 'limeGreen', '08': 'forestGreen',
+        '09': 'olive', '10': 'peru', '11': 'rosybrown', '12': 'slateblue'
+      }
+      return colors
     }
   },
   methods: {
-    colors: function(tar){
-      const m = tar.slice(5, 7)
-      const colors = {
-        '01': 'dodgerblue', '02': 'darkturquoise', '03': 'lightsalmon', '04': 'lightcoral',
-        '05': 'darkseegreen', '06': 'mediumseegreen', '07': 'yellowgreen', '08': 'darkkhaki',
-        '09': 'peru', '10': 'sienna', '11': 'rosybrown', '12': 'slateblue'
-      }
-      return colors[m]
-    },
     getOffset: function(){
       const tar = document.querySelectorAll(`.row-${this.num}`)[0]
       this.offset = tar.parentElement.offsetTop + tar.offsetTop

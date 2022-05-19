@@ -5,9 +5,9 @@
       <span @click="changeTab('calendar')" :class="{'tab':true, 'active': tab == 'calendar'}">달력으로 보기</span>
       <span @click="changeTab('grid')" :class="{'tab':true, 'active': tab == 'grid'}">그리드로 보기</span>
     </article>
-    <diary-pop-up v-if="target" @close-pop-up="closePopUp" :target="target" />
+    <diary-pop-up v-if="target" :target="target" @close-pop-up="closePopUp" @change-diaries="changeDiaries" />
     <article class="main-body">
-      <calendar v-if="tab == 'calendar'" @show-date-diary="showDateDiary" />
+      <calendar v-if="tab == 'calendar'" :changes="changes" @show-date-diary="showDateDiary" @change-diaries="changeDiaries" />
       <grid v-if="tab == 'grid'" />
     </article>
   </section>
@@ -25,6 +25,7 @@ export default {
     return {
       target: null,
       dollNo: null,
+      changes: false
     }
   },
   components: {
@@ -49,8 +50,10 @@ export default {
       this.target = t
     },
     closePopUp: function(){
-      console.log('ehehh!!')
       this.target = null
+    },
+    changeDiaries: function(tar){
+      this.changes = tar
     }
   },
   created(){

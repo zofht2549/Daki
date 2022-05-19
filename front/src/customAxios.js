@@ -14,8 +14,8 @@ const CustomAxios = axios.create({
 CustomAxios.interceptors.request.use(
   function CustomInterceptorRequest(config){ 
     const temp = {...config}
-    temp.headers.accessToken = session.getItem('accessToken')
-    temp.headers.refreshToken = session.getItem('refreshToken')
+    temp.headers.Authorization = session.getItem('accessToken')
+    temp.headers.Refresh_Authorization = session.getItem('refreshToken')
 
     return temp
   }
@@ -23,12 +23,13 @@ CustomAxios.interceptors.request.use(
 
 CustomAxios.interceptors.response.use(
   function CustomInterceptorSucced(res){
-    if (res.data.accessToken) {
-      window.sessionStorage.setItem('accessToken', res.data.accessToken)
-      store.dispatch('setUser', res.data)
+
+    if (res.headers.authorization) {
+      window.sessionStorage.setItem('accessToken', res.headers.authorization)
+      store.dispatch('setUser', res.headers)
     }
-    if (res.data.refreshToken){
-      window.sessionStorage.setItem('refreshToken', res.data.refreshToken)
+    if (res.headers.refresh_authorization){
+      window.sessionStorage.setItem('refreshToken', res.headers.refresh_authorization)
     }
 
     return res
