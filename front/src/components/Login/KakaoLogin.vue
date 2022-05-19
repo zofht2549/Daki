@@ -1,16 +1,29 @@
 <template>
-  <button class='social-login kakao-login'>
-      <img src="../../assets/Login/kakao_logo.png" alt="" />
-      <p>
-        Login with Kakao
-      </p>
-    </button>
+  <button class='social-login kakao-login' @click="kakaoLogin">
+    <img src="../../assets/Login/kakao_logo.png"/>
+    <p>
+      Login with Kakao
+    </p>
+  </button>
 
 </template>
 
 <script>
 export default {
-
+  methods: {
+    kakaoLogin: function(){
+      let url = 'https://kauth.kakao.com/oauth/authorize?'
+      const params = {
+        'client_id': process.env.VUE_APP_KAKAO_CLIENT_ID,
+        'redirect_uri': process.env.VUE_APP_REDIRECT_URI,
+        'response_type': 'code'
+      }
+      for (const key in params){
+        url += `${key}=${params[key]}&`
+      }
+      window.location.href = url
+    }
+  }
 }
 </script>
 

@@ -12,6 +12,9 @@
         </div>
         <button @click="goToLogin">로그인</button>
       </div>
+      <div class="mobile-img">
+        <img src="@/assets/logo.png" alt="">
+      </div>
     </header>
     <section class="bgcolor content-padding">
       <div class="text">
@@ -56,7 +59,10 @@
         <img src="@/assets/landing/door_botton.png" alt="">
       </div>
       <div>
-        <button class="start">시작하기</button>
+        <button class="start"
+          @click="goToLogin">
+          시작하기
+        </button>
       </div>
     </section>
 
@@ -81,130 +87,159 @@ export default {
 </script>
 
 <style lang="scss">
-@font-face{
-  font-family : 'kyobo';
-  src : url("@/assets/landing/Kyobo Handwriting 2019.ttf")
-}
-#landingpage-container{    
-  width:100%;
-  .main{
-		& {
-			height:100vh;
-			background-image: url("@/assets/landing/paper_bg.png");
-			padding-left:15%;
-			padding-right:15%;
-			padding-top: 5%;
-			display: flex;
-			justify-content: space-between;
-		}
-    & .image{
-      // float: left;
+@media only screen and (min-width:800px){
+  #landingpage-container{    
+    width:100%;
+    .main{
+      & {
+        height:100vh;
+        background-image: url("@/assets/landing/paper_bg.png");
+        padding-left:15%;
+        padding-right:15%;
+        padding-top: 5%;
+        display: flex;
+        justify-content: space-between;
+      }
+      & .image{
+        // float: left;
 
-      .diary{
-        width: 80%;
+        .diary{
+          width: 80%;
+        }
+      }
+      .text{
+        // float: right;
+        font-family: kyobo;
+        font-weight: 400;
+        font-size: 64px;
+      }
+      & > .mobile-img{
+        display: none;
       }
     }
-    .text{
-      // float: right;
-      font-family: kyobo;
-      font-weight: 400;
-      font-size: 64px;
-    }
-  }
-  .content-padding{
-    padding-left: 15%;
-    padding-right: 15%;
-    position: relative;
-		text-align: center;
+    .content-padding{
+      padding-left: 15%;
+      padding-right: 15%;
+      position: relative;
+      text-align: center;
 
-    .text-left{
-      text-align: left;
-      font-family: kyobo;
-      font-weight: 400;
-      font-size: 2.5rem;
-      margin: 10% 0% 10% 0%;
+      .text-left{
+        text-align: left;
+        font-family: kyobo;
+        font-weight: 400;
+        font-size: 2.5rem;
+        margin: 10% 0% 10% 0%;
 
-			& > span{
-				z-index: 2;
+        & > span{
+          z-index: 2;
 
-			}
-			& > img{
-				z-index: 1;
-				position: absolute;
-				width: 20%;
-			}
-    }
-    .text-right{
-      text-align: right;
-      font-family: kyobo;
-      font-weight: 400;
-      font-size: 2.5rem;
-      margin: 10% 0% 10% 0%;
-			& > span{
-				z-index: 2;
+        }
+        & > img{
+          z-index: 1;
+          position: absolute;
+          width: 20%;
+        }
+      }
+      .text-right{
+        text-align: right;
+        font-family: kyobo;
+        font-weight: 400;
+        font-size: 2.5rem;
+        margin: 10% 0% 10% 0%;
+        & > span{
+          z-index: 2;
 
-			}
-			& > img{
-				z-index: 1;
-				position: absolute;
-				width: 20%;
-			}
+        }
+        & > img{
+          z-index: 1;
+          position: absolute;
+          width: 20%;
+        }
+      }
     }
-  }
 
-  .bgcolor{
-    background-color:#93D9CE;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    font-size:0;
-		z-index: 2;
-    .text{
-      font-size: 48px;
-      font-weight: 400;
-      color: #fff;
-      text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.25);
-      font-family: kyobo;
+    .bgcolor{
+      background-color:#93D9CE;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      font-size:0;
+      z-index: 2;
+      .text{
+        font-size: 48px;
+        font-weight: 400;
+        color: #fff;
+        text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.25);
+        font-family: kyobo;
+      }
+      .image{
+        margin: 5%;
+      }
+      .character{
+        width: 15%;
+        position: absolute;
+        transform: translate(800px,150px);
+      }
     }
-    .image{
-      margin: 5%;
+
+    .start{
+      display: inline-block;
+      margin-right: auto;
+      margin-left: auto;
+      margin-top: 5%;
+      margin-bottom: 5%;
+      margin: 0;
     }
-    .character{
-      width: 15%;
+    .bottom-section{
+      padding-top: 300px;
+      padding-bottom: 50px;
+    }
+    .logoimg{
+      padding: 20%;
+    }
+    .door_upper{
       position: absolute;
-      transform: translate(800px,150px);
+      bottom: 0;
+      & > img {
+        width: 100px;
+      }
+    }
+    .door_botton{
+      position: absolute;
+      top: 0%;
+      & > img{
+        width: 22px;
+      }
+    }
+    button{
+      font-size: 1.25rem;
+      font-weight: bold;
+      border-radius: 10px;
+      border: 1px #93D9CE solid;
+      color: #93D9CE;
+      background-color: white;
+      box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.35);
+      // margin: 3rem 0 0;
+      margin: 0;
+      padding: 1rem 5rem;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #93D9CE;
+        color: white;
+      }
+    }
+    footer{
+      background-color: #d8d8d8;
     }
   }
+}
+@media only screen and (max-width:799px){
 
-  .start{
-    display: inline-block;
-    margin-right: auto;
-    margin-left: auto;
-    margin-top: 5%;
-    margin-bottom: 5%;
-		margin: 0;
-  }
-	.bottom-section{
-		padding-top: 300px;
-		padding-bottom: 50px;
-	}
-  .logoimg{
-    padding: 20%;
-  }
-  .door_upper{
-    position: absolute;
-    bottom: 0;
-		& > img {
-			width: 100px;
-		}
-  }
-  .door_botton{
-    position: absolute;
-    top: 0%;
-		& > img{
-			width: 22px;
-		}
+  @font-face{
+  font-family : 'kyobo';
+  src : url("@/assets/landing/Kyobo Handwriting 2019.ttf")
   }
   button{
     font-size: 1.25rem;
@@ -215,7 +250,7 @@ export default {
     background-color: white;
     box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.35);
     // margin: 3rem 0 0;
-		margin: 0;
+    margin: 0;
     padding: 1rem 5rem;
     cursor: pointer;
 
@@ -224,8 +259,83 @@ export default {
       color: white;
     }
   }
-  footer{
-    background-color: #d8d8d8;
+  #landingpage-container{
+    width: 100%;
+
+    & > .main{
+      background-color: #FED771;
+      height: 100vh;
+      top: 0;
+      // position: relative;
+      // height: 100%;
+      & > .image{
+        display: none;
+      }
+      & > .text{
+        // float: right;
+        font-family: kyobo;
+        font-weight: 400;
+        font-size: 64px;
+        // margin:0% 20%;
+        padding: 20%;
+        color: #fff;
+      }
+      & > .mobile-img{
+        bottom: 0;
+        right: 0;
+        position: absolute;
+        text-align: right;
+        & > img{
+          width: 300px;
+        }
+      }
+    }
+
+    & > .bgcolor{
+      background-image: url("@/assets/landing/paper_bg.png");
+      font-family: kyobo;
+      text-align: center;
+      font-size: 32px;
+      padding: 20px;
+
+      & > .door_upper{
+        display: none;
+      }
+    }
+
+    & > .bottom-section{
+      & > .door_botton{
+        display: none;
+      }
+    }
+
+    & > .edit-bg{
+      
+      text-align: center;
+      // margin-left: auto;
+      & > article{
+        padding: 10%;
+        & > img{
+          width: 100px;
+          margin: auto;
+          display: block;
+          text-align: center;
+        }
+        & > span{
+          font-size: 24px;
+          font-family: kyobo;
+        }
+      }
+    }
+    & > .bottom-section{
+      margin: 10%;
+      text-align: center;
+    }
+
+    & > footer{
+      text-align: center;
+    }
   }
 }
+
 </style>

@@ -22,6 +22,9 @@ export default {
   computed: {
     isEnd: function(){
       return store.state.isEnd
+    },
+    path: function(){
+      return this.$route.path
     }
   },
   watch: {
@@ -31,6 +34,9 @@ export default {
           this.getHeight()
         }, 1000)
       }
+    },
+    path: function(){
+      window.scrollTo({top: 0, behavior: 'smooth'})
     }
   },
   methods: {
@@ -38,7 +44,10 @@ export default {
       this.$nextTick(() => {
         this.height = this.$refs.app.clientHeight
       })
-    },
+    }
+  },
+  created: function(){
+    this.$store.dispatch('getUser')
   },
   mounted: function(){
     this.getHeight()
@@ -66,5 +75,9 @@ export default {
     & * {
       box-sizing: border-box;
     }
+  }
+
+  .swal2-container {
+    z-index: 987654321 !important;
   }
 </style>

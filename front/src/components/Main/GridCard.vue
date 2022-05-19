@@ -1,8 +1,8 @@
 <template>
-  <div :class="['card-container', `date-${item.created_at.slice(0, 7)}`]">
+  <div :class="['card-container', `date-${item.diaryDate.slice(0, 7)}`]">
     <div class="card-img" :style="{backgroundImage: `url(${thumbnail})`}" />
     <h2 class="card-title">{{ item.title }}</h2>
-    <p class="card-content">작성일: {{ item.created_at }}</p>
+    <p class="card-content">작성일: {{ item.diaryDate.slice(0, 10) }}</p>
     <span class="opacity" />
   </div>
 </template>

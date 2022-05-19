@@ -1,19 +1,20 @@
 <template>
-  <div id="canvas-container" ref="canvas" @click="createNewOne">
-    <canvas-item v-for="(item, idx) in items" :key="item.content ? item.content + idx : item.imgUrl + idx" :item="item" :idx="idx" 
-    :selected="selected == idx ? true:false" :canvasSize="{w: canvasWidth, h: canvasHeight}"
-     @select="idx => select(idx)" @remove-item="idx => removeItem(idx)"
+  <div id="canvas-container" ref="canvas" @click="createNewOne" @contextmenu.prevent>
+    <canvas-item v-for="(item, idx) in items" :key="item.content ? item.content + idx + pointer: item.imgUrl + idx + pointer" :item="item" :idx="idx" 
+    :selected="selected == idx ? true:false" :canvasSize="{w: canvasWidth, h: canvasHeight}" :maxIdx="items.length - 1"
+     @select="idx => select(idx)" @remove-item="removeItem" @move-index="index => moveIndex(index)"
      @value-change="payload => valueChange(payload)"
      ref="canvas-item"/>
 
-    <img v-if="file && isActive" :src="file" class="image-preview" ref="preview"
+    <img v-if="file && isActive" :src="file" class="image-preview" ref="preview" @load="loadPreview"
      :style="{top: `${mouseY}%`, left: `${mouseX}%`}" >
   </div>
 </template>
 
 <script>
-import {items} from './Dummy.js'
+// import {items} from './Dummy.js'
 import CanvasItem from './CanvasItem.vue'
+import AWS from 'aws-sdk'
 
 export default {
   data: function(){
@@ -28,11 +29,13 @@ export default {
       history: Array(1000),
       historyChange: false,
       pointer: -1,
+      historyHead: 0,
       ctrl: false,
       shift: false
     }
   },
   props: {
+    initialItems: Array,
     type: String,
     isActive: Boolean,
     changes: Object,
@@ -43,24 +46,16 @@ export default {
     CanvasItem
   },
   methods: {
+    init: function(){
+      this.items = this.initialItems
+    },
     getCanvasSize: function(){
       this.canvasWidth = this.$refs.canvas.clientWidth
       this.canvasHeight = this.$refs.canvas.clientHeight
     },
-    initItems: function(){
-      this.items = items.map(item => {
-        item.width = Number(item.width.replace('%', ''))
-        item.height = Number(item.height.replace('%', ''))
-        item.top = Number(item.top.replace('%', ''))
-        item.left = Number(item.left.replace('%', ''))
-
-        return item
-      })
-    },
     createNewOne: function(e){
       if (e.target.id == 'canvas-container' && !this.isActive){
         this.selected = null
-        this.$emit('select', null)
       }
       if (this.isActive){
         const canvas = this.$refs.canvas
@@ -91,8 +86,7 @@ export default {
         }
 
         this.items.push(temp)
-        this.selected = this.$refs['canvas-item'].length
-        this.$emit('select', temp)
+        this.selected = this.items.length - 1
       }
       this.$emit('deactivate')
       this.$refs.canvas.style.cursor = 'auto'
@@ -109,7 +103,7 @@ export default {
         const item = this.items[this.selected]
         /// remove
         if (e.key == 'Backspace' || e.key == 'Delete'){
-          this.removeItem(this.selected)
+          this.removeItem()
         }
         /// item move
         if (e.key == 'ArrowUp'){
@@ -129,38 +123,26 @@ export default {
           if (this.selected == 0){
             return
           }
-          const temp = [...this.items]
-          const idx = this.selected
-          
+
           if (this.ctrl){
-            const tar = temp.splice(idx, 1)
-            temp.shift(tar)
-            this.selected = 0
+            this.moveIndex(3)
           }
           else {
-            [temp[idx], temp[idx-1]] = [temp[idx-1], temp[idx]]
-            this.selected = idx - 1
+            this.moveIndex(2)
           }
-          this.items = temp
         }
         /// bring to front
         else if (e.key == ']'){  
           if (this.selected == this.items.length - 1){
             return
           }
-          const temp = [...this.items]
-          const idx = this.selected
-          
+
           if (this.ctrl){
-            const tar = temp.splice(idx, 1)
-            temp.append(tar)
-            this.selected = this.items.length - 1
+            this.moveIndex(0)
           }
           else {
-            [temp[idx], temp[idx+1]] = [temp[idx+1], temp[idx]]
-            this.selected = idx + 1
+           this.moveIndex(1)
           }
-          this.items = temp
         }
       }
       /// undo & redo
@@ -181,8 +163,36 @@ export default {
         }
       }
     },
-    removeCtrl: function(e){
-      console.log(e)
+    /// 요소 순서 변경 ///
+    moveIndex: function(index){
+      const temp = [...this.items]
+      const idx = this.selected
+      console.log(index, temp, idx)
+      /// 맨 앞으로 ///
+      if (index == 0){
+        const tar = temp.splice(idx, 1)[0]
+        temp.push(tar)
+        this.selected = this.items.length - 1
+      }
+      /// 앞으로 ///
+      else if (index == 1){
+        [temp[idx], temp[idx+1]] = [temp[idx+1], temp[idx]]
+        this.selected = idx + 1
+      }
+      /// 뒤로 ///
+      else if (index == 2){
+        [temp[idx], temp[idx-1]] = [temp[idx-1], temp[idx]]
+        this.selected = idx - 1
+      }
+      /// 맨 뒤로 ///
+      else if (index == 3){
+        const tar = temp.splice(idx, 1)[0]
+        temp.shift(tar)
+        this.selected = 0
+      }
+      this.items = temp
+    },
+    removeCtrl: function(){
       this.ctrl = false
     },
     removeShift: function(){
@@ -192,50 +202,78 @@ export default {
       if (this.selected == idx){
         return
       }
-      const tar = this.items[idx]
       this.selected = idx
-      this.$emit('select', tar)
     },
-    removeItem: function(idx){
-      this.items.splice(idx, 1)
+    /// S3 파일 삭제 ///
+    fileRemoveFromS3: function(url){
+      const credentials = JSON.parse(process.env.VUE_APP_AWS_S3_CREDENTIALS)
+      const s3 = new AWS.S3(credentials)
+      const fileName = url.replace('https://diarypj.s3.ap-northeast-2.amazonaws.com/', '')
+      
+      s3.deleteObject({
+        Bucket: process.env.VUE_APP_AWS_S3_BUCKET,
+        Key: fileName.replace('%40', '@')
+      })
+
+      return new Promise(resolve => resolve())
+    },
+    removeItem: async function(){
+      const selectedItem = this.items[this.selected]
+      if (selectedItem.type == 'image'){
+        await this.fileRemoveFromS3(selectedItem.imgUrl)
+      }
+      this.items.splice(this.selected, 1)
       this.$emit('select', null)
     },
     valueChange: function(payload){
-      console.log('hy', payload)
-      const tar = {...this.items[this.selected]}
+      const tar = {...this.items[this.selected], fontStyle: {...this.items[this.selected].fontStyle}}
+      let flag = false
       for (const key of Object.keys(payload)){
-        tar[key] = payload[key]
+        if (tar.fontStyle[key] && tar.fontStyle[key] != payload[key]){
+          tar.fontStyle[key] = payload[key]
+          flag = true
+        }
+        else if (tar[key] != payload[key]) {
+          tar[key] = payload[key]
+          flag = true
+        }
       }
-      this.$set(this.items, this.selected, tar)
+      if (flag){
+        this.$set(this.items, this.selected, tar)
+      }
+    },
+    /// add mouse-move event when preview was loaded ///
+    loadPreview: function(){
+      if (this.file){
+        const canvas = this.$refs.canvas
+        canvas.addEventListener('mousemove', this.mouseMove)
+      }
     },
     /// new image, sticker assistant ///
     mouseMove: function(e){
-      if (this.mouseX == null){
+      if (this.mouseX === null){
         this.mouseX = ((e.offsetX - this.$refs.preview.width / 2) / this.canvasWidth) * 100
       }
-      if (this.mouseY == null){
+      if (this.mouseY === null){
         this.mouseY = ((e.offsetY - this.$refs.preview.height / 2) / this.canvasHeight) * 100
       }
       this.mouseX += (e.movementX / this.canvasWidth) * 100
       this.mouseY += (e.movementY / this.canvasHeight) * 100
     }
   },
-  computed: {
-    topOfHistory: function(){
-      const temp = this.history.filter(ele => ele)
-      return temp.length - 1
-    }
-  },
   watch: {
+    initialItems: function(){
+      this.init()
+    },
     isActive: function(){
       if (this.isActive){
         this.selected = null
       }
     },
+    selected: function(){
+      this.$emit('select', this.items[this.selected])
+    },
     type: function(){
-      if (!this.type){
-        this.selected = null
-      }
       this.cursorType = this.type
     },
     cursorType: function(){
@@ -243,7 +281,7 @@ export default {
         this.$refs.canvas.style.cursor = 'text'
       }
       else if (this.cursorType == 'image' || this.cursorType == 'sticker'){
-        this.$refs.canvas.style.cursor = 'none'
+        this.$refs.canvas.style.cursor = 'grabbing'
       }
       else {
         this.$refs.canvas.style.cursor = 'auto'
@@ -251,38 +289,32 @@ export default {
     },
     changes: function(){
       if (this.changes){
-        const key = Object.keys(this.changes)[0]
-        this.$set(this.items[this.selected].fontStyle, key, this.changes[key])
+        this.valueChange(this.changes)
       }
     },
     file: function(){
       const canvas = this.$refs.canvas
-      if (this.file){
-        canvas.addEventListener('mousemove', this.mouseMove)
-      }
-      else {
+      if (!this.file){
         canvas.removeEventListener('mousemove', this.mouseMove)
       }
     },
     items: {deep: true, handler(){
       if (!this.historyChange){
         this.pointer += 1
-        this.$nextTick(() => {
-          this.$set(this.history, this.pointer, [...this.item])
-        })
+        this.historyHead = this.pointer
+        this.history[this.pointer] = [...this.items]
       }
     }},
     historyChange: function(){
       if (this.historyChange){
-        console.log(this.pointer)
-        this.items = this.history[this.pointer]
+        this.items = [...this.history[this.pointer]]
         this.$nextTick(() => {
           this.historyChange = false
         })
       }
     },
     pointer: function(){
-      this.$emit('get-history-info', [this.pointer, this.topOfHistory])
+      this.$emit('get-history-info', [this.pointer, this.historyHead])
     },
     historyChangeFromMenu: function(){
       if (this.historyChangeFromMenu == 'undo'){
@@ -294,10 +326,8 @@ export default {
       this.historyChange = true
     }
   },
-  created: function(){
-    this.initItems()
-  },
   mounted: function(){
+    this.init()
     this.getCanvasSize()
     window.addEventListener('resize', this.getCanvasSize)
     document.addEventListener('keydown', this.keyAction)

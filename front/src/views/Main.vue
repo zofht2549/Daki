@@ -5,9 +5,9 @@
       <span @click="changeTab('calendar')" :class="{'tab':true, 'active': tab == 'calendar'}">달력으로 보기</span>
       <span @click="changeTab('grid')" :class="{'tab':true, 'active': tab == 'grid'}">그리드로 보기</span>
     </article>
-    <diary-pop-up v-if="target" @close-pop-up="closePopUp" :target="target" />
+    <diary-pop-up v-if="target" :target="target" @close-pop-up="closePopUp" @change-diaries="changeDiaries" />
     <article class="main-body">
-      <calendar v-if="tab == 'calendar'" @show-date-diary="showDateDiary" />
+      <calendar v-if="tab == 'calendar'" :changes="changes" @show-date-diary="showDateDiary" @change-diaries="changeDiaries" />
       <grid v-if="tab == 'grid'" />
     </article>
   </section>
@@ -18,11 +18,14 @@ import Navigation from '../components/Navigation.vue'
 import Calendar from '../components/Main/Calendar.vue'
 import Grid from '../components/Main/Grid.vue'
 import DiaryPopUp from '../components/Main/DiaryPopUp.vue'
+// import { mapState } from 'vuex'
 
 export default {
   data: () => {
     return {
-      target: null
+      target: null,
+      dollNo: null,
+      changes: false
     }
   },
   components: {
@@ -34,7 +37,10 @@ export default {
   computed: {
     tab: function(){
       return this.$route.query.tab
-    }
+    },
+		// ...mapState([
+    //   'user',
+    // ])
   },
   methods: {
     changeTab: function(tab){
@@ -44,10 +50,17 @@ export default {
       this.target = t
     },
     closePopUp: function(){
-      console.log('ehehh!!')
       this.target = null
+    },
+    changeDiaries: function(tar){
+      this.changes = tar
     }
   },
+  created(){
+    this.dollNo = this.$store.state.user.doll_no
+    console.log(this.dollNo)
+    this.$store.dispatch('userItemList',this.dollNo)
+  }
 }
 </script>
 

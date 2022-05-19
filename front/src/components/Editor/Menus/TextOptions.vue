@@ -87,8 +87,12 @@ export default {
       }
     },
     setter: function(payload){
-      /// to Editor.vue ///
-      this.$parent.$parent.$emit('value-change', payload)
+      /// to Editor ///
+      const key = Object.keys(payload)[0]
+      if (this.selected.fontStyle[key] != payload[key]){
+        console.log('저용')
+        this.$parent.$parent.$emit('value-change', payload)
+      }
     }
   },
   watch: {

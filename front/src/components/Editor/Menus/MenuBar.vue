@@ -4,15 +4,17 @@
      @click="menuClickHandler" />
     <input type="radio" id="text" value="text" v-model="menu">
 
-    <label :class="[{'clicked': menu == 'mic'}, 'mic']" title="음성 녹음" for="mic"
-     @click="menuClickHandler" />
+    <label :class="[{'clicked': menu == 'mic'}, 'mic']" title="음성녹음:Beta" for="mic"
+     @click="menuClickHandler">
+      <speech-to-text v-if="menu == 'mic' && selected" :selected="selected" />
+    </label>
     <input type="radio" id="mic" value="mic" v-model="menu">
 
     <label :class="[{'clicked': menu == 'image'}, 'image']" title="이미지" for="image"
      @click="menuClickHandler" />
     <input type="radio" id="image" value="image" v-model="menu">
-    <image-uploader  v-model="file" :maxSize="3" v-show="false"
-      :id="'file-input'" :maxWidth="500" :maxHeight="500" :preview="false" />
+    <image-uploader v-show="false" @input="fileUploadToS3" 
+     :outputFormat="'file'" :id="'file-input'" :maxWidth="500" :maxHeight="500" :preview="false" />
 
     <label :class="[{'clicked': menu == 'sticker'}, 'sticker']" :title="menu == 'sticker' ? false:'스티커'" for="sticker"
      @click="menuClickHandler">
@@ -29,15 +31,22 @@
       <button :class="['undo', {'active':historyInfo[0] > 0}]" title="undo" 
        @click="historyChange('undo')" />
       <button :class="['redo', {'active':historyInfo[1] > historyInfo[0]}]" title="redo" 
-       @click="historyChange('do')" />
+       @click="historyChange('redo')" />
     </div>
+
+    <button class="submit-btn" @click="submitHandler">
+      작성 완료
+    </button>
   </div>
 </template>
 
 <script>
 import TextOptions from './TextOptions.vue'
+import SpeechToText from './SpeechToText.vue'
 import ImageUploader from 'vue-image-upload-resize'
 import StickerLoader from './StickerLoader.vue'
+import AWS from 'aws-sdk'
+import Swal from 'sweetalert2'
 
 export default {
   data: function(){
@@ -55,7 +64,13 @@ export default {
   components: {
     TextOptions,
     ImageUploader,
-    StickerLoader
+    StickerLoader,
+    SpeechToText
+  },
+  computed: {
+    user: function(){
+      return this.$store.state.user
+    }
   },
   methods: {
     menuClickHandler: function(e){
@@ -80,25 +95,77 @@ export default {
       }
     },
     historyChange: function(payload){
+      if ((payload == 'undo' && this.historyInfo[0] <= 0) || (payload == 'redo' && this.historyInfo[1] <= this.historyInfo[0])){
+        return
+      }
       this.$emit('history-change', payload)
+    },
+    submitHandler: function(){
+      this.$emit('submit')
+    },
+    fileUploadToS3: async function(file){
+      const body = document.querySelector('body')
+      body.style.cursor = 'wait'
+
+      const credentials = JSON.parse(process.env.VUE_APP_AWS_S3_CREDENTIALS)
+      const s3 = new AWS.S3(credentials)
+
+      const params = {
+        Bucket: process.env.VUE_APP_AWS_S3_BUCKET,
+        Key: `${this.user.email}/${file.name}`,
+        ACL: 'public-read',
+        Body: file,
+        ContentType: file.type,
+      }
+
+      await s3.upload(params, (err, data) => {
+        if (err){
+          console.dir('에러!', err)
+        }
+        else {
+          this.file = data.Location
+        }
+      })
+
+      body.style.cursor = 'auto'
     }
   },
   watch: {
     selected: function(){
       if (this.selected){
         this.menu = this.selected.type
+        if (this.selected.type == 'image' || this.selected.type == 'sticker'){
+          this.menu = null
+        }
       }
       else {
         this.menu = null
-        this.isActive = false
       }
+      this.isActive = false
     },
     menu: function(){
-      if (this.menu){
+      if (this.menu != 'mic'){
         this.$emit('active-menu', {menu: this.menu, isActive: this.isActive})
       }
       else {
-        this.$emit('active-menu', {menu: this.menu, isActive: this.isActive})
+        if (!this.selected){
+          Swal.fire({
+            icon: 'info',
+            text: '입력할 텍스트 박스를 선택해주세요'
+          })
+          .then(() => {
+            this.menu = null
+          })
+        }
+        else if (this.selected.type != 'text'){
+          Swal.fire({
+            icon: 'info',
+            text: '텍스트 박스에만 사용 가능합니다'
+          })
+          .then(() => {
+            this.menu = null
+          })
+        }
       }
     },
     file: function(){
@@ -107,11 +174,17 @@ export default {
           this.$emit('image-upload', this.file)
         })
       }
+      else {
+        this.menu = null
+      }
     },
     isCreated: function(){
       if (this.isCreated){
         this.isActive = false
         this.file = null
+        if (this.file){
+          this.file = null
+        }
       }
     }
   }
@@ -123,7 +196,7 @@ export default {
     width: 100%;
     height: 70px;
     background-color: white;
-    border-bottom: 1px #cccccc solid;
+    border: 1px #cccccc solid;
     display: flex;
     align-items: center;
 
@@ -217,7 +290,6 @@ export default {
     .do-box {
       display: flex;
       margin-left: auto;
-      margin-right: 1rem;
       align-items: center;
 
       .undo {
@@ -248,6 +320,25 @@ export default {
           cursor: pointer;
           background-image: url('../../../assets/Editor/redo-active.png');
         }
+      }
+    }
+
+    .submit-btn {
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 10px;
+      border: 1px #93D9CE solid;
+      color: #93D9CE;
+      background-color: white;
+      box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.35);
+      margin: 1.5rem;
+      padding: 0.5rem 0.75rem;
+      cursor: pointer;
+
+      &:hover, &:focus {
+        outline: none;
+        background-color: #93D9CE;
+        color: white;
       }
     }
   }

@@ -1,16 +1,31 @@
 <template>
-  <button class='social-login google-login'>
-      <img src="../../assets/Login/google_logo.png" alt="" />
-      <p>
-        Sign in with Google
-      </p>
-    </button>
+  <button class='social-login google-login' @click="googleLogin">
+    <img src="../../assets/Login/google_logo.png"/>
+    <p>
+      Sign in with Google
+    </p>
+  </button>
 
 </template>
 
 <script>
-export default {
 
+export default {
+  methods: {
+    googleLogin: async function(){
+      let url = 'https://accounts.google.com/o/oauth2/v2/auth?'
+      const params = {
+        client_id: process.env.VUE_APP_GOOGLE_CLIENT_ID,
+        redirect_uri: process.env.VUE_APP_REDIRECT_URI,
+        response_type: 'token',
+        scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile'
+      }
+      for (const key in params){
+        url += `${key}=${params[key]}&`
+      }
+      window.location.href = url
+    }
+  }
 }
 </script>
 

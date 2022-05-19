@@ -9,7 +9,8 @@
 
 <script>
 import Calendar from 'v-calendar/lib/components/calendar.umd'
-import Dummy from './Dummy.js'
+// import Dummy from './Dummy.js'
+import customAxios from '@/customAxios'
 
 const VCalendar =  {
   data: () => {
@@ -19,14 +20,30 @@ const VCalendar =  {
         highlight: true,
         dates: new Date(),
       }],
+      items: null,
       flag: false,
       clickedDay: null
     }
+  },
+  props: {
+    changes: Boolean
   },
   components: {
     Calendar,
   },
   methods: {
+    getItems: function(init=true){
+      customAxios({
+      method: 'get',
+      url: `/api/diary/findDate/${this.page[0] + '/' + this.page[1]}`
+    })
+    .then(res => {
+      this.items = res.data
+    })
+    .then(() => this.loadDairies(init))
+    .catch(err => console.log(err))
+    },
+
     makeDisabled: function(){
       const notInMonth = document.querySelectorAll('.is-not-in-month')
       notInMonth.forEach(ele => {
@@ -39,25 +56,32 @@ const VCalendar =  {
         tar.classList.add('day-disabled')
       })
     },
+
     createButton: function(){
       const todayCol = document.querySelectorAll(`.id-${this.today[0]}-${this.today[1]}-${this.today[2]}`)[0]
 
       if (todayCol){
         const button = document.createElement('button')
-  
+        button.id = 'create-btn'
+
+        button.addEventListener('click', () => {
+          this.$router.push('/diary')
+        })
         todayCol.appendChild(button)
       }
     },
+
     randomColor: function(){
       return '#' + Math.floor(Math.random() * 0xffffff).toString(16)
     },
+
     loadDairies: function(init=true){
       this.$nextTick(
         function(){
           const parent = document.querySelectorAll('.vc-day')[0]
           const w = parent.clientWidth * 0.5
 
-          for (const key in Dummy){
+          for (const key in this.items){
             if (key.slice(0, 7) == `${this.page[0]}-${this.page[1]}`){
               const tar = document.querySelectorAll(`.id-${key}`)[0]
               let wrapper
@@ -78,8 +102,8 @@ const VCalendar =  {
                 }
               }
 
-              for (const item of Dummy[key]){
-                const idx = Dummy[key].indexOf(item)
+              for (const item of this.items[key]){
+                const idx = this.items[key].indexOf(item)
                 if ((idx+1) * 40 + 16 < w){
                   const p = document.createElement('p')
                   p.setAttribute('class', 'diary-title')
@@ -96,7 +120,7 @@ const VCalendar =  {
               dot.setAttribute('class', 'is-exist')
               const helpMessage = document.createElement('p')
               helpMessage.setAttribute('class', 'diary-help-message')
-              helpMessage.innerText = `작성된 일기 수: ${Dummy[key].length}개`
+              helpMessage.innerText = `작성된 일기 수: ${this.items[key].length}개`
 
               dot.appendChild(helpMessage)
               wrapper.appendChild(dot)
@@ -108,22 +132,30 @@ const VCalendar =  {
           this.setEvent()
         }
       )
+      this.$emit('change-diaries', false)
     },
-    clickEventHandler: function(tar){
-      this.$emit('show-date-diary', tar.slice(3, ))
+
+    clickEventHandler: function(e, tar){
+      if (e.target.id != 'create-btn'){
+        const key = tar.slice(3, )
+        this.$emit('show-date-diary', {date: key, diaries: this.items[key]})
+      }
     },
+
     setEvent: function(){
       const dayList = document.querySelectorAll('.vc-day')
       dayList.forEach(ele => {
         if (ele.classList[ele.classList.length - 1] != 'day-disabled'){
-          ele.addEventListener('click', () => this.clickEventHandler(ele.classList[1]))
+          ele.addEventListener('click', e => this.clickEventHandler(e, ele.classList[1]))
         }
       })
     },
+
     updateFromPage: function(){
       this.loadDairies()
     }
   },
+
   computed: {
     page: function(){
       const time = this.$refs.calendar._data
@@ -138,6 +170,7 @@ const VCalendar =  {
 
       return [y, m, d]
     },
+
     today: function(){
       const today = new Date()
       let y = String(today.getFullYear()); let m = String(today.getMonth()+1); let d = String(today.getDate());
@@ -152,9 +185,18 @@ const VCalendar =  {
       return [y, m, d]
     }
   },
-  mounted: function(){
-    const _this = this
 
+  watch: {
+    changes: function(){
+      if (this.changes){
+        this.getItems(false)
+      }
+    }
+  },
+
+  mounted: function(){
+    this.getItems()
+    const _this = this
     window.addEventListener('resize', function(){
       if (_this.flag){
         clearTimeout()
@@ -301,6 +343,7 @@ export default VCalendar
             padding: 1rem;
             position: absolute;
             visibility: hidden;
+            z-index: 2;
           }
 
           &:hover {
