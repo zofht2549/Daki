@@ -46,6 +46,8 @@ public class UserItemController {
                                                                HttpServletRequest httpServletRequest){
         UserItemUpdateWearStateRes userItemUpdateWearStateRes = useritemService.updateWearState(userItemUpdateWearStateReq);
 
+
+
         return userService.tokenEnter(httpServletRequest, userItemUpdateWearStateRes, 200);
     }
 
