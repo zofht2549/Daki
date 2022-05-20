@@ -103,9 +103,7 @@ export default {
       this.$emit('close-pop-up');
     },
     charSave:function(){
-      // this.$store.dispatch('userCharData',this.itemList)
-      this.$emit('change-item')
-      this.$store.dispatch('userItemWear',this.itemList)
+      this.$store.dispatch('userItemList')
     }
   },
   created: function(){
