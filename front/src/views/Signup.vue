@@ -76,8 +76,15 @@ export default {
   },
   methods: {
     changeStep: function(tar){
+      let validData
+      if (this.oauth){
+        validData = {birth: this.validData.birth, gender: this.validData.gender, dollType: this.validData.dollType}
+      }
+      else {
+        validData = this.validData
+      }
       if (tar == 3){
-        for (const value of Object.values(this.validData)){
+        for (const value of Object.values(validData)){
           if (!value){
             return Swal.fire({
               icon: 'warning',
