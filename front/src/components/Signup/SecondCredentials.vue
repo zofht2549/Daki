@@ -7,7 +7,7 @@
     <label for="birth">
       <h5>생년월일</h5>
       <span>
-        <input type="date" id="birth">
+        <input type="date" id="birth" v-model="credentials.birth">
       </span>
     </label>
     <label for="gender-box">
@@ -15,11 +15,11 @@
       <span id="gender-box">
         <label for="male">
           남
-          <input type="radio" name="gender" value="male" id="male">
+          <input type="radio" name="gender" value="M" id="male" v-model="credentials.gender">
         </label>
         <label for="female">
           여
-          <input type="radio" name="gender" value="female" id="female">
+          <input type="radio" name="gender" value="F" id="female" v-model="credentials.gender">
         </label>
       </span>
     </label>
@@ -27,16 +27,16 @@
       <h5>캐릭터</h5>
       <span id="character-box">
         <div class="character">
-          <input type="radio" name="character" value="char-1" id="char-1">
-          <label for="char-1"/>
+          <input type="radio" name="character" :value="1" id="char-1" v-model="credentials.dollType">
+          <label class="char1" for="char-1"/>
         </div>
         <div class="character">
-          <input type="radio" name="character" value="char-1" id="char-2">
-          <label for="char-2"/>
+          <input type="radio" name="character" :value="2" id="char-2" v-model="credentials.dollType">
+          <label class="char2" for="char-2"/>
         </div>
         <div class="character">
-          <input type="radio" name="character" value="char-1" id="char-3">
-          <label for="char-3"/>
+          <input type="radio" name="character" :value="3" id="char-3" v-model="credentials.dollType">
+          <label class="char3" for="char-3"/>
         </div>
       </span>
     </label>
@@ -49,10 +49,32 @@
 
 <script>
 export default {
+  data: function(){
+    return {
+      credentials: {...this.secondCredentials},
+      isValid: {...this.validData}
+    }
+  },
+  props: {
+    secondCredentials: Object,
+    validData: Object
+  },
   methods: {
     nextStep: function(){
       this.$emit('next-step', 3)
     }
+  },
+  watch: {
+    credentials: {deep: true, handler(){
+      Object.keys(this.credentials).forEach(key => {
+        const value = Boolean(this.credentials[key])
+        this.isValid[key] = value
+      })
+      this.$emit('get-credentials', this.credentials)
+    }},
+    isValid: {deep:true, handler(){
+      this.$emit('get-valid-data', this.isValid)
+    }}
   }
 }
 </script>
@@ -70,7 +92,7 @@ export default {
       h6 {
         font-size: 1.5rem;
         font-weight: bold;
-        margin: 0.25rem 1.5rem;
+        margin: 0.25rem 0;
       }
     }
 
@@ -135,11 +157,23 @@ export default {
       label {
         width: 100%;
         aspect-ratio: 1/1;
-        background-image: url('../../assets/character.png');
+        // background-image: url('../../assets/character.png');
         background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
         cursor: pointer;
+      }
+
+      .char1{
+        background-image: url('../../assets/character.png');
+      }
+
+      .char2{
+        background-image: url('../../assets/char2.png');
+      }
+
+      .char3{
+        background-image: url('../../assets/char3.png');
       }
 
       input[type="radio"]:checked + label {
