@@ -68,7 +68,7 @@ export default {
           width: 20,
           height: 10,
           imgUrl: null,
-          content: null,
+          content: '',
           fontStyle: {
             size: 16,
             family: 'HallymMjo-Regular',
