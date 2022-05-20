@@ -1,26 +1,21 @@
 <template>
-    <div id="mypage-container">
+    <div id="mypage-container" v-if="user && itemList">
       <navigation />
       <section class="info">
 				<article class="char-box">
 					<div class="char">
-						<!-- <img src="@/assets/landing/character.png" alt=""> -->
-						<img src="@/assets/character/head.png" alt="">
-						<div class="parts background">
-							<!-- <img :src="require(`@/assets/character/${this.itemList.ItemImageBackground}.png`)" alt="배경"> -->
-							<img :src="`${this.itemList.ItemImageBackground}`" alt="">
+						<img src="@/assets/character/head.png">
+						<div class="parts background" v-if="this.itemList.itemBackground">
+							<img :src="`${this.itemList.itemBackground}`">
 						</div>
-						<div class="parts head">
-							<!-- <img :src="require(`@/assets/character/${this.itemList.ItemImageHair}.png`)" alt="머리"> -->
-							<img :src="`${this.itemList.ItemImageHair}`" alt="">
+						<div class="parts head" v-if="this.itemList.itemHair">
+							<img :src="`${this.itemList.itemHair}`">
 						</div>
-						<div class="parts cloth">
-							<!-- <img :src="require(`@/assets/character/${this.itemList.ItemImageCloth}.png`)" alt="옷"> -->
-							<img :src="`${this.itemList.ItemImageCloth}`" alt="">
+						<div class="parts cloth" v-if="this.itemList.itemCloth">
+							<img :src="`${this.itemList.itemCloth}`">
 						</div>
-						<div class="parts deco">
-							<!-- <img :src="require(`@/assets/character/${this.itemList.ItemImageDeco}.png`)" alt="장식"> -->
-							<img :src="`${this.itemList.ItemImageDeco}`" alt="">
+						<div class="parts deco" v-if="this.itemList.itemDeco">
+							<img :src="`${this.itemList.itemDeco}`">
 						</div>
 					</div>
 					<div class="char-info">
@@ -44,11 +39,12 @@
 						</div>
 						<div for="nickname">
 							<span class="title">닉네임</span>
-							<span class="content">{{ user.nickName }}</span>
-							<button
-								class="nickname_button" @click="changeNickname()">
-								닉네임 변경
-							</button>
+							<span class="content">
+								{{ user.nickName }}
+								<button class="nickname_button" @click="changeNickname()">
+									닉네임 변경
+								</button>
+							</span>
 						</div>
 						<div for="birth">
 							<span class="title">생년월일</span>
@@ -56,7 +52,7 @@
 						</div>
 						<div for="gender">
 							<span class="title">성별</span>
-							<span class="content">{{ user.userGender }}</span>
+							<span class="content">{{ user.userGender == 'M' ? '남자':'여자' }}</span>
 						</div>
 					</form>
 					
@@ -67,18 +63,13 @@
 					<a href="#">회원탈퇴</a>
 				</article>
       </section>
-			<div>
-				<character-button
-					@change="getCharItem()">
-				</character-button>
-			</div>
+
 			<div class="change-password" :class="{ active : passwordView }">
 				<change-password @close-pop-up="changePassword()" />
 			</div>
 			<div class="change-nickname" :class="{ active : nicknameView}">
 				<change-nickname @close-pop-up="changeNickname()" />
 			</div>
-
     </div>
     
 </template>
@@ -86,34 +77,29 @@
 import Navigation from '../components/Navigation.vue'
 import ChangePassword from '@/components/Mypage/ChangePassword.vue'
 import ChangeNickname from '@/components/Mypage/ChangeNickname.vue'
-import CharacterButton from '@/components/CharacterButton.vue'
-import { mapState } from 'vuex'
 
 export default {
   name: 'MyPage',
 	data: () => {
 		return {
-			
 			popupVal : false,
-			// target : false,
-
 			passwordView : false,
 			nicknameView : false,
-
-			itemList:{
-				ItemImageBackground : null,
-				ItemImageCloth : null,
-				ItemImageHair : null,
-				ItemImageDeco : null
-			},
 		}
 	},
   components:{
     Navigation,
 		ChangePassword,
 		ChangeNickname,
-		CharacterButton,
   },
+	computed:{
+		user(){
+			return this.$store.state.user
+		},
+		itemList(){
+			return this.$store.state.wearItem
+		}
+	},
   methods:{
 		openPop(){
 			this.view = (this.view) ? false : true; 
@@ -123,52 +109,8 @@ export default {
 		},
 		changeNickname(){
 			this.nicknameView = (this.nicknameView) ? false : true
-		},
-		getCharItem(){
-		this.itemList.ItemImageBackground = this.$store.state.wearItem.itemBackground.itemImage
-		this.itemList.ItemImageCloth = this.$store.state.wearItem.itemCloth.itemImage
-		this.itemList.ItemImageHair = this.$store.state.wearItem.itemHair.itemImage
-		this.itemList.ItemImageDeco = this.$store.state.wearItem.itemDeco.itemImage
-		console.log('getchar확인',this.itemList.ItemImageBackground)
-		console.log('getchar이미지 확인',this.itemList.ItemImageBackground.itemImage)
 		}
-  },
-	created: function(){
-		// this.itemList.ItemImageBackground = this.$store.state.charItemList.ItemImageBackground
-		// this.itemList.ItemImageBackground = this.$store.state.wearItem.itemBackground
-		// this.itemList.ItemImageCloth = this.$store.state.wearItem.itemCloth
-		// this.itemList.ItemImageHair = this.$store.state.wearItem.itemHair
-		// this.itemList.ItemImageDeco = this.$store.state.wearItem.itemDeco
-		// console.log('확인',this.itemList.ItemImageBackground)
-
-
-
-    this.dollNo = this.$store.state.user.doll_no
-    console.log(this.dollNo)
-    this.$store.dispatch('userItemList',this.dollNo)
-		for(var i = 1 ; i < this.$store.state.userItemList.length; i++){
-			if(this.$store.state.userItemList[i].itemCategory == 2 && this.$store.state.userItemList[i].wearFlag == 1){
-				this.itemList.ItemImageBackground = this.$store.state.userItemList[i].itemImage
-			}
-			else if(this.$store.state.userItemList[i].itemCategory == 0 && this.$store.state.userItem[i].wearFlag == 1){
-				this.itemList.ItemImageCloth = this.$store.state.userItemList[i].itemImage
-			}
-			else if(this.$store.state.userItemList[i].itemCategory == 1 && this.$store.userItem[i].wearFlag == 1){
-				this.itemList.ItemImageHair = this.$store.state.userItemList[i].itemImage
-			}
-			else if(this.$store.state.userItemList[i].itemCategory == 3 && this.$store.state.userItem[i].wearFlag == 1){
-				this.itemList.ItemImageDeco = this.$store.state.userItemList[i].itemImage
-			}
-		}
-
 	},
-	computed:{
-		...mapState([
-      'user',
-			'charItemList',
-			'wearItem'
-    ])
-	}
 }
 </script>
 <style lang="scss">
@@ -347,19 +289,24 @@ export default {
 							font-size: 1.5rem;
 							margin: 0 1rem;
 							padding: 0.25rem 0.5rem;
+							display: flex;
+							justify-content: space-between;
+							align-items: center;
 						}
 
 						& > .nickname_button{
 							font-size: 12px;
-							position: absolute;
-							left: 65%;
-							bottom: 25%;
+							padding: 0.125rem 0.25rem;
 						}
 					}
 				}
 			}
 			& > .botton-area{
-					text-align: center;
+				text-align: center;
+
+				button {
+					margin: 2rem;
+				}
 			}
 		}
 
@@ -371,8 +318,7 @@ export default {
 			color: #93D9CE;
 			background-color: white;
 			box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.35);
-			margin: 2rem 0;
-			padding: 0.5rem 1rem;
+			padding: 0.25rem 0.5rem;
 			cursor: pointer;
 
 			&:hover, &:disabled {
@@ -395,7 +341,6 @@ export default {
 		padding-right: 16px;
 
 		& > .info{
-
 
 			& > .char-box{
 				display: flex;
@@ -480,13 +425,13 @@ export default {
 							font-size: 1.5rem;
 							margin: 0 1rem;
 							padding: 0.25rem 0.5rem;
+							display: flex;
+							justify-content: space-between;
+							align-items: center;
 						}
 
 						& > .nickname_button{
 							font-size: 12px;
-							position: absolute;
-							left: 65%;
-							bottom: 25%;
 						}
 					}
 				}

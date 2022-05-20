@@ -1,5 +1,5 @@
 <template>
-  <div id="char-popup-container">
+  <div id="char-popup-container" v-if="user">
     <div @click="closePopUp()">
 
     </div>
@@ -9,21 +9,21 @@
       <section class="deco-box">
           <article class="char-box">
             <div class="char">
-              <img src="@/assets/character/head.png" alt="">
+              <img src="@/assets/character/head.png">
 
               <!-- 캐릭터 파츠 -->
 
-              <div class="parts background">
-                <img :src="`${this.itemList.ItemImageBackground}`" alt="">
+              <div class="parts background" v-if="this.itemList.itemBackground">
+                <img :src="`${this.itemList.itemBackground}`">
               </div>
-              <div class="parts head">
-                <img :src="`${this.itemList.ItemImageHair}`" alt="">
+              <div class="parts head" v-if="this.itemList.itemHair">
+                <img :src="`${this.itemList.itemHair}`">
               </div>
-              <div class="parts cloth">
-                <img :src="`${this.itemList.ItemImageCloth}`" alt="">
+              <div class="parts cloth" v-if="this.itemList.itemCloth">
+                <img :src="`${this.itemList.itemCloth}`">
               </div>
-              <div class="parts deco">
-                <img :src="`${this.itemList.ItemImageDeco}`" alt="">
+              <div class="parts deco" v-if="this.itemList.itemDeco">
+                <img :src="`${this.itemList.itemDeco}`">
               </div>
               
             </div>
@@ -50,13 +50,12 @@
             <h3>인벤토리</h3>
             <div class="inventory">
               <div class="tab-box">
-                <span @click="temp(0)" :class="{'tab':true, 'active': tab == 0}">옷</span>
-                <span @click="temp(1)" :class="{'tab':true, 'active': tab == 1}">머리</span>
-                <span @click="temp(2)" :class="{'tab':true, 'active': tab == 2}">배경</span>
-                <span @click="temp(3)" :class="{'tab':true, 'active': tab == 3}">장식</span>
+                <span @click="changeTab(0)" :class="{'tab':true, 'active': tab == 0}">옷</span>
+                <span @click="changeTab(1)" :class="{'tab':true, 'active': tab == 1}">머리</span>
+                <span @click="changeTab(2)" :class="{'tab':true, 'active': tab == 2}">배경</span>
+                <span @click="changeTab(3)" :class="{'tab':true, 'active': tab == 3}">장식</span>
               </div>
-              <inventory-box :tab="tab"
-                @itemImage="itemImage"/>
+              <inventory-box :tab="tab"/>
             </div>
           </article>
           <article>
@@ -67,95 +66,55 @@
           </article>
       </section>
     </div>
+
   </div>
 </template>
 
 <script>
 import InventoryBox from '@/components/character/InventoryBox.vue'
-import { mapState } from 'vuex'
 
 export default {
 	data: () => {
     return {
       tab: 0,
       target: null,
-      itemList:{
-        ItemImageBackground : null,
-        ItemImageCloth : null,
-        ItemImageHair : null,
-        ItemImageDeco : null
-      },
-      // wearItem:{
-      //   itemBackground : null,
-      //   itemCloth : null,
-      //   itemHair : null,
-      //   itemDeco : null
-      // },
-      
-      CategoryNum : 0,
-      
       level: 0,
     }
-  },
-  watch: {
-    /* eslint-disable */
-    tab: function (val) {
-      this.fullName = val + ' ' + this.lastName
-    },
   },
   props:{
     popupVal: String,
   },
 	components:{
-		InventoryBox,
+    InventoryBox,
 	},
+  computed:{
+    itemList(){
+      return this.$store.state.wearItem
+    },
+    user(){
+      return this.$store.state.user
+    }
+  },
   methods: {
-    temp(index){
+    changeTab(index){
       this.tab = index;
-      this.CategoryNum = this.tab;
     },
     closePopUp: function(){
-        this.$emit('close-pop-up');
-    },
-    // categoryNum(data){
-    //   this.CategoryNum = data
-    // },
-    itemImage(data){
-      this.wearItem = data
-      if(this.CategoryNum == 0){
-        this.itemList.ItemImageCloth = data
-      }else if(this.CategoryNum == 1){
-        this.itemList.ItemImageHair = data
-      }else if(this.CategoryNum == 2){
-        this.itemList.ItemImageBackground = data
-      }else{
-        this.itemList.ItemImageDeco = data
-      }
+      this.$emit('close-pop-up');
     },
     charSave:function(){
       // this.$store.dispatch('userCharData',this.itemList)
       this.$emit('change-item')
-      console.log('현재 입고 있는 옷',this.itemList)
-      console.log('저장할거',this.wearItem)
       this.$store.dispatch('userItemWear',this.itemList)
     }
   },
-  computed:{
-		...mapState([
-      'user',
-      'charItemList',
-      'userItemList',
-      'wearItem'
-    ])
-	},
-  created(){
-    console.log('현재 입고 있는 옷',this.wearItem)
-    console.log('데이터 들어왔나 확인',this.itemList)
-    // itemList.ItemImageBackground = this.$store.state.wearItem.itemBackground
-
-
-
-
+  created: function(){
+    const body = document.querySelector('body')
+    body.style.overflow = 'hidden'
+  },
+  destroyed: function(){
+    const body = document.querySelector('body')
+    body.style.overflow = 'auto'
   }
 }
 </script>
@@ -172,7 +131,7 @@ export default {
     justify-content: center;
     align-items: center;
     //background-color: rgba(0, 0, 0, 0.35);
-    z-index: 3;
+    z-index: 987654321;
 
     & > div:nth-child(1){
       position:absolute;

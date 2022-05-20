@@ -13,19 +13,8 @@ export default new Vuex.Store({
     isEnd: false,
     user: null,
     nickName : null,
-    charItemList : {
-      ItemImageBackground : 'background1',
-      ItemImageCloth : 'cloth1',
-      ItemImageHair : 'hair1',
-      ItemImageDeco : 'deco1'
-    },
-    userItemList:[],
-    wearItem:{
-      itemBackground : null,
-      itemCloth : null,
-      itemHair : null,
-      itemDeco : null
-    }
+    userItemList: null,
+    wearItem: null
   },
   mutations: {
     SCROLLED(state, payload){
@@ -44,12 +33,6 @@ export default new Vuex.Store({
     CLEARUSER(state){
       state.user = null
     },
-    USER_CHAR_DATA(state, itemList){
-      state.charItemList.ItemImageBackground = itemList.ItemImageBackground
-      state.charItemList.ItemImageCloth = itemList.ItemImageCloth
-      state.charItemList.ItemImageDeco = itemList.ItemImageDeco
-      state.charItemList.ItemImageHair = itemList.ItemImageHair
-    },
     USER_ITEM_LIST(state, data){
       state.userItemList = data
     },
@@ -64,20 +47,17 @@ export default new Vuex.Store({
         state.wearItem.itemDeco = item
       }
       console.log('지금 입은거',state.wearItem)
-      // for(var a = 0 ; a < 14; a++){
-      //   if(state.userItemList[a].itemNo == item){
-      //     console.log('아이템 이름',state.userItemList[a].itemName)
-      //     state.userItemList.wearFlag = 1
-      //   }
-      // }
     },
-    USER_WEAR_ITEM(state,data){
-      console.log('state',data)
-      state.wearItem.itemBackground = data[0]
-      state.wearItem.itemCloth = data[1]
-      state.wearItem.itemDeco = data[2]
-      state.wearItem.itemHair = data[3]
-      console.log('데이터 입력 후',state.wearItem)
+    USER_WEAR_ITEM(state){
+      const temp = ['itemCloth', 'itemHair', 'itemBackground', 'itemDeco']
+      const result = {itemBackground : null, itemCloth : null, itemHair : null, itemDeco : null}
+      state.userItemList.forEach(ele => {
+        if (ele.wearFlag == 1){
+          const tar = temp[Number(ele.itemCategories)]
+          result[tar] = ele.itemImage
+        }
+      })
+      state.wearItem = result
     }
   },
   actions: {
@@ -96,6 +76,7 @@ export default new Vuex.Store({
       try {
         const user = JSON.parse(session.getItem('user'))
         commit('GETUSER', user)
+        return new Promise(resolve => resolve(user))
       }
       catch {
         return
@@ -107,45 +88,38 @@ export default new Vuex.Store({
     userCharData({commit},itemList){
       commit('USER_CHAR_DATA',itemList)
     },
-
-    userItemList({commit},dollNo){
-      const bearer_token = sessionStorage.getItem('accessToken')
-      const session_token = sessionStorage.getItem('refreshToken')
+    /// 모든 아이템 정보 불러오기 ///
+    userItemList({commit}){
       axios({
         methods: 'GET',
-        url:`https://k6e105.p.ssafy.io:8080/api/item/info`,
+        url: `https://k6e105.p.ssafy.io:8080/api/item/info/${this.state.user.doll_no}`,
         headers:{
-          Authorization:`Bearer ${bearer_token}`,
-          Refresh_Authorization:`${session_token}`
+          Authorization: sessionStorage.getItem('accessToken'),
+          Refresh_Authorization: sessionStorage.getItem('refreshToken')
+        }
+      })
+      .then(res => commit('USER_ITEM_LIST', res.data))
+      .finally(() => commit('USER_WEAR_ITEM'))
+    },
+
+    changeItem({dispatch}, item){
+      axios({
+        method: 'put',
+        url: 'https://k6e105.p.ssafy.io:8080/api/useritem/wear',
+        data: {
+          dollNo: this.state.user.doll_no,
+          itemNo: item.itemNo
         },
-        params:{dollNo: dollNo}
+        headers:{
+          Authorization: sessionStorage.getItem('accessToken'),
+          Refresh_Authorization: sessionStorage.getItem('refreshToken')
+        }
       })
-      .then(res =>{
-        console.log('확인')
-        commit('USER_ITEM_LIST',res.data)
-      })
+      .then(() => dispatch('userItemList'))
     },
-    changeItem({commit},item){
-      commit('CHANGE_ITEM',item)
-    },
-    // userItemWear({commit},data){
-    //   const bearer_token = sessionStorage.getItem('accessToken')
-    //   const session_token = sessionStorage.getItem('refreshToken')
-    //   axios({
-    //     methods:'PUT',
-    //     url:`https://k6e105.p.ssafy.io:8080/api/useritem/wear`,
-    //     headers:{
-    //       Authorization:`Bearer ${bearer_token}`,
-    //       Refresh_Authorization:`${session_token}`
-    //     }
-    //   })
-    //   .then(res =>{
-    //     console.log('의상 체인지',data)
-    //     commit('USER_ITEM_WEAR',res.data)
-    //   })
-    // }
     userItemWear({commit},data){
       commit('USER_WEAR_ITEM',data)
+      console.log(data)
     }
   }
 })

@@ -28,15 +28,15 @@
       <span id="character-box">
         <div class="character">
           <input type="radio" name="character" :value="1" id="char-1" v-model="credentials.dollType">
-          <label for="char-1"/>
+          <label class="char1" for="char-1"/>
         </div>
         <div class="character">
           <input type="radio" name="character" :value="2" id="char-2" v-model="credentials.dollType">
-          <label for="char-2"/>
+          <label class="char2" for="char-2"/>
         </div>
         <div class="character">
           <input type="radio" name="character" :value="3" id="char-3" v-model="credentials.dollType">
-          <label for="char-3"/>
+          <label class="char3" for="char-3"/>
         </div>
       </span>
     </label>
@@ -157,11 +157,23 @@ export default {
       label {
         width: 100%;
         aspect-ratio: 1/1;
-        background-image: url('../../assets/character.png');
+        // background-image: url('../../assets/character.png');
         background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
         cursor: pointer;
+      }
+
+      .char1{
+        background-image: url('../../assets/character.png');
+      }
+
+      .char2{
+        background-image: url('../../assets/char2.png');
+      }
+
+      .char3{
+        background-image: url('../../assets/char3.png');
       }
 
       input[type="radio"]:checked + label {
