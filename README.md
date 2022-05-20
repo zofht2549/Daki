@@ -4,7 +4,7 @@
 
 ## 사용기술
 
-![image-20220520113236917](asset/Untitled 1.png)
+![image-20220520113236917](asset/Untitled 10.png)
 
 # **나만의 일기장을 꾸밀 수 있는 서비스 DAKI**
 
@@ -28,43 +28,43 @@
 
 ## 3**. 아키텍처**
 
-![Untitled](README%20869b59691897423e965cf8ccdd716dc7/Untitled.png)
+![Untitled](asset/Untitled.png)
 
 ## 4**. 서비스 화면**
 
 ### **메인페이지**
 
-![Untitled](README%20869b59691897423e965cf8ccdd716dc7/Untitled%201.png)
+![Untitled](asset/Untitled 1.png)
 
 ### 로그인
 
-![Untitled](README%20869b59691897423e965cf8ccdd716dc7/Untitled%202.png)
+![Untitled](asset/Untitled 2.png)
 
 ### 회원가입
 
-![Untitled](README%20869b59691897423e965cf8ccdd716dc7/Untitled%203.png)
+![Untitled](asset/Untitled 3.png)
 
-![Untitled](README%20869b59691897423e965cf8ccdd716dc7/Untitled%204.png)
+![Untitled](asset/Untitled 4.png)
 
 ### 일기 캘린더
 
-![Untitled](README%20869b59691897423e965cf8ccdd716dc7/Untitled%205.png)
+![Untitled](asset/Untitled 5.png)
 
 ### 일기 그리드로 보기
 
-![Untitled](README%20869b59691897423e965cf8ccdd716dc7/Untitled%206.png)
+![Untitled](asset/Untitled 6.png)
 
 ### 일기 작성 페이지
 
-![Untitled](README%20869b59691897423e965cf8ccdd716dc7/Untitled%207.png)
+![Untitled](asset/Untitled 7.png)
 
 ### 마이페이지
 
-![Untitled](README%20869b59691897423e965cf8ccdd716dc7/Untitled%208.png)
+![Untitled](asset/Untitled 8.png)
 
 ### 캐릭터 꾸미기 탭
 
-![Untitled](README%20869b59691897423e965cf8ccdd716dc7/Untitled%209.png)
+![Untitled](asset/Untitled 9.png)
 
 ## 5**. UCC**
 
