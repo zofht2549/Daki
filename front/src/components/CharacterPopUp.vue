@@ -67,6 +67,7 @@
           </article>
       </section>
     </div>
+
   </div>
 </template>
 
@@ -149,11 +150,10 @@ export default {
     ])
 	},
   created(){
-    console.log('현재 입고 있는 옷',this.wearItem)
-    console.log('데이터 들어왔나 확인',this.itemList)
     // itemList.ItemImageBackground = this.$store.state.wearItem.itemBackground
-
-
+    // for(var i = 0; i < this.$store.state.userItemList.length;i++){
+    //   console.log(this.$store.state.userItemList[i])
+    // }
 
 
   }

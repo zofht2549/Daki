@@ -55,6 +55,7 @@ export default {
 
       img {
         width: 150px;
+        height: 150px;
         aspect-ratio: 3/4;
       }
 

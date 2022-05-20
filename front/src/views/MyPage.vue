@@ -78,7 +78,6 @@
 			<div class="change-nickname" :class="{ active : nicknameView}">
 				<change-nickname @close-pop-up="changeNickname()" />
 			</div>
-
     </div>
     
 </template>
@@ -134,38 +133,34 @@ export default {
 		}
   },
 	created: function(){
-		// this.itemList.ItemImageBackground = this.$store.state.charItemList.ItemImageBackground
-		// this.itemList.ItemImageBackground = this.$store.state.wearItem.itemBackground
-		// this.itemList.ItemImageCloth = this.$store.state.wearItem.itemCloth
-		// this.itemList.ItemImageHair = this.$store.state.wearItem.itemHair
-		// this.itemList.ItemImageDeco = this.$store.state.wearItem.itemDeco
-		// console.log('확인',this.itemList.ItemImageBackground)
-
-
-
     this.dollNo = this.$store.state.user.doll_no
     console.log(this.dollNo)
     this.$store.dispatch('userItemList',this.dollNo)
 		for(var i = 1 ; i < this.$store.state.userItemList.length; i++){
-			if(this.$store.state.userItemList[i].itemCategory == 2 && this.$store.state.userItemList[i].wearFlag == 1){
+			console.log('mypage',this.$store.state.userItemList[i])
+			if(this.$store.state.userItemList[i].itemCategories == 2 && this.$store.state.userItemList[i].wearFlag == 0){
 				this.itemList.ItemImageBackground = this.$store.state.userItemList[i].itemImage
 			}
-			else if(this.$store.state.userItemList[i].itemCategory == 0 && this.$store.state.userItem[i].wearFlag == 1){
+			else if(this.$store.state.userItemList[i].itemCategories == 0 && this.$store.state.userItem[i].wearFlag == 0){
 				this.itemList.ItemImageCloth = this.$store.state.userItemList[i].itemImage
 			}
-			else if(this.$store.state.userItemList[i].itemCategory == 1 && this.$store.userItem[i].wearFlag == 1){
+			else if(this.$store.state.userItemList[i].itemCategories == 1 && this.$store.userItem[i].wearFlag == 0){
 				this.itemList.ItemImageHair = this.$store.state.userItemList[i].itemImage
 			}
-			else if(this.$store.state.userItemList[i].itemCategory == 3 && this.$store.state.userItem[i].wearFlag == 1){
+			else if(this.$store.state.userItemList[i].itemCategories == 3 && this.$store.state.userItem[i].wearFlag == 0){
 				this.itemList.ItemImageDeco = this.$store.state.userItemList[i].itemImage
 			}
 		}
-
+		if(this.itemList.ItemImageBackground == null){
+			this.$store.state.userItemList[0].itemImage
+		}
+		console.log('다 넣고',this.itemList)
 	},
 	computed:{
 		...mapState([
       'user',
 			'charItemList',
+			'userItemList',
 			'wearItem'
     ])
 	}

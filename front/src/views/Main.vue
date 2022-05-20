@@ -65,6 +65,7 @@ export default {
 </script>
 
 <style lang="scss">
+@media only screen and (min-width:800px){
   #main-container {
     border-left: 1px #cccccc solid;
     border-right: 1px #cccccc solid;
@@ -119,4 +120,60 @@ export default {
       justify-content: center;
     }
   }
+}
+@media only screen and (max-width:799px){
+  #main-container {
+
+    width: 100%;
+    min-height: 100vh;
+    padding-top: 100px;
+
+    .tab-box {
+      width: 100%;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      border-bottom: 1px #cccccc solid;
+      overflow: hidden;
+
+      .tab {
+        width: 25%;
+        height: 60px;
+        background-color: #cccccc;
+        color: #777777;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin: 0 3rem;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        cursor: pointer;
+        box-shadow: 2px 0 4px rgba(0, 0, 0, 0.5);
+      }
+
+      @keyframes scale-up {
+        from {
+          height: 60px;
+        }
+        to {
+          height: 75px;
+        }
+      }
+
+      .active {
+        animation: scale-up 0.1s ease-in forwards;
+        background-color: #93D9CE;
+        color: white;
+      }
+    }
+
+    .main-body {
+      display: flex;
+      justify-content: center;
+    }
+  }
+}
 </style>

@@ -115,7 +115,7 @@ export default new Vuex.Store({
         methods: 'GET',
         url:`https://k6e105.p.ssafy.io:8080/api/item/info`,
         headers:{
-          Authorization:`Bearer ${bearer_token}`,
+          Authorization:`${bearer_token}`,
           Refresh_Authorization:`${session_token}`
         },
         params:{dollNo: dollNo}
@@ -146,6 +146,7 @@ export default new Vuex.Store({
     // }
     userItemWear({commit},data){
       commit('USER_WEAR_ITEM',data)
+      console.log(data)
     }
   }
 })
