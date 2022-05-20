@@ -33,7 +33,7 @@ export default {
       return this.$route.path
     },
     charButtonShow: function(){
-      return this.path !== '/login' && this.path !== '/signup' && this.path !== '/'
+      return this.path !== '/login' && this.path !== '/signup' && this.path !== '/' && this.path !== '/oauth'
     }
   },
   watch: {
