@@ -8,10 +8,10 @@ import com.daki.common.config.TokenProvider;
 import com.daki.common.util.RefreshToken;
 import com.daki.common.util.RefreshTokenRepository;
 import com.daki.common.util.SecurityUtil;
-import com.daki.db.entity.Authority;
-import com.daki.db.entity.Doll;
-import com.daki.db.entity.User;
+import com.daki.db.entity.*;
 import com.daki.db.repository.DollRepository;
+import com.daki.db.repository.ItemRepository;
+import com.daki.db.repository.UserItemRepository;
 import com.daki.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +25,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 @Service
@@ -42,6 +44,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     DollRepository dollRepository;
 
+    @Autowired
+    UserItemRepository userItemRepository;
+
+    @Autowired
+    ItemRepository itemRepository;
 
     @Transactional
     @Override
@@ -53,6 +60,19 @@ public class UserServiceImpl implements UserService {
 
         Doll doll = new Doll(0, saveUser, userJoinReq.getDollType());
         dollRepository.save(doll);
+
+        List<Item> itemList = itemRepository.findAll();
+
+        for (Item item:itemList) {
+            UserItem userItem;
+
+            if(item.getItemNo()==1){
+                userItem = new UserItem(1,doll,item);
+            }else{
+                userItem = new UserItem(0, doll, item);
+            }
+            userItemRepository.save(userItem);
+        }
 
         return saveUser;
     }

@@ -37,8 +37,6 @@ public class UserItemServiceImpl implements UserItemService{
         List<UserItemReadResInterface> userItemList = userItemRepository.findByDoll(doll);
 
         return userItemList;
-//        List<UserItemReadRes> list = new ArrayList<>();
-//        return list;
     }
 
     public UserItemCreateRes createUserItem(UserItemCreateReq userItemCreateReq){
@@ -53,6 +51,8 @@ public class UserItemServiceImpl implements UserItemService{
         Doll doll = dollRepository.getById(userItemUpdateWearStateReq.getDollNo());
         Item item = itemRepository.getById(userItemUpdateWearStateReq.getItemNo());
         UserItem findUserItem = userItemRepository.findByDollAndItem(doll, item);
+
+        System.out.println("UserItemNo : "+findUserItem.getUserItemNo());
 
         int wearFlag = findUserItem.getWearFlag();
         if(wearFlag ==0) wearFlag =1;

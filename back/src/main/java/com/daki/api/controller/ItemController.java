@@ -1,5 +1,6 @@
 package com.daki.api.controller;
 
+import com.daki.api.response.ItemListRes;
 import com.daki.api.response.ItemReadResInterface;
 import com.daki.api.service.ItemService;
 import com.daki.db.entity.Item;
@@ -17,8 +18,8 @@ public class ItemController {
     @Autowired
     ItemService itemService;
 
-    @GetMapping("/info")
-    ResponseEntity<List<ItemReadResInterface>> readAllItemInfo(@RequestParam Long dollNo){
+    @GetMapping("/info/{dollNo}")
+    ResponseEntity<List<ItemListRes>> readAllItemInfo(@PathVariable Long dollNo){
         return ResponseEntity.ok(itemService.readAllItem(dollNo));
     }
 
