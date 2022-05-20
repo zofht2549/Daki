@@ -4,7 +4,7 @@
 
 ## 사용기술
 
-![image-20220520113236917](README 869b59691897423e965cf8ccdd716dc7.assets/image-20220520113236917.png)
+![image-20220520113236917](asset/Untitled 1.png)
 
 # **나만의 일기장을 꾸밀 수 있는 서비스 DAKI**
 
