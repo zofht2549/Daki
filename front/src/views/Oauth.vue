@@ -70,7 +70,6 @@ export default {
         }
       })
       .then(() => this.$router.push({name: 'Main', query: {tab: 'calendar'}}))
-      .catch(err => console.log(err))
     }
   },
   watch: {

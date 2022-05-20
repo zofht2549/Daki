@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Swal from 'sweetalert2'
+import Store from '@/store/index'
 
 // Landing Page
 import LandingPage from '@/views/LandingPage.vue'
@@ -21,6 +22,7 @@ const routes = [
   {
     path: '/signup',
     name: 'Signup',
+    props: true,
     component: () => import('../views/Signup.vue')
   },
   {
@@ -62,14 +64,16 @@ const router = new VueRouter({
 const session = window.sessionStorage
 
 // eslint-disable-next-line no-unused-vars
-router.beforeEach((to, from, next) => {
-
+router.beforeEach(async (to, from, next) => {
+  
   if (to.params.forced){
+    console.log(to)
     next()
   }
   
   else {
     const accessToken = session.getItem('accessToken')
+    const user = await Store.dispatch('getUser')
 
     if (!accessToken) {
       console.log(to.name)
@@ -87,11 +91,42 @@ router.beforeEach((to, from, next) => {
       }
     }
 
-    if (to.name == 'Main' && !to.query.tab){
+    else if (user && (!user.userGender || !user.birth || !user.dollType)){
+      if (to.path == '/main'){
+        Swal.fire({
+          icon: 'info',
+          html: '첫 로그인이시군요<br>추가정보를 입력해주세요!'
+        })
+        .then(() => {
+          next({name: 'Signup', params: {oauth: true, forced: true}})
+        })
+      }
+      else {
+        Swal.fire({
+          icon: 'question',
+          text: '정말 나가시겠어요?',
+          showConfirmButton: true,
+          showCancelButton: true
+        })
+        .then(res => {
+          if (res.isConfirmed){
+            session.clear()
+            if (to.path == '/login'){
+              next({name: to.name})
+            }
+            else {
+              next({path: '/main'})
+            }
+          }
+        })
+      }
+    }
+
+    else if (to.name == 'Main' && !to.query.tab){
       next({ name: 'Main', query: { tab: 'calendar' } })
     }
   
-    if ((from.name == 'DiaryCreate' || from.name == 'DiaryDetail')){
+    else if ((from.name == 'DiaryCreate' || from.name == 'DiaryDetail')){
       Swal.fire({
         icon: 'warning',
         html: '저장하지 않은 정보는 사라집니다.<br> 그래도 페이지를 이동할까요?',
