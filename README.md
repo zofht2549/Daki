@@ -4,7 +4,7 @@
 
 ## 사용기술
 
-![Untitled](asset/Untitled 10.png)
+![Untitled](asset/Untitled 10.PNG)
 
 # **나만의 일기장을 꾸밀 수 있는 서비스 DAKI**
 
