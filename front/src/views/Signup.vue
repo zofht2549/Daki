@@ -32,7 +32,6 @@ export default {
     return {
       step: 1,
       direction: true,
-      oauth: false,
       firstCredentials: {
         email: null,
         nickName: null,
@@ -54,6 +53,9 @@ export default {
         dollType: false
       }
     }
+  },
+  props: {
+    oauth: Boolean
   },
   components: {
     AccountHeader,

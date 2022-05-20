@@ -36,17 +36,22 @@ export default new Vuex.Store({
     USER_ITEM_LIST(state, data){
       state.userItemList = data
     },
-    CHANGE_ITEM(state,item){
-      if((item.itemCategories == 0)){
-        state.wearItem.itemCloth = item
-      }else if((item.itemCategories == 1)){
-        state.wearItem.itemHair = item
-      }else if((item.itemCategories == 2)){
-        state.wearItem.itemBackground = item
-      }else{
-        state.wearItem.itemDeco = item
-      }
-      console.log('지금 입은거',state.wearItem)
+    CHANGE_ITEM(state, item){
+      const items = [...state.userItemList]
+      console.log(items)
+      console.log(item)
+      items.forEach(ele => {
+        if (ele.itemCategories == item.itemCategories){
+          if (ele.itemNo == item.itemNo){
+            ele.wearFlag = 1
+          }
+          else {
+            ele.wearFlag = 0
+          }
+        }
+      })
+      state.userItemList = items
+      this.commit('USER_WEAR_ITEM')
     },
     USER_WEAR_ITEM(state){
       const temp = ['itemCloth', 'itemHair', 'itemBackground', 'itemDeco']
@@ -102,7 +107,7 @@ export default new Vuex.Store({
       .finally(() => commit('USER_WEAR_ITEM'))
     },
 
-    changeItem({dispatch}, item){
+    changeItem({commit}, item){
       axios({
         method: 'put',
         url: 'https://k6e105.p.ssafy.io:8080/api/useritem/wear',
@@ -115,7 +120,7 @@ export default new Vuex.Store({
           Refresh_Authorization: sessionStorage.getItem('refreshToken')
         }
       })
-      .then(() => dispatch('userItemList'))
+      .then(() => commit('CHANGE_ITEM', item))
     },
     userItemWear({commit},data){
       commit('USER_WEAR_ITEM',data)
