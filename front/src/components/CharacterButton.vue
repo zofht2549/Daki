@@ -1,81 +1,58 @@
 <template>
-  <div id="character-container">
+  <div id="character-container" v-if="itemList">
     <div @click="openPopup()">
-      <img src="@/assets/character/head.png" alt="">
-			<div class="parts head">
-				<!-- <img :src="require(`@/assets/character/${this.itemList.ItemImageHair}.png`)" alt="머리"> -->
-				<img :src="`${this.itemList.ItemImageHair}`" alt="">
+      <img src="@/assets/character/head.png">
+			<div class="parts head" v-if="this.itemList.itemHair">
+				<img :src="`${this.itemList.itemHair}`">
 			</div>
-			<div class="parts cloth">
-				<!-- <img :src="require(`@/assets/character/${this.itemList.ItemImageCloth}.png`)" alt="옷"> -->
-				<img :src="`${this.itemList.ItemImageCloth}`" alt="">
+			<div class="parts cloth" v-if="this.itemList.itemCloth">
+				<img :src="`${this.itemList.itemCloth}`">
 			</div>
-			<div class="parts deco">
-				<!-- <img :src="require(`@/assets/character/${this.itemList.ItemImageDeco}.png`)" alt="장식"> -->
-				<img :src="`${this.itemList.ItemImageDeco}`" alt="">
+			<div class="parts deco" v-if="this.itemList.itemDeco">
+				<img :src="`${this.itemList.itemDeco}`">
 			</div>
     </div>
 
     <div class="character-popup"
 			:class="{ active : popupView }"
 			>
-      <character-pop-up
-        @close-pop-up="openPopup()"
-				@change-item="getCharItem()"></character-pop-up>
+      <character-pop-up @close-pop-up="openPopup()"	@change-item="getCharItem()" />
     </div>
   </div>
 </template>
 <script>
 import CharacterPopUp from '@/components/CharacterPopUp.vue'
-import { mapState } from 'vuex'
 
 export default {
 	name: 'CharacterButton',
 	data: () =>{
 		return {
 			popupView : false,
-			itemList:{
-				ItemImageBackground : null,
-				ItemImageCloth : null,
-				ItemImageHair : null,
-				ItemImageDeco : null
-			},
 		}
 	},
 	components:{
 		CharacterPopUp,
 	},
+	computed:{
+		itemList(){
+			return this.$store.state.wearItem
+		}
+	},
 	methods:{
 		openPopup(){
 			this.popupView = (this.popupView) ? false : true;
-		},
-		getCharItem(){
-			this.itemList.ItemImageCloth = this.$store.state.wearItem.itemCloth.itemImage
-			this.itemList.ItemImageHair = this.$store.state.wearItem.itemHair.itemImage
-			this.itemList.ItemImageDeco = this.$store.state.wearItem.itemDeco.itemImage
-
-			this.$emit('change')
-		},
+		}
 	},
-
-	created: function(){
-		this.itemList.ItemImageCloth = this.$store.state.charItemList.ItemImageCloth
-		this.itemList.ItemImageHair = this.$store.state.charItemList.ItemImageHair
-		this.itemList.ItemImageDeco = this.$store.state.charItemList.ItemImageDeco
-	},
-	computed:{
-		...mapState([
-      'userItemList'
-    ])
-	}
 }
 </script>
 <style lang="scss">
 	@media only screen and (min-width:800px){
     #character-container{
       position: fixed;
-      bottom:10%;
-      right: 10%;
+      bottom: 5%;
+      right: 2%;
+			z-index: 987654321;
+			cursor: pointer;
 
 			& > div{
 				& > .parts{
