@@ -69,7 +69,7 @@ export default {
           'type': this.type
         }
       })
-      .then(res => console.log(res))
+      .then(() => this.$router.push({name: 'Main', query: {tab: 'calendar'}}))
       .catch(err => console.log(err))
     }
   },

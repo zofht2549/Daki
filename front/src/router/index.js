@@ -59,15 +59,34 @@ const router = new VueRouter({
   routes
 })
 
-// const ssession = window.sessionStorage
+const session = window.sessionStorage
 
 // eslint-disable-next-line no-unused-vars
 router.beforeEach((to, from, next) => {
+
   if (to.params.forced){
     next()
   }
-
+  
   else {
+    const accessToken = session.getItem('accessToken')
+
+    if (!accessToken) {
+      console.log(to.name)
+      if (to.name !== 'Login' && to.name !== 'Signup' && to.name !== 'LandingPage' && to.name !== 'Oauth'){
+        Swal.fire({
+          icon: 'warning',
+          text: '로그인이 필요합니다'
+        })
+        .then(() => {
+          next({name: 'Login', params: {forced: true}})
+        })
+      }
+      else {
+        next()
+      }
+    }
+
     if (to.name == 'Main' && !to.query.tab){
       next({ name: 'Main', query: { tab: 'calendar' } })
     }

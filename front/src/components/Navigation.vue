@@ -1,5 +1,5 @@
 <template>
-  <nav>
+  <nav v-if="user">
     <div class="nav-mobile">
       <div class="mobile-bar">
         <router-link to="/main">

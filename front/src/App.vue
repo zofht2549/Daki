@@ -1,6 +1,7 @@
 <template>
   <div id="app" ref="app">
     <router-view />
+    <character-button v-if="charButtonShow" />
     <scrollbar :height="height" />
   </div>
 </template>
@@ -8,6 +9,7 @@
 <script>
 import store from './store/index'
 import Scrollbar from './components/ScrollBar.vue'
+import CharacterButton from '@/components/CharacterButton.vue'
 
 export default {
   data: function(){
@@ -17,17 +19,29 @@ export default {
     }
   },
   components: {
+    CharacterButton,
     Scrollbar
   },
   computed: {
+    user: function(){
+      return this.$store.state.user
+    },
     isEnd: function(){
       return store.state.isEnd
     },
     path: function(){
       return this.$route.path
+    },
+    charButtonShow: function(){
+      return this.path !== '/login' && this.path !== '/signup' && this.path !== '/'
     }
   },
   watch: {
+    user: function(){
+      if (this.user){
+        this.$store.dispatch('userItemList')
+      }
+    },
     isEnd: function(){
       if (!this.isEnd){
         setTimeout(() => {
