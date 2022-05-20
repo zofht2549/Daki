@@ -23,9 +23,9 @@
         <span>이제 더 쉽고 예쁘게</span>
       </div>
       <div class="image">
-        <img src="@/assets/landing/editor.png" alt="">
+        <img src="@/assets/landing/editor.gif" alt="">
       </div>
-      <img class="character" src="@/assets/landing/character.png" alt="">
+      <img class="character" src="@/assets/character.png" alt="">
     </section>
     <section class="content-padding edit-bg">
       <article class="text-left">
@@ -174,7 +174,11 @@ export default {
         font-family: kyobo;
       }
       .image{
-        margin: 5%;
+
+        img{
+          width: 500px;
+          margin: 50px;
+        }
       }
       .character{
         width: 15%;
@@ -300,6 +304,12 @@ export default {
 
       & > .door_upper{
         display: none;
+      }
+
+      & > .image{
+        & > img{
+          width: 400px;
+        }
       }
     }
 
