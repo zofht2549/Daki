@@ -2,10 +2,7 @@ package com.daki.api.service;
 
 import com.daki.api.request.UserItemCreateReq;
 import com.daki.api.request.UserItemUpdateWearStateReq;
-import com.daki.api.response.UserItemCreateRes;
-import com.daki.api.response.UserItemReadRes;
-import com.daki.api.response.UserItemReadResInterface;
-import com.daki.api.response.UserItemUpdateWearStateRes;
+import com.daki.api.response.*;
 import com.daki.db.entity.Doll;
 import com.daki.db.entity.Item;
 import com.daki.db.entity.User;
@@ -50,13 +47,22 @@ public class UserItemServiceImpl implements UserItemService{
     public UserItemUpdateWearStateRes updateWearState(UserItemUpdateWearStateReq userItemUpdateWearStateReq){
         Doll doll = dollRepository.getById(userItemUpdateWearStateReq.getDollNo());
         Item item = itemRepository.getById(userItemUpdateWearStateReq.getItemNo());
+
+        List<UserItemCategoriesInterface> list = userItemRepository.setNo(doll, item);
+
+        for (UserItemCategoriesInterface userItemCategoriesInterface : list) {
+            if(userItemCategoriesInterface.getItemNo() != null) {
+                Item item2 = itemRepository.getById(userItemCategoriesInterface.getItemNo());
+                int a = userItemRepository.setNo2(doll, item2);
+            }
+        }
+
         UserItem findUserItem = userItemRepository.findByDollAndItem(doll, item);
 
-        System.out.println("UserItemNo : "+findUserItem.getUserItemNo());
-
         int wearFlag = findUserItem.getWearFlag();
-        if(wearFlag ==0) wearFlag =1;
+        if(wearFlag ==0) wearFlag = 1;
         else wearFlag = 0;
+
 
         UserItem updateItem = new UserItem(findUserItem.getUserItemNo(), wearFlag, doll, item);
         UserItemUpdateWearStateRes userItemUpdateWearStateRes = new UserItemUpdateWearStateRes(userItemRepository.save(updateItem));
