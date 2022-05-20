@@ -70,7 +70,6 @@
 			<div class="change-nickname" :class="{ active : nicknameView}">
 				<change-nickname @close-pop-up="changeNickname()" />
 			</div>
-
     </div>
     
 </template>

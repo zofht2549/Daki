@@ -119,6 +119,7 @@ export default new Vuex.Store({
     },
     userItemWear({commit},data){
       commit('USER_WEAR_ITEM',data)
+      console.log(data)
     }
   }
 })
