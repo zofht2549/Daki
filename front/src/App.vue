@@ -50,6 +50,7 @@ export default {
       }
     },
     path: function(){
+      document.title = this.$route.name
       window.scrollTo({top: 0, behavior: 'smooth'})
     }
   },
